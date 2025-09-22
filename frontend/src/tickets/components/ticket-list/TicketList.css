@@ -14,6 +14,7 @@
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.2s;
+    box-shadow: 2px 5px 20px 0px #3939393d;
 }
 
 .ticket-card:hover {

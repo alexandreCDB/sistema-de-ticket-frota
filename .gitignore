@@ -71,3 +71,6 @@ build/ # Pasta de build do React
 __pycache__/
 *.pyc
 uploads/
+.env
+.env.development
+.env.production

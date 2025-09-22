@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -18,6 +18,8 @@ from backend.ticket.routers import users_router, tickets_router, messages_router
 # 3. Roteadores da Frota
 from backend.frota.routers.vehicle import router as frota_vehicles_router
 from backend.frota.routers.booking import router as frota_bookings_router
+
+from backend.websocket.service.ws_instance import manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -84,5 +86,15 @@ frota_api_router.include_router(frota_vehicles_router, tags=["Frota - Veículos"
 frota_api_router.include_router(frota_bookings_router, tags=["Frota - Reservas"])
 api_router.include_router(frota_api_router)
 
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str):
+    await manager.connect(websocket, token)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print("📩 Mensagem recebida:", data)
+            await manager.broadcast(f"Echo: {data}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
 # Monta o router principal com o prefixo /api na aplicação
 app.include_router(api_router)

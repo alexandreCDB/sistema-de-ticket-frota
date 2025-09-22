@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AnimatedPageWrapper from '../../../components/Animated/AnimatedPageWrapper';
 import { fetchTickets, TicketResponse } from './TicketList.service';
+import './TicketList.css';
 
 
 export interface User {
