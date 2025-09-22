@@ -1,0 +1,103 @@
+/*
+ * Arquivo: frontend/src/Pages/home.css
+ */
+
+/* Container principal que centraliza tudo e define o fundo */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Um cinza bem claro */
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+/* Cabeçalho com o título principal */
+.home-header {
+  text-align: center;
+  margin-bottom: 4rem; /* 64px */
+}
+
+.home-header h1 {
+  font-size: 2.75rem; /* Tamanho da fonte grande */
+  font-weight: bold;
+  color: #1f2937; /* Cinza escuro */
+}
+
+.home-header p {
+  font-size: 1.125rem; /* Tamanho da fonte do parágrafo */
+  color: #6b7280; /* Cinza médio */
+  margin-top: 0.75rem;
+}
+
+/* Container que segura os dois cards */
+.modules-container {
+  display: flex;
+  flex-direction: column; /* Em telas pequenas, os cards ficam um sobre o outro */
+  gap: 2.5rem; /* Espaçamento entre os cards */
+}
+
+/* Estilo individual de cada card */
+.module-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20rem; /* 320px */
+  height: 20rem; /* 320px */
+  background-color: #ffffff;
+  border-radius: 1rem; /* Bordas bem arredondadas */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Animação suave para o hover */
+  padding: 1rem;
+}
+
+/* Efeito ao passar o mouse sobre o card */
+.module-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-8px); /* Eleva o card sutilmente */
+}
+
+.module-card .module-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.module-card:hover .module-icon {
+  transform: scale(1.1); /* Aumenta o ícone no hover */
+}
+
+/* Título e descrição dentro do card */
+.module-card h2 {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151; /* Cinza escuro */
+}
+
+.module-card p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+/* Estilos específicos para cada ícone */
+.icon-tickets {
+  color: #3b82f6; /* Azul */
+}
+
+.icon-frotas {
+  color: #22c55e; /* Verde */
+}
+
+
+/* Media query para telas maiores (desktops) */
+@media (min-width: 768px) {
+  .modules-container {
+    flex-direction: row; /* Em telas maiores, os cards ficam lado a lado */
+  }
+}

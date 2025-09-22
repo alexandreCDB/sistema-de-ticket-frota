@@ -1,0 +1,301 @@
+.container {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth-container {
+    width: 90%;
+    /* Ocupa 90% da largura disponível */
+    max-width: 400px;
+    /* Mas não mais que 400px em telas grandes */
+    background: transparent;
+    box-shadow: 0 0px 4px rgb(251, 249, 252);
+    color: white;
+    border-radius: 40px;
+    /* Bordas arredondadas como na imagem */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    /* Adiciona padding Robotono para o conteúdo */
+    box-sizing: border-box;
+    /* Garante que padding e borda sejam incluídos na largura */
+    position: relative;
+    display: flex;
+    /* Usar flex para organizar o conteúdo Robotono */
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza itens Robotonos */
+    justify-content: center;
+    /* Centraliza itens Robotonos */
+    height: 70%;
+    gap: 30px;
+
+}
+
+.auth-container form {
+    width: 100%;
+    /* Formulário ocupa a largura total do auth-container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.auth-container .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.auth-container label {
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+    /* Remover margin-left: 12px; para manter o alinhamento centralizado */
+    color: white !important;
+}
+
+/* Estilos para inputs de texto, email, password, etc. */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    /* Ocupa 100% da largura do form-group */
+    padding: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.096);
+    border-radius: 10px;
+    font-size: 1.05em;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-sizing: border-box;
+    /* Essencial para padding e borda */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: black;
+    box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
+}
+
+/* Estilos para botões (exceto logout e sidebar) */
+button:not(.logout-button):not(.sidebar-nav a) {
+    appearance: none;
+    background-color: #FAFBFC;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: #24292E;
+    cursor: poRoboto;
+    display: inline-block;
+    font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: break-word;
+}
+
+button:not(.logout-button):not(.sidebar-nav a):hover {
+    background-color: hsl(0, 1%, 36%);
+    color: white;
+}
+
+.message-success {
+    color: green;
+    margin-top: 15px;
+    font-size: 0.95em;
+}
+
+.message-error {
+    color: var(--color-destructive);
+    margin-top: 15px;
+    font-size: 0.95em;
+}
+
+.button-destructive {
+    background-color: var(--color-destructive) !important;
+    color: var(--color-destructive-foreground) !important;
+}
+
+.button-destructive:hover {
+    background-color: hsl(0, 84.2%, 50.2%) !important;
+}
+
+.registrar {
+    margin-top: 20px;
+    /* Ajustado para um valor menor e responsivo */
+}
+
+.login-button {
+    width: 150px !important;
+    background-color: #f47e1a !important;
+    color: white !important;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.login-button:hover {
+    background-color: #8f4300 !important;
+}
+
+.div-img {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Reduzido o gap para telas menores */
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    /* Permite que as imagens quebrem a linha */
+}
+
+.div-img img {
+    width: 150px;
+    /* Ajustado para ser menor */
+    height: 150px;
+    /* Ajustado para ser menor */
+    object-fit: contain;
+    /* Garante que a imagem se ajuste */
+}
+
+.logo {
+    width: 2100px;
+    /* Ajustado para ser menor */
+    height: auto;
+    /* Altura automática para manter proporção */
+    margin-top: 5px;
+    margin-bottom: 15px;
+    /* Adicionado margem inferior */
+}
+
+/* Removido .card-header e .card-content se eles não se aplicam ao login */
+/* Se eles são de outro componente, devem estar no CSS desse componente */
+/* .card-header { display: flex; align-items: center; text-align: center; } */
+/* .card-content { font-size: 25px; } */
+
+.img-login {
+    width: 250px;
+    /* Ajustado para ser menor */
+    margin-top: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Removido o estilo 'html' para background-image, pois já está no #root, .App */
+/* html {
+    background-image: url("./assets/login.jpg");
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-size: cover;
+} */
+
+.registrar button {
+    background-color: #B76BB5 !important;
+    color: white !important;
+}
+
+/* Remover body display flex, align-items, justify-content, pois .App já faz isso */
+/* body{
+    display: flex !important;
+    align-items: center !important; 
+    justify-content: center !important;
+} */
+
+.logo-doce {
+    width: 120px;
+    /* Ajustado para ser menor */
+    height: auto;
+}
+
+/* Media Queries para Responsividade */
+
+/* Para telas de tablet e menores (max-width: 768px) */
+@media (max-width: 768px) {
+    .auth-container {
+        width: 95%;
+        /* Ocupa mais largura em telas menores */
+        padding: 15px;
+        border-radius: 20px;
+        top: -65px;
+    }
+
+    .auth-container form {
+        padding: 10px;
+    }
+
+    .auth-container .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .auth-container h2 {
+        /* Assumindo que você tem um h2 no formulário */
+        font-size: 1.5em;
+    }
+
+    .auth-container label {
+        font-size: 0.9em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+        padding: 25px;
+        font-size: 0.95em;
+        width: 90%;
+    }
+
+    .login-button {
+        width: 100px !important;
+        /* Botão menor */
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    .div-img img {
+        width: 60px;
+        /* Imagens menores */
+        height: 60px;
+    }
+
+    .logo,
+    .img-login {
+        width: 150px;
+        /* Logo e imagem de login menores */
+    }
+
+    .logo-doce {
+        width: 100px;
+        /* Logo doce menor */
+    }
+}

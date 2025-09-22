@@ -1,0 +1,73 @@
+sql_app.db
+*.pyc
+__pycache__/
+*.pyc
+
+# .gitignore
+
+# Ambientes virtuais
+env/
+venv/
+.direnv/
+.vscode/
+
+
+.flaskenv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+.pytest_cache/
+htmlcov/
+.mypy_cache/
+.dmypy.json
+.ruff_cache/
+.nox/
+.venv/
+
+# Arquivos de log e DB
+*.log
+*.sqlite3
+*.db
+/backend/__pycache__/ # Específico para garantir que não ignorei lá dentro
+
+# macOS
+.DS_Store
+
+# Node.js (para o frontend React)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.eslintcache
+build/ # Pasta de build do React
+__pycache__/
+*.pyc
+uploads/

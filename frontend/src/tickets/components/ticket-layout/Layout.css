@@ -1,0 +1,301 @@
+/* frontend/src/components/Layout.css */
+
+
+.layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-background);
+}
+
+.sidebar {
+  width: 300px;
+  background-color: #393939;
+  color: var(--color-background);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Garante alinhamento ao topo */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  position: relative;
+
+}
+
+.sidebar-header {
+  text-align: center;
+  padding: 10px 20px 10px 20px; /* Reduzido */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px; /* Reduzido */
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.4em; /* Reduzido */
+  color: var(--color-background);
+  font-weight: 600;
+}
+
+.sidebar-header p {
+  margin: 2px 0;
+  font-size: 0.8em; /* Reduzido */
+  color: hsl(210, 10%, 70%);
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 5px;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--color-background);
+  font-size: 1.1em;
+  font-weight: 300;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: var(--radius-md);
+  margin: 0 10px;
+}
+
+.sidebar-nav li a:hover {
+  background-color: hsl(240, 0%, 43%);
+  color: white;
+}
+
+.sidebar-nav li a.active {
+  background-color: rgba(131, 130, 130, 0.3);
+  color: var(--color-primary-foreground);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav li a .icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.logout-button {
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+  border: none;
+  padding: 12px 20px;
+  margin: 20px 10px;
+  width: calc(100% - 30px);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+}
+
+.logout-button:hover {
+  background-color: hsl(0, 84.2%, 50.2%);
+}
+.main-content {
+  width: 100%;
+  flex-grow: 1;
+  background-color: var(--color-background);
+  padding: 5px;
+  overflow-y: auto;
+  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.03);
+  height: 100vh; /* ou min-height: 100vh */
+}
+
+
+/* --- Estilos para Cards (simulando ShadCN/UI Card) --- */
+.card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  
+}
+
+.card-header .card-title {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0;
+  color: black;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Estilos para Badges (simulando ShadCN/UI Badge) --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.badge-default {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.badge-secondary {
+  background-color: hsl(210, 10%, 80%);
+  color: hsl(210, 10%, 40%);
+}
+
+.badge-destructive {
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+}
+
+.badge-outline {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+}
+
+/* Cores de badge customizadas para status */
+.badge-status-open {
+  background-color: hsl(142.1, 76.2%, 36.3%);
+  color: white;
+}
+
+.badge-status-in-progress {
+  background-color: hsl(200, 80%, 40%);
+  color: white;
+}
+
+.badge-status-awaiting-user {
+  background-color: hsl(40, 90%, 50%);
+  color: hsl(0, 0%, 10%);
+}
+
+.badge-status-resolved {
+  background-color: hsl(210, 60%, 50%);
+  color: white;
+}
+
+.badge-status-closed {
+  background-color: hsl(0, 0%, 50%);
+  color: white;
+}
+
+/* Cores de badge customizadas para prioridade */
+.badge-priority-low {
+  background-color: hsl(142.1, 76.2%, 36.3%);
+  color: white;
+}
+
+.badge-priority-medium {
+  background-color: hsl(40, 90%, 50%);
+  color: hsl(0, 0%, 10%);
+}
+
+.badge-priority-high {
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+}
+
+.header-bar {
+  position: relative;
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    /* position: fixed; */
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    z-index: 1000;
+    padding: 5px 0;
+  }
+
+  .sidebar-header {
+    display: none; 
+  }
+
+  .sidebar-nav {
+    width: 100%;
+  }
+
+  .sidebar-nav ul {
+    display: flex;
+    flex-direction: row;     
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar-nav li {
+    list-style: none;
+    flex: 1;
+    text-align: center;
+  }
+
+  .sidebar-nav li a {
+    display: flex;
+    flex-direction: column;   
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 6px 0;
+    text-decoration: none;
+    color: #333;
+  }
+
+  .sidebar-nav li a .icon {
+    font-size: 1.8em;
+    /* margin-bottom: 2px; */
+  }
+
+  .logout-button {
+    display: none; /* Esconde o botão de logout no mobile */
+  }
+}
+
