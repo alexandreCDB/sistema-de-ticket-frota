@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -19,7 +19,12 @@ from backend.ticket.routers import users_router, tickets_router, messages_router
 from backend.frota.routers.vehicle import router as frota_vehicles_router
 from backend.frota.routers.booking import router as frota_bookings_router
 
+<<<<<<< HEAD
 # --- LIFESPAN PARA STARTUP/SHUTDOWN ---
+=======
+from backend.websocket.service.ws_instance import manager
+
+>>>>>>> c0c865bb1533616d472288361102cf25fe580bc3
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Application startup event triggered.")
@@ -87,5 +92,20 @@ frota_api_router.include_router(frota_vehicles_router, prefix="/vehicles", tags=
 frota_api_router.include_router(frota_bookings_router, prefix="/bookings", tags=["Frota - Reservas"])
 api_router.include_router(frota_api_router)
 
+<<<<<<< HEAD
 # --- MONTAGEM FINAL ---
 app.include_router(api_router)
+=======
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str):
+    await manager.connect(websocket, token)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print("📩 Mensagem recebida:", data)
+            await manager.broadcast(f"Echo: {data}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+# Monta o router principal com o prefixo /api na aplicação
+app.include_router(api_router)
+>>>>>>> c0c865bb1533616d472288361102cf25fe580bc3

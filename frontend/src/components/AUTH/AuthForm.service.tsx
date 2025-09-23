@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { connectWebSocket } from "../../services/websocket";
 
 // @ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
@@ -57,7 +58,12 @@ export default function useAuthService() {
         const data = await res.json();
         throw new Error(data.detail || "Erro no login");
       }
+      const data = await res.json();
+      const token = data.access_token;
 
+      // conecta no WebSocket usando o token
+      connectWebSocket(token);
+      
       setMessage("Login bem-sucedido!");
       await fetchCurrentUser();
       navigate("/", { replace: true });
