@@ -1,28 +1,30 @@
 .ticket-detail-container {
-    background-color: var(--color-card);
+    background-color: hsl(210, 20%, 100%);
+    ;
     padding: 30px;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     max-width: 900px;
     margin: 20px auto;
-    color: var(--color-foreground);
+    color: black;
     margin-bottom: 15px !important;
 }
 
 .ticket-detail-container h3 {
     text-align: center;
     margin-bottom: 25px;
-    color: var(--color-foreground);
+    color: black;
     font-size: 2em;
 }
 
 .detail-card {
-    background-color: var(--color-background);
+    background-color: hsl(210, 20%, 95%);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: 20px;
     margin-bottom: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
 }
 
 .detail-card p {
@@ -31,7 +33,7 @@
 }
 
 .detail-card p strong {
-    color: var(--color-primary);
+    color: hsl(210, 60%, 50%);
     margin-right: 5px;
 }
 
@@ -84,7 +86,7 @@
 h4 {
     margin-top: 30px;
     margin-bottom: 15px;
-    color: var(--color-foreground);
+    color: black;
     font-size: 1.5em;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 5px;
@@ -98,6 +100,7 @@ h4 {
     overflow-y: auto;
     border: 1px solid transparent;
     box-shadow: 0px 0px 2px rgb(160, 158, 158);
+    border-radius: 10px;
 }
 
 /* Scrollbar - Chrome, Edge, Safari */
@@ -205,16 +208,15 @@ h4 {
 
 .message-content {
     margin: 0;
-    color: var(--color-foreground);
+    color: black;
     line-height: 1.5;
 }
 
 .message-form {
-    background-color: var(--color-background);
-    padding: 20px;
-    border-radius: var(--radius);
+    background-color: hsl(210, 20%, 95%);
+    border-radius: 10px;
     margin-top: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.50);
     width: 100%
 }
 
@@ -227,7 +229,7 @@ h4 {
     font-size: 1em;
     box-sizing: border-box;
     background-color: var(--color-input-background);
-    color: var(--color-foreground);
+    color: black;
     resize: vertical;
 }
 
@@ -262,7 +264,7 @@ h4 {
     margin-left: auto;
     margin-right: auto;
     padding: 0 30px;
-    margin-bottom: 50px
+    margin-bottom: 50px;
 }
 
 .button-danger {
@@ -280,33 +282,40 @@ h4 {
     margin-bottom: 10px;
 }
 
+.send-msg {
+    background: #77b3f387 !important;
+}
+
 @media (max-width: 768px) {
 
-    .ticket-detail-container{
+    .ticket-detail-container {
         padding: 10px;
         margin: 0;
     }
-    p{
+
+    p {
         font-size: x-small;
     }
+
     .attend-ticket-action.mt-20 {
-    display: flex
-;
-    justify-content: space-around;
-    align-items: center;
-    align-content: space-around;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        align-content: space-around;
+    }
 }
-}
+
 .btn-voltar {
-  background-color: #2563eb !important; /* azul forte */
-  color: #fff !important;
-  padding: 0.5rem 1rem !important;
-  border-radius: 0.75rem !important;
-  /* box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; */
-  transition: all 0.2s ease-in-out !important;
+    background-color: #2563eb !important;
+    /* azul forte */
+    color: #fff !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.75rem !important;
+    /* box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; */
+    transition: all 0.2s ease-in-out !important;
 }
 
 .btn-voltar:hover {
-  background-color: #1d4ed8 !important;
-  transform: scale(1.05) !important;
+    background-color: #1d4ed8 !important;
+    transform: scale(1.05) !important;
 }

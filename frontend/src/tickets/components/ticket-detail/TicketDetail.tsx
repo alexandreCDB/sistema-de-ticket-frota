@@ -163,6 +163,8 @@ const TicketDetail: React.FC = () => {
   const isTicketClosed = TicketService.isTicketClosed(ticket.status);
   const enableMessageForm = TicketService.canExchangeMessages(ticket.status);
 
+  
+
   return (
     <AnimatedPageWrapper>
       <div className="ticket-detail-container">
@@ -170,8 +172,10 @@ const TicketDetail: React.FC = () => {
           ← Voltar
         </button>
 
-        <h3>Chamado #{ticket.id} - {ticket.title}</h3>
+        <h3>Chamado #{ticket.id}</h3>
+        <h3>{ticket.title}</h3>
         <div className="detail-card">
+          <p><strong>Titulo:</strong> {ticket.title}</p>
           <p><strong>Status:</strong> <span className={`status-${ticket.status.toLowerCase()}`}>{ticket.status}</span></p>
           <p><strong>Prioridade:</strong> {ticket.priority}</p>
           <p><strong>Categoria:</strong> {TicketService.formatCategoryName(ticket.category)}</p>
@@ -184,7 +188,7 @@ const TicketDetail: React.FC = () => {
         </div>
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'aberto' && (
-          <div className="attend-ticket-action mt-20">
+          <div className="close-ticket-action">
             <button onClick={handleAttendTicket} disabled={attendingTicket}>
               {attendingTicket ? 'Atendendo...' : 'Atender Chamado'}
             </button>
@@ -223,16 +227,16 @@ const TicketDetail: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSendMessage} className="message-form mt-20">
+            <form onSubmit={handleSendMessage} className="message-form">
               <textarea value={newMessageContent} onChange={e => setNewMessageContent(e.target.value)} rows={4} placeholder="Digite sua mensagem..." disabled={sendingMessage} />
-              <button type="submit" disabled={sendingMessage}>{sendingMessage ? 'Enviando...' : 'Enviar Mensagem'}</button>
+              <button className="send-msg" type="submit" disabled={sendingMessage}>{sendingMessage ? 'Enviando...' : 'Enviar Mensagem'}</button>
             </form>
           </>
         )}
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'em progresso' && (
-          <div className="close-ticket-action mt-20">
-            <button onClick={() => setShowObsModal(true)}>Fechar Chamado</button>
+          <div className="close-ticket-action ">
+            <button className="button-danger" onClick={() => setShowObsModal(true)}>Fechar Chamado</button>
           </div>
         )}
 

@@ -60,7 +60,7 @@ export default function useAuthService() {
       }
       const data = await res.json();
       const token = data.access_token;
-
+      localStorage.setItem("token", token);
       // conecta no WebSocket usando o token
       connectWebSocket(token);
       

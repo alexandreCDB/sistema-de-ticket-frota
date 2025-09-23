@@ -42,8 +42,7 @@ export const isTicketClosed = (status: string) => {
 };
 
 export const canExchangeMessages = (status: string) => {
-  const lower = status.toLowerCase();
-  return lower !== 'aberto' && !isTicketClosed(lower);
+  return status.toLowerCase() === "em progresso";
 };
 
 export const formatCategoryName = (category: string) => {
