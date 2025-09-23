@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IUser } from '../../components/AUTH/interfaces/user';
+
 //@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -8,7 +8,7 @@ interface AuthParams {
   password: string;
   confirmPassword?: string;
   isRegistering: boolean;
-  onLoginSuccess?: () => void; // já que o cookie é gerenciado pelo backend
+  onLoginSuccess?: () => void;
 }
 
 export default function useAuthService() {
@@ -21,7 +21,6 @@ export default function useAuthService() {
 
     try {
       if (isRegistering) {
-        // Registro
         await fetch(`${API_URL}/ticket/auth/register/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -29,7 +28,6 @@ export default function useAuthService() {
         });
         setMessage('Conta criada com sucesso! Faça login.');
       } else {
-
         const response = await fetch(`${API_URL}/ticket/auth/login/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -42,7 +40,7 @@ export default function useAuthService() {
           throw new Error(data.detail || 'Erro no login');
         }
 
-        onLoginSuccess?.(); // dispara redirecionamento no App
+        onLoginSuccess?.();
       }
     } catch (err: any) {
       setError(err.message || 'Erro na autenticação');
@@ -52,34 +50,25 @@ export default function useAuthService() {
   return { message, error, handleAuth, setMessage };
 }
 
-
 export function useAuth() {
   const [user, setUser] = useState<any>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [userError, setUserError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-
-  // Função para buscar usuário atual
   const fetchCurrentUser = async () => {
     setLoadingUser(true);
     setUserError(null);
-    let userData: IUser | null = null;
-
     try {
       const res = await fetch(`${API_URL}/ticket/users/me/`, {
         credentials: 'include',
       });
-      console.log('res', res);
 
       if (!res.ok) throw new Error('Não foi possível carregar usuário');
+      
       const data = await res.json();
       setUser(data);
-      userData = data as IUser
 
-      setUser(data as IUser);
-
-      // 🔹 Pega token se estiver disponível no header ou cookie
       const authHeader = res.headers.get("Authorization");
       if (authHeader?.startsWith("Bearer ")) {
         setToken(authHeader.replace("Bearer ", ""));
@@ -90,31 +79,10 @@ export function useAuth() {
       setUserError('Erro ao buscar usuário atual');
     } finally {
       setLoadingUser(false);
-      return userData;
     }
   };
 
-  const returnUserCurrent = async () => {
-
-    let userData: IUser | null = null;
-
-    try {
-      const res = await fetch(`${API_URL}/ticket/users/me/`, {
-        credentials: 'include',
-      });
-      if (!res.ok) throw new Error('Não foi possível carregar usuário');
-      const data = await res.json();
-      userData = data as IUser
-    } catch (err) {
-      throw new Error('returnUserCurrent: Erro ao buscar usuário atual');
-    } finally {
-      return userData;
-    }
-  };
-
-  // 🔹 handleLoginSuccess: chamado pelo AuthForm
   const handleLoginSuccess = async () => {
-    // Após login, busca dados do usuário
     await fetchCurrentUser();
   };
 
@@ -136,7 +104,5 @@ export function useAuth() {
     fetchCurrentUser();
   }, []);
 
-  return { user, loadingUser, userError, handleLoginSuccess, handleLogout,token };
+  return { user, loadingUser, userError, handleLoginSuccess, handleLogout, token };
 }
-
-

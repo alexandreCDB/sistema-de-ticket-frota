@@ -1,18 +1,16 @@
-// src/frota/components/VehicleCard/index.tsx
-
 import React from 'react';
 import './styles.css'; 
-import { Vehicle } from '../../../frota/types';
-import defaultVehicleImage from '../../../assets/onix.png'; 
+import { Vehicle } from '../../types';
+import defaultVehicleImage from '../../../assets/onix.png'; // Verifique se este caminho está correto!
 import { Users, GitBranch, MoreVertical } from 'lucide-react';
 
-// Define as propriedades que o componente espera receber
 interface VehicleCardProps {
   vehicle: Vehicle;
-  onRetirar: (vehicle: Vehicle) => void; // A função para abrir o modal
+  onRetirar?: (vehicle: Vehicle) => void;
+  onDevolver?: (vehicle: Vehicle) => void;
 }
 
-export function VehicleCard({ vehicle, onRetirar }: VehicleCardProps) {
+export function VehicleCard({ vehicle, onRetirar, onDevolver }: VehicleCardProps) {
   
   const statusMap = {
     available: { text: 'Disponível', className: 'status-available' },
@@ -53,24 +51,26 @@ export function VehicleCard({ vehicle, onRetirar }: VehicleCardProps) {
             <span className="detail-value">{vehicle.passengers}</span>
           </div>
         )}
-        {/* Você pode adicionar outros detalhes aqui conforme necessário */}
       </div>
 
       <div className="vehicle-actions">
-        {vehicle.status === 'available' ? (
+        {vehicle.status === 'available' && onRetirar && (
           <>
-            {/* Adiciona o onClick para chamar a função que abre o modal */}
             <button className="btn btn-primary" onClick={() => onRetirar(vehicle)}>
               Retirar Veículo
             </button>
             <button className="btn btn-secondary">Agendar</button>
           </>
-        ) : vehicle.status === 'in-use' ? (
-          <button className="btn btn-success">Devolver Veículo</button>
-        ) : (
-          <button className="btn-disabled" disabled>
-            Indisponível
-          </button>
+        )}
+        {vehicle.status === 'in-use' && onDevolver && (
+            <button className="btn btn-success" onClick={() => onDevolver(vehicle)}>
+              Devolver Veículo
+            </button>
+        )}
+        {vehicle.status !== 'available' && vehicle.status !== 'in-use' && (
+           <button className="btn-disabled" disabled>
+             Indisponível
+           </button>
         )}
       </div>
     </div>

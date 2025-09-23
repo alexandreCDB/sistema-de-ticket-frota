@@ -1,0 +1,76 @@
+.frota-header {
+  background-color: var(--frota-color-surface);
+  border-bottom: 1px solid var(--frota-color-border);
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--frota-color-primary-end);
+}
+
+.logo-text h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--frota-color-text-primary);
+}
+
+.logo-text span {
+  font-size: 0.875rem;
+  color: var(--frota-color-text-secondary);
+}
+
+.navigation {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--frota-color-text-secondary);
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--frota-color-text-primary);
+}
+
+.nav-link.active {
+  color: var(--frota-color-primary-end);
+  border-bottom-color: var(--frota-color-primary-end);
+}
+
+.user-area {
+  padding: 0.5rem;
+  background-color: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--frota-color-text-secondary);
+}
+
+.admin-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--frota-color-status-maintenance-text) !important;
+}
+
+.admin-link.active {
+  border-bottom-color: var(--frota-color-status-maintenance-text) !important;
+}
