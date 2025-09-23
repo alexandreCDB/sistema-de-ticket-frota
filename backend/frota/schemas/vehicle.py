@@ -16,10 +16,10 @@ class VehicleCreate(VehicleBase):
 class VehicleRead(VehicleBase):
     id: int
     image_url: Optional[str]
-    status: str
+    status: Optional[str]         # 👈 pode vir nulo em registros antigos ou novos
     passengers: Optional[int]
     features: Optional[str]
-    created_at: datetime
+    created_at: Optional[datetime]  # 👈 evita erro se banco não preencher antes do refresh
 
     class Config:
         orm_mode = True

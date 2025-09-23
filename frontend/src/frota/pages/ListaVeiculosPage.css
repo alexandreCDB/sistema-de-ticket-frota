@@ -1,0 +1,46 @@
+/* src/frota/pages/ListaVeiculosPage.css */
+
+.page-layout {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  /* Adicionado para garantir que o container se estique se necessário */
+  width: 100%;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+/* Garante que a seção ocupe a largura total do container pai */
+.page-layout section {
+    width: 100%;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--frota-color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--frota-color-text-secondary);
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.page-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 1.25rem;
+}
+
+.page-status.error {
+  color: #B91C1C;
+}

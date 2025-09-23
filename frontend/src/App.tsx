@@ -1,6 +1,3 @@
-//
-// Arquivo: frontend/src/App.tsx (VERSÃO ATUALIZADA)
-//
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthForm from "./components/AUTH/AuthForm";
 import ProtectedRoute from "./components/AUTH/ProtectedRoute";
@@ -14,45 +11,26 @@ import TicketsPage from "./tickets/pages/ticket-page/TicketsPage";
 import TicketDetail from "./tickets/components/ticket-detail/TicketDetail";
 import ConfigsPage from "./tickets/pages/configs/ConfigsPage";
 import ManagerUser from "./tickets/pages/manager-user/manager-user";
-
-// --- MUDANÇA 1: Importar a nova página da Frota ---
+import FrotaAdminPage from '../../frontend/src/frota/components/FrotaAdminPage/index';
 import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
-
+import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
+import { useAuth } from './tickets/services/App.services';
 
 function App() {
+  const { user, loadingUser } = useAuth();
+
+  if (loadingUser) {
+    return <p>A carregar aplicação...</p>;
+  }
+
   return (
     <Router>
       <Routes>
-        {/* Rota pública de Login */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <AuthForm />
-            </PublicRoute>
-          }
-        />
-
-        {/* A rota principal "/" agora é a página de seleção */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Rota do sistema de tickets */}
-        <Route
-          path="/tickets/*" // Usar "/*" aqui é uma boa prática para rotas aninhadas
-          element={
-            <ProtectedRoute>
-              <DashboardLayoutRoute />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Dashboard />} /> {/* Rota padrão para /tickets */}
+        <Route path="/login" element={<PublicRoute><AuthForm /></PublicRoute>} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        
+        <Route path="/tickets/*" element={<ProtectedRoute><DashboardLayoutRoute /></ProtectedRoute>}>
+          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="create-ticket" element={<CreateTicketForm/>} />
           <Route path="tickets" element={<TicketsPage/>} />
@@ -62,19 +40,14 @@ function App() {
           <Route path="tickets/:ticketId" element={<TicketDetail/>} />
         </Route>
 
-        {/* --- MUDANÇA 2: Nova rota para o sistema de frotas --- */}
-        {/* Trocamos o placeholder FrotasSystem pela sua página real */}
-        <Route
-          path="/frotas"
-          element={
-            <ProtectedRoute>
-              {/* No futuro, podemos criar um DashboardLayout para a frota também */}
-              <ListaVeiculosPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/frotas">
+          <Route index element={<ProtectedRoute><ListaVeiculosPage /></ProtectedRoute>} />
+          <Route path="meus-veiculos" element={<ProtectedRoute><MeusVeiculosPage /></ProtectedRoute>} />
+          {user?.is_admin && (
+            <Route path="admin" element={<ProtectedRoute><FrotaAdminPage /></ProtectedRoute>} />
+          )}
+        </Route>
 
-        {/* Fallback */}
         <Route path="*" element={<FallbackRoute />} />
       </Routes>
     </Router>

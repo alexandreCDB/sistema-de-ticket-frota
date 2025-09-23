@@ -1,0 +1,47 @@
+// Este ficheiro define o "contrato" de dados para todo o módulo de frotas.
+
+export interface Vehicle {
+  id: number;
+  name: string;
+  model: string | null;
+  license_plate: string;
+  image_url: string | null;
+  status: 'available' | 'in-use' | 'reserved' | 'maintenance' | string;
+  passengers: number | null;
+  features: string | null;
+  created_at: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  is_admin: boolean;
+}
+
+export interface Booking {
+  id: number;
+  vehicle_id: number;
+  user_id: number;
+  type: 'checkout' | 'schedule' | string;
+  status: 'pending' | 'confirmed' | 'denied' | 'completed' | string;
+  purpose: string | null;
+  observation: string | null;
+  start_time: string;
+  end_time: string | null;
+  start_mileage: number | null;
+  end_mileage: number | null;
+  parking_location: string | null;
+  created_at: string;
+  handled_by: number | null;
+}
+
+// Novo tipo que garante que o objeto 'vehicle' e 'user' estão sempre presentes
+export interface BookingWithDetails extends Booking {
+  vehicle: Vehicle;
+
+}
+export interface BookingWithVehicle extends Booking {
+  vehicle: Vehicle;
+}

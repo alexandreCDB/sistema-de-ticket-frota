@@ -1,0 +1,219 @@
+/* src/components/frota/VehicleCard/styles.css (NOVO DESIGN) */
+
+:root {
+  --card-bg-color: #ffffff;
+  --border-color: #e5e7eb; /* gray-200 */
+  --text-color-primary: #111827; /* gray-900 */
+  --text-color-secondary: #6b7280; /* gray-500 */
+  --primary-color: #6d28d9; /* violet-700 */
+  --primary-color-hover: #5b21b6; /* violet-800 */
+  --secondary-color: #e0e7ff; /* indigo-100 */
+  --secondary-color-text: #4f46e5; /* indigo-600 */
+  --success-color-text: #22c55e; /* green-500 */
+  --danger-color: #ef4444; /* red-500 */
+  --warning-color: #f59e0b; /* amber-500 */
+  --info-color: #3b82f6; /* blue-500 */
+}
+
+/* Estilos para a página ListaVeiculosPage */
+.lista-veiculos-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lista-veiculos-page h1 {
+  font-size: 2.5rem;
+  color: var(--text-color-primary);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  justify-content: center;
+}
+
+.page-status {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--text-color-secondary);
+}
+
+.page-status.error {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
+/* Estilos para o VehicleCard */
+.vehicle-card {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Garante que todos os cards tenham a mesma altura */
+}
+
+.vehicle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.vehicle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.vehicle-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-color-primary);
+  margin: 0;
+}
+
+.vehicle-status-badge {
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px; /* Pill shape */
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white; /* Cor do texto padrão para badges */
+}
+
+/* Cores dos status */
+.status-available {
+  background-color: var(--success-color-text); /* Verde */
+}
+.status-in-use {
+  background-color: var(--info-color); /* Azul */
+}
+.status-reserved {
+  background-color: var(--warning-color); /* Amarelo/Laranja */
+  color: var(--text-color-primary); /* Texto escuro para contraste */
+}
+.status-maintenance {
+  background-color: var(--danger-color); /* Vermelho */
+}
+.status-unknown {
+  background-color: var(--text-color-secondary); /* Cinza */
+}
+
+.vehicle-image-wrapper {
+  width: 100%;
+  padding-top: 75%; /* 4:3 Aspect Ratio (300/400 = 0.75) */
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f4f6; /* light gray background */
+}
+
+.vehicle-main-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem cubra a área sem distorção */
+  object-position: center;
+}
+
+.vehicle-details-grid {
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Duas colunas */
+  gap: 0.75rem; /* Espaçamento entre os itens da grade */
+  border-bottom: 1px solid var(--border-color);
+  flex-grow: 1; /* Faz com que esta seção preencha o espaço disponível */
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: var(--text-color-primary);
+  font-weight: 600;
+}
+
+/* Estilos para os botões de ação */
+.vehicle-actions {
+  padding: 1.25rem;
+  display: flex;
+  gap: 1rem; /* Espaçamento entre os botões */
+  justify-content: stretch; /* Estica os botões para preencher o espaço */
+}
+
+/* Estilo base para todos os botões */
+.btn {
+  flex-grow: 1; /* Faz os botões crescerem igualmente */
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none; /* Remove borda padrão */
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Botão Primário (Roxo) */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--primary-color-hover);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Secundário (Branco com borda roxa) */
+.btn-secondary {
+  background-color: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+.btn-secondary:hover {
+  background-color: var(--secondary-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Botão de Sucesso (Verde) */
+.btn-success {
+  background-color: var(--success-color-text);
+  color: white;
+}
+.btn-success:hover {
+  background-color: hsl(140, 70%, 35%); /* Um verde um pouco mais escuro */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Desabilitado */
+.btn-disabled {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: #f3f4f6; /* Cinza claro */
+  color: #9ca3af; /* Cinza médio */
+  cursor: not-allowed;
+  box-shadow: none;
+}

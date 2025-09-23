@@ -1,24 +1,27 @@
+// src/tickets/components/AUTH/ProtectedRoute.tsx
+
 import React from "react";
 import { Navigate } from "react-router-dom";
-import useAuthService from "./AuthForm.service";
+import { useAuth } from "../../services/App.services"; // Importa o hook correto
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loadingUser } = useAuthService();
-  
+  const { user, loadingUser } = useAuth();
+  
+  console.log("RODANDO PROTECTED ROUTE:", { user, loadingUser });
 
-  if (loadingUser) {
-    return <p>Carregando...</p>;
-  }
+  if (loadingUser) {
+    return <p>Carregando...</p>;
+  }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-  return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
