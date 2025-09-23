@@ -1,59 +1,76 @@
-//
-// Arquivo: frontend/src/frota/pages/ListaVeiculosPage.tsx
-//
-import React, { useState, useEffect } from 'react';
-import { Vehicle, getVehicles } from '../services/frota.services';
-import VehicleCard from '../components/VehicleCard'; // Importa nosso novo componente
+// src/frota/pages/ListaVeiculosPage.tsx
 
-const ListaVeiculosPage = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+import React, { useState } from 'react'; // Adicionado useState
+import '../styles/frota.css';
+import './ListaVeiculosPage.css';
+import { useAuth } from '../../tickets/services/App.services'; 
+import { useVehicles } from '../services/frota.services';
+import { Dashboard } from '../components/Dashboard';
+import { VehicleCard } from '../components/VehicleCard';
+import { CheckoutModal } from '../components/CheckoutModal'; // Importa o novo modal
+import { Vehicle } from '../types'; // Importa o tipo Vehicle
 
-  useEffect(() => {
-    const loadVehicles = async () => {
-      try {
-        setLoading(true);
-        const data = await getVehicles();
-        setVehicles(data);
-      } catch (err) {
-        setError('Não foi possível carregar a lista de veículos.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+export default function ListaVeiculosPage() {
+  const { loadingUser } = useAuth();
+  const { vehicles, isLoading, error } = useVehicles();
+  
+  // Estados para controlar o modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
 
-    loadVehicles();
-  }, []);
+  // Funções para abrir e fechar o modal
+  const handleOpenCheckoutModal = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedVehicle(null);
+  };
 
-  if (loading) {
-    // Futuramente, podemos colocar um componente de "esqueleto" mais bonito aqui
-    return <div className="p-8 text-center">Carregando frota...</div>;
+  if (loadingUser || isLoading) {
+    return <div className="page-status">Carregando...</div>;
   }
 
   if (error) {
-    return <div className="p-8 text-center text-red-600 bg-red-100 rounded-md">{error}</div>;
+    return <div className="page-status error">Erro: {error}</div>;
   }
 
   return (
-    <div className="p-4 md:p-8 bg-gray-50 min-h-full">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Frota de Veículos</h1>
-        {/* Futuramente, o botão de adicionar novo veículo virá aqui */}
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600">
-          Adicionar Veículo
-        </button>
-      </div>
+    <div className="frota-module"> 
+      <main className="frota-container page-layout">
+        <section>
+          <h2 className="section-title">Dashboard de Veículos</h2>
+          <Dashboard vehicles={vehicles || []} />
+        </section>
 
-      {/* Grade responsiva para os cards de veículos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {vehicles.map((vehicle) => (
-          <VehicleCard key={vehicle.id} vehicle={vehicle} />
-        ))}
-      </div>
+        <section>
+          <h2 className="section-title">Veículos da Frota</h2>
+          <p className="section-subtitle">Visão geral de todos os veículos cadastrados</p>
+          <div className="vehicle-grid">
+            {vehicles && vehicles.length > 0 ? (
+              vehicles.map((vehicle) => (
+                <VehicleCard 
+                  key={vehicle.id} 
+                  vehicle={vehicle} 
+                  // Passa a função para o card para que ele possa abrir o modal
+                  onRetirar={handleOpenCheckoutModal} 
+                />
+              ))
+            ) : (
+              <p>Nenhum veículo cadastrado no sistema.</p>
+            )}
+          </div>
+        </section>
+      </main>
+
+      {/* O Modal é renderizado aqui, mas só aparece quando isModalOpen for true */}
+      <CheckoutModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        vehicle={selectedVehicle}
+      />
     </div>
   );
-};
-
-export default ListaVeiculosPage;
+}

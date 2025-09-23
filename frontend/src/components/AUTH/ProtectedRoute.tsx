@@ -9,6 +9,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loadingUser } = useAuthService();
   
+  // ADICIONE ESTE LOG
+  console.log("RODANDO PROTECTED ROUTE:", { user, loadingUser });
 
   if (loadingUser) {
     return <p>Carregando...</p>;

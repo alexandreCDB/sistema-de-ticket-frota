@@ -1,6 +1,5 @@
-//
-// Arquivo: frontend/src/App.tsx (VERSÃO ATUALIZADA)
-//
+// Arquivo: frontend/src/App.tsx (VERSÃO CONFIRMADA)
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthForm from "./components/AUTH/AuthForm";
 import ProtectedRoute from "./components/AUTH/ProtectedRoute";
@@ -15,9 +14,8 @@ import TicketDetail from "./tickets/components/ticket-detail/TicketDetail";
 import ConfigsPage from "./tickets/pages/configs/ConfigsPage";
 import ManagerUser from "./tickets/pages/manager-user/manager-user";
 
-// --- MUDANÇA 1: Importar a nova página da Frota ---
+// Importação da nova página da Frota
 import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
-
 
 function App() {
   return (
@@ -45,14 +43,14 @@ function App() {
 
         {/* Rota do sistema de tickets */}
         <Route
-          path="/tickets/*" // Usar "/*" aqui é uma boa prática para rotas aninhadas
+          path="/tickets/*"
           element={
             <ProtectedRoute>
               <DashboardLayoutRoute />
             </ProtectedRoute>
           }
         >
-          <Route index element={<Dashboard />} /> {/* Rota padrão para /tickets */}
+          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="create-ticket" element={<CreateTicketForm/>} />
           <Route path="tickets" element={<TicketsPage/>} />
@@ -62,13 +60,11 @@ function App() {
           <Route path="tickets/:ticketId" element={<TicketDetail/>} />
         </Route>
 
-        {/* --- MUDANÇA 2: Nova rota para o sistema de frotas --- */}
-        {/* Trocamos o placeholder FrotasSystem pela sua página real */}
+        {/* Nova rota para o sistema de frotas */}
         <Route
           path="/frotas"
           element={
             <ProtectedRoute>
-              {/* No futuro, podemos criar um DashboardLayout para a frota também */}
               <ListaVeiculosPage />
             </ProtectedRoute>
           }

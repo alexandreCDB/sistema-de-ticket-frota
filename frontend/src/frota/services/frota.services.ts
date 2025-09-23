@@ -1,35 +1,45 @@
-//
-// Arquivo: frontend/src/frota/services/frota.service.ts
-//
+// src/frota/services/frota.service.ts (CORREÇÃO FINAL)
+
+import { useState, useEffect } from 'react';
+import { Vehicle } from '../types';
 
 // @ts-ignore
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL; // Esta variável já é "http://localhost:8000/api"
 
-// Define a "forma" de um objeto Veículo, baseado no que a API retorna
-export interface Vehicle {
-  id: number;
-  name: string;
-  model: string | null;
-  license_plate: string;
-  image_url: string | null;
-  status: 'available' | 'in-use' | 'reserved' | 'maintenance';
-  passengers: number | null;
+export function useVehicles() {
+  const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // --- AQUI ESTÁ A CORREÇÃO ---
+        // Removemos o "/api" daqui, pois ele já está na variável API_URL
+        const response = await fetch(`${API_URL}/frotas/vehicles`, { 
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro na rede: ${response.statusText}`);
+        }
+        
+        const data: Vehicle[] = await response.json();
+        setVehicles(data);
+
+      } catch (err: any) {
+        setError(err.message || 'Falha ao buscar veículos.');
+        console.error("Erro ao buscar veículos:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
+
+  return { vehicles, isLoading, error };
 }
-
-// Função para buscar todos os veículos da API
-export const getVehicles = async (): Promise<Vehicle[]> => {
-  const response = await fetch(`${API_URL}/frotas/vehicles/`, {
-    method: 'GET',
-    credentials: 'include', // Essencial para enviar o cookie de autenticação
-  });
-
-  if (!response.ok) {
-    // Se a resposta não for bem-sucedida, lança um erro
-    const errorData = await response.json();
-    throw new Error(errorData.detail || 'Falha ao buscar os veículos da frota.');
-  }
-
-  return response.json();
-};
-
-// Futuramente, adicionaremos aqui as funções para criar, agendar, devolver, etc.
