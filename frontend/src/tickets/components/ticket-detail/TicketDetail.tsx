@@ -2,10 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AnimatedPageWrapper from '../../../components/Animated/AnimatedPageWrapper';
 import * as TicketService from './TicketDetail.service';
+import Picker from "emoji-picker-react";
+//@ts-ignore
 import './TicketDetail.css';
+//@ts-ignore
 import './Forms.css';
 import { IUser } from '../../../components/AUTH/interfaces/user';
 import { useAuth } from '../../services/App.services';
+import { connectWebSocket, getWebSocket } from '../../../services/websocket';
 
 const TicketDetail: React.FC = () => {
   const { user, loadingUser, userError } = useAuth();
@@ -34,9 +38,47 @@ const TicketDetail: React.FC = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [showPicker, setShowPicker] = useState(false);
+
+  const onEmojiClick = (emojiData: any) => {
+    setNewMessageContent(prev => prev + emojiData.emoji);
+  };
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+
+  useEffect(() => { scrollToBottom(); }, [totalMsg]);
+  // ---------------- WebSocket ----------------
+  useEffect(() => {
+
+    if (!getWebSocket()) {
+      connectWebSocket();
+    }
+    const ws = getWebSocket();
+
+
+    if (!ws) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const eventData = JSON.parse(event.data);
+        const { type, message } = eventData;
+
+        if (type === 'ticket_message_page' && message.ticket_id === Number(ticketId)) {
+
+          setMessages(prev => [...prev, message]); // aqui deve adicionar à lista
+          setTotalMsg(prev => prev + 1);
+        }
+      } catch (err) {
+        console.error("Erro ao processar mensagem WS:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleMessage);
+    return () => ws.removeEventListener("message", handleMessage);
+  }, [ticketId]);
+
 
   // ---------------- Fetch ticket e mensagens ----------------
   useEffect(() => {
@@ -48,11 +90,11 @@ const TicketDetail: React.FC = () => {
         setTicket(data);
         setSelectedAssigneeId(data.assignee?.id?.toString() || '');
 
-        if (TicketService.canExchangeMessages(data.status)) {
+        // if (TicketService.canExchangeMessages(data.status)) {
           const msgs = await TicketService.fetchMessages(data.id);
           setMessages(msgs);
           setTotalMsg(msgs.length);
-        }
+        // }
 
         const users = await TicketService.fetchAssignableUsers();
         setAssignableUsers(users);
@@ -163,15 +205,19 @@ const TicketDetail: React.FC = () => {
   const isTicketClosed = TicketService.isTicketClosed(ticket.status);
   const enableMessageForm = TicketService.canExchangeMessages(ticket.status);
 
+
+
   return (
     <AnimatedPageWrapper>
       <div className="ticket-detail-container">
-        <button onClick={() => navigate('/dashboard/tickets')} className="btn-voltar">
+        <button onClick={() => navigate('/tickets/tickets')} className="btn-voltar">
           ← Voltar
         </button>
 
-        <h3>Chamado #{ticket.id} - {ticket.title}</h3>
+        <h3>Chamado #{ticket.id}</h3>
+        <h3>{ticket.title}</h3>
         <div className="detail-card">
+          <p><strong>Titulo:</strong> {ticket.title}</p>
           <p><strong>Status:</strong> <span className={`status-${ticket.status.toLowerCase()}`}>{ticket.status}</span></p>
           <p><strong>Prioridade:</strong> {ticket.priority}</p>
           <p><strong>Categoria:</strong> {TicketService.formatCategoryName(ticket.category)}</p>
@@ -184,7 +230,7 @@ const TicketDetail: React.FC = () => {
         </div>
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'aberto' && (
-          <div className="attend-ticket-action mt-20">
+          <div className="close-ticket-action">
             <button onClick={handleAttendTicket} disabled={attendingTicket}>
               {attendingTicket ? 'Atendendo...' : 'Atender Chamado'}
             </button>
@@ -208,31 +254,101 @@ const TicketDetail: React.FC = () => {
           </div>
         )}
 
+
+        <hr className="divider" />
+        <h4>Mensagens</h4>
+
+        <div className="messages-wrapper">
+          <div className="messages-section">
+            {messages.map(msg => (
+              <div
+                key={msg.id}
+                className={`message-row ${msg.sender_id === user.id ? "my-message" : "other-message"
+                  }`}
+              >
+                <div className="message-bubble">
+                  <div className="message-header">
+                    <strong>
+                      {msg.sender_id === user.id
+                        ? "Você"
+                        : TicketService.getUsernameFromEmail(msg.sender_email)}
+                    </strong>
+                  </div>
+                  <div className="message-content">{msg.content}</div>
+                  <span className="message-time">
+                    <span className="message-time">{new Date(msg.sent_at).toLocaleString()}</span>
+                    {/* {new Date(msg.sent_at).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })} */}
+                  </span>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {/* 
+            
+            IMPLEMENTAÇÃO DO PICKER DE EMOJI - COMENTADO POR ENQUANTO
+            FUNCIONAL
+            <form onSubmit={handleSendMessage} className="message-form">
+              <div className="textarea-wrapper">
+                <textarea
+                  value={newMessageContent}
+                  onChange={e => setNewMessageContent(e.target.value)}
+                  rows={4}
+                  placeholder="Digite sua mensagem..."
+                  disabled={sendingMessage}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPicker(prev => !prev)}
+                  style={{
+                    position: "absolute",
+                    right: "8px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "20px",
+                    zIndex: 5
+                  }}
+                >
+                  😊
+                </button>
+
+                {showPicker && (
+          <div style={{
+            position: "absolute",
+            bottom: "50px",
+            right: "0",
+            zIndex: 10
+          }}>
+            <Picker onEmojiClick={onEmojiClick} />
+          </div>
+        )}
+      </div>
+
+              <button className="send-msg" type="submit" disabled={sendingMessage}>
+                {sendingMessage ? "Enviando..." : "Enviar Mensagem"}
+              </button>
+            </form> */}
         {enableMessageForm && (
           <>
-            <hr className="divider" />
-            <h4>Mensagens</h4>
-            <div className="messages-section">
-              {messages.map(msg => (
-                <div key={msg.id} className={`message-item ${msg.sender_id === user.id ? 'my-message' : 'other-message'}`}>
-                  <strong>{msg.sender_id === user.id ? 'Você' : TicketService.getUsernameFromEmail(msg.sender_email)}</strong>
-                  : {msg.content}
-                  <span className="message-time">{new Date(msg.sent_at).toLocaleString()}</span>
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <form onSubmit={handleSendMessage} className="message-form mt-20">
+            <form onSubmit={handleSendMessage} className="message-form">
               <textarea value={newMessageContent} onChange={e => setNewMessageContent(e.target.value)} rows={4} placeholder="Digite sua mensagem..." disabled={sendingMessage} />
-              <button type="submit" disabled={sendingMessage}>{sendingMessage ? 'Enviando...' : 'Enviar Mensagem'}</button>
+              <button className="send-msg" type="submit" disabled={sendingMessage}>{sendingMessage ? 'Enviando...' : 'Enviar Mensagem'}</button>
             </form>
           </>
         )}
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'em progresso' && (
-          <div className="close-ticket-action mt-20">
-            <button onClick={() => setShowObsModal(true)}>Fechar Chamado</button>
+          <div className="close-ticket-action ">
+            <button className="button-danger" onClick={() => setShowObsModal(true)}>Fechar Chamado</button>
           </div>
         )}
 
@@ -242,8 +358,8 @@ const TicketDetail: React.FC = () => {
               <h2>Inserir Observação</h2>
               <textarea value={obsText} onChange={e => setObsText(e.target.value)} rows={5} placeholder="Digite sua observação..." />
               <div className="modal-actions">
-                <button onClick={() => setShowObsModal(false)}>Cancelar</button>
-                <button onClick={handleFinalizeClose} disabled={closingTicket}>Finalizar</button>
+                <button className='cancelar' onClick={() => setShowObsModal(false)}>Cancelar</button>
+                <button className='finalizar' onClick={handleFinalizeClose} disabled={closingTicket}>Finalizar</button>
               </div>
               {closeError && <p style={{ color: 'red' }}>{closeError}</p>}
             </div>
@@ -255,3 +371,5 @@ const TicketDetail: React.FC = () => {
 };
 
 export default TicketDetail;
+
+

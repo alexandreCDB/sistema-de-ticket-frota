@@ -1,3 +1,4 @@
+import json
 import os
 from dotenv import load_dotenv
 from fastapi import WebSocket
@@ -60,49 +61,22 @@ class ConnectionManager:
                 print(f"❌ Cliente {user_id} desconectado")
                 break
 
-    async def send_to_user(self, user_id: int, message: str):
+    async def send_to_user(self, user_id: int,type:str, message: str):
+        
         """Envia notificação só para o usuário específico"""
         if user_id in self.active_connections:
             for conn in self.active_connections[user_id]:
-                await conn.send_text(message)
+                print(f"Enviando mensagem para usuário {user_id}: {message}")
+                await conn.send_text(json.dumps(self.set_msg(type, message)))
 
-    async def broadcast(self, message: str):
+    async def broadcast(self, type:str, message: str):
         for conns in self.active_connections.values():
             for conn in conns:
-                await conn.send_text(message)
+                await conn.send_text(json.dumps(self.set_msg(type, message)))
+                
+    def set_msg(self, type:str, message: str):
+        return {
+                "type": type,
+                "message": message
+            }
 
-class ConnectionManagerx:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket, token: str):
-        """
-        Aceita conexão WebSocket apenas se o token JWT for válido
-        """
-        try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            user_email: str = payload.get("sub")
-            if user_email is None:
-                raise Exception("Usuário inválido")
-        except JWTError:
-            await websocket.close(code=1008)
-            return
-
-        await websocket.accept()
-        self.active_connections.append(websocket)
-        print(f"🔗 Novo cliente conectado: {user_email}")
-
-    def disconnect(self, websocket: WebSocket):
-        """
-        Remove cliente desconectado
-        """
-        if websocket in self.active_connections:
-            self.active_connections.remove(websocket)
-            print("❌ Cliente desconectado")
-
-    async def broadcast(self, message: str):
-        """
-        Envia mensagem para todos conectados
-        """
-        for connection in self.active_connections:
-            await connection.send_text(message)

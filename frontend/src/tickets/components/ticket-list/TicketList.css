@@ -88,3 +88,9 @@
     padding: 10px;
     border-radius: 10px;
 }
+
+.pagination-controls{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

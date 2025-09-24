@@ -40,6 +40,7 @@ def create_user_route(user: UserCreate, db: Session = Depends(get_db)):
 # Isso quebra o loop infinito de serialização.
 @router.get("/me/", response_model=UserRead, tags=["users"])
 async def read_users_me(current_user: UserRead = Depends(get_current_user)):
+    print("Current User:", current_user)  # para depuração
     return current_user
 
 # As outras rotas também são atualizadas para usar UserRead nas respostas

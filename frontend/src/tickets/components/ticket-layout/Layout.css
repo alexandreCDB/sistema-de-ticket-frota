@@ -16,30 +16,35 @@
   padding: 20px 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Garante alinhamento ao topo */
+  justify-content: flex-start;
+  /* Garante alinhamento ao topo */
   box-shadow: 2px 0 5px 070707;
   flex-shrink: 0;
   position: relative;
-    border-radius: 0 5px 5px 0px;
+  border-radius: 0 5px 5px 0px;
 }
 
 .sidebar-header {
   text-align: center;
-  padding: 10px 20px 10px 20px; /* Reduzido */
+  padding: 10px 20px 10px 20px;
+  /* Reduzido */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 10px; /* Reduzido */
+  margin-bottom: 10px;
+  /* Reduzido */
 }
 
 .sidebar-header h3 {
   margin: 0;
-  font-size: 1.4em; /* Reduzido */
+  font-size: 1.4em;
+  /* Reduzido */
   color: var(--color-background);
   font-weight: 600;
 }
 
 .sidebar-header p {
   margin: 2px 0;
-  font-size: 0.8em; /* Reduzido */
+  font-size: 0.8em;
+  /* Reduzido */
   color: hsl(210, 10%, 70%);
 }
 
@@ -88,8 +93,7 @@
 }
 
 .logout-button {
-  background-color: var(--color-destructive);
-  color: var(--color-destructive-foreground);
+  background-color: rgb(0, 123, 255);
   border: none;
   padding: 12px 20px;
   margin: 20px 10px;
@@ -101,13 +105,16 @@
   transition: background-color 0.3s ease;
   text-align: center;
   position: absolute;
-  bottom: 5px;
-  left: 10px;
+  bottom: -20px;
+  left: -10px;
+  width: 100%;
+  border-radius: 0 0px 5px 0px;
 }
 
 .logout-button:hover {
-  background-color: hsl(0, 84.2%, 50.2%);
+  background-color: rgb(0, 47, 255);
 }
+
 .main-content {
   width: 100%;
   flex-grow: 1;
@@ -115,7 +122,8 @@
   padding: 5px;
   overflow-y: auto;
   box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.03);
-  height: 100vh; /* ou min-height: 100vh */
+  height: 100vh;
+  /* ou min-height: 100vh */
 }
 
 
@@ -131,7 +139,7 @@
 .card-header {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
-  
+
 }
 
 .card-header .card-title {
@@ -256,7 +264,7 @@
   }
 
   .sidebar-header {
-    display: none; 
+    display: none;
   }
 
   .sidebar-nav {
@@ -265,7 +273,7 @@
 
   .sidebar-nav ul {
     display: flex;
-    flex-direction: row;     
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
     margin: 0;
@@ -280,7 +288,7 @@
 
   .sidebar-nav li a {
     display: flex;
-    flex-direction: column;   
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
@@ -295,7 +303,7 @@
   }
 
   .logout-button {
-    display: none; /* Esconde o botão de logout no mobile */
+    display: none;
+    /* Esconde o botão de logout no mobile */
   }
 }
-

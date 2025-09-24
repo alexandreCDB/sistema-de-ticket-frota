@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.544.0",

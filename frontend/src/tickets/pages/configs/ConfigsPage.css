@@ -1,7 +1,6 @@
-.main{
+.main {
 
-    display: flex
-;
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -25,7 +24,7 @@
     align-items: center !important;
     gap: 8px !important;
     flex-direction: column;
-    border-radius:  15px !important;
+    border-radius: 15px !important;
     min-width: 150px;
 }
 
@@ -33,3 +32,12 @@
     background-color: #a8aaaa !important;
 }
 
+/* .off-c{
+    display: none !important;
+}
+
+@media (max-width: 770px) {
+    .off-c{
+    display: flex !important;
+}
+} */

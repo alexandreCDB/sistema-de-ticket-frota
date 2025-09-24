@@ -60,10 +60,10 @@ export default function useAuthService() {
       }
       const data = await res.json();
       const token = data.access_token;
-
+      localStorage.setItem("token", token);
       // conecta no WebSocket usando o token
       connectWebSocket(token);
-      
+
       setMessage("Login bem-sucedido!");
       await fetchCurrentUser();
       navigate("/", { replace: true });
@@ -93,6 +93,41 @@ export default function useAuthService() {
     fetchCurrentUser();
   }, []);
 
+  // useAuthService.ts
+// ...
+
+const handleRegister = async (email: string, password: string, confirmPassword: string) => {
+  setMessage(null);
+  setError(null);
+
+  if (password !== confirmPassword) {
+    setError("As senhas não conferem");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/ticket/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.detail || "Erro ao registrar usuário");
+    }
+
+    setMessage("Usuário registrado com sucesso! Agora faça login.");
+  } catch (err: any) {
+    setError(err.message || "Erro no registro");
+  }
+};
+
   return {
     user,
     loadingUser,
@@ -101,6 +136,7 @@ export default function useAuthService() {
     error,
     handleLogin,
     handleLogout,
+    handleRegister,
     setMessage,
     setError,
   };

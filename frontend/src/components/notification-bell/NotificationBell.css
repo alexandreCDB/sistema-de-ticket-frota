@@ -1,7 +1,7 @@
 .bell-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 5px;
+  right: 25px;
   z-index: 1000;
 }
 

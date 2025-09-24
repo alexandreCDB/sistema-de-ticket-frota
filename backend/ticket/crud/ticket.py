@@ -1,17 +1,20 @@
 import asyncio
+import json
 import os
 import shutil
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_
 from fastapi import HTTPException, UploadFile
-from backend.ticket.events.notification import notify_ticket_created, notify_ticket_created_async
+from backend.ticket.events.notification import notify_ticket_created, notify_ticket_created_async, notify_ticket_wsb_async
 from backend.ticket.events.notification import notify_ticket_accept
 from backend.ticket.events.notification import notify_ticket_close
+from backend.ticket.models.notification import NotificationType
 from backend.ticket.models.ticket import Ticket, TicketStatus
 from backend.models.user import User
 from backend.ticket.schemas.ticket import TicketCreate, TicketUpdate
 from datetime import datetime
 from typing import Optional, List
+
 
 # --- Funções auxiliares para upload ---
 def _save_upload_file(upload_file: UploadFile) -> str:
@@ -206,26 +209,13 @@ def create_ticket(db: Session, ticket_data: TicketCreate, requester_id: int, att
         admins: List[User] = db.query(User).filter(User.is_admin == True, User.is_active == True).all()
         print(f"[quantidade de registro]: {len(admins)}")
 
-        # loop = asyncio.get_running_loop()
-        for admin in admins:
-            print(f"[User]: {admin.email}")
-            user_data = {c.name: getattr(admin, c.name) for c in admin.__table__.columns}
-            print(f"[User-FULL]: {user_data}")
+        # asyncio.create_task(notify_ticket_wsb_async(db_ticket, msg="Novo chamado criado. Tk:"+ str(db_ticket.id),notif_type= "ticket_created"))
+        for admin in admins:           
+            user_data = {c.name: getattr(admin, c.name) for c in admin.__table__.columns}            
             asyncio.create_task(notify_ticket_created_async(user_id=admin.id, ticket_id=db_ticket.id))
 
-            # loop.run_in_executor(
-            #     None,  # usa default ThreadPoolExecutor
-            #     notify_ticket_created_tasks,
-            #     db, admin.id, db_ticket.id
-            # )
-        # for admin in admins:
-        #     print(f"[User]: {admin.email}")
-        #     user_data = {c.name: getattr(admin, c.name) for c in admin.__table__.columns}
-        #     print(f"[User-FULL]: {user_data}")
-        #     asyncio.create_task(
-               
-        #         notify_ticket_created(db, user_id=admin.id, ticket_id=db_ticket.id)
-        #     )
+       
+        
     except Exception as e:
         print(f"[ERRO ao notificar admins]: {e}")
         pass

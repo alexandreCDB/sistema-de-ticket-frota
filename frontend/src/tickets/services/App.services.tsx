@@ -68,7 +68,7 @@ export function useAuth() {
       const res = await fetch(`${API_URL}/ticket/users/me/`, {
         credentials: 'include',
       });
-      console.log('res',res);
+      
       
       if (!res.ok) throw new Error('Não foi possível carregar usuário');
       const data = await res.json();

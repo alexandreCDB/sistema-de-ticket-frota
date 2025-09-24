@@ -172,11 +172,11 @@ const TicketList: React.FC<TicketListProps> = ({
             {totalTickets > limit && (
               <div className="pagination-controls">
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                  Anterior
+                  ⬅️ Anterior
                 </button>
                 <span>Página {currentPage} de {totalPages}</span>
                 <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-                  Próximo
+                  Próximo ➡️
                 </button>
               </div>
             )}

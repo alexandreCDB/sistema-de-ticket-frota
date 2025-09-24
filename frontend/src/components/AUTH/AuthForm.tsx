@@ -2,6 +2,7 @@ import { useState, FormEvent } from "react";
 //@ts-ignore
 import teste from "../../assets/logo.png";
 import useAuthService from "./AuthForm.service";
+//@ts-ignore
 import "./AuthForm.css";
 
 interface AuthFormProps {
@@ -14,18 +15,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { message, error, handleLogin, setMessage } = useAuthService();
+  const { message, error, handleLogin, handleRegister, setMessage } =
+    useAuthService();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isRegistering) {
-      // Aqui você pode implementar registro no backend futuramente
-      if (password !== confirmPassword) {
-        setMessage("As senhas não conferem");
-        return;
-      }
-      setMessage("Registro ainda não implementado");
+      await handleRegister(email, password, confirmPassword);
       return;
     }
 
@@ -37,6 +34,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
     <div className="container">
       <div className="auth-container">
         <img className="img-login" src={teste} alt="Logo" />
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email:</label>
@@ -84,7 +82,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
           {isRegistering ? "Já tem uma conta?" : "Não tem uma conta?"}
           <button
             type="button"
-            onClick={() => setIsRegistering(!isRegistering)}
+            onClick={() => {
+              setIsRegistering(!isRegistering);
+              setMessage(null); // limpa mensagens quando alterna
+            }}
             style={{
               background: "transparent",
               border: "none",
@@ -95,7 +96,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
             {isRegistering ? "Fazer Login" : "Registrar-se"}
           </button>
         </p>
-      </div></div>
+      </div>
+    </div>
   );
 };
 
