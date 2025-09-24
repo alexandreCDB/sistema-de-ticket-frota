@@ -1,8 +1,9 @@
-.modal-overlay {
-  position: fixed;       /* fixa no viewport */
-  inset: 0;              /* equivale a top:0; right:0; bottom:0; left:0 */
-  width: 100vw;          /* garante largura total da viewport */
-  height: 100vh;         /* garante altura total da viewport */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(24, 39, 75, 0.4);
   display: flex;
   align-items: center;
@@ -11,7 +12,6 @@
   backdrop-filter: blur(5px);
   padding: 1rem;
 }
-
 
 .modal-content {
   background-color: var(--frota-color-surface);
@@ -25,8 +25,6 @@
 
   display: grid;
   grid-template-rows: auto 1fr auto;
-      align-content: stretch;
-    justify-items: center;
 }
 
 @media (max-width: 768px) {
@@ -65,7 +63,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--frota-color-text-primary);
-  margin: 10px;
+  margin: 0;
 }
 
 .modal-subtitle {
@@ -79,7 +77,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: #ff0303;
+  background-color: #F1F5F9;
   border: none;
   width: 40px;
   height: 40px;
