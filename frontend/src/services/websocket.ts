@@ -7,9 +7,8 @@ let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 let token: string | null = null;
 
 
-export function connectWebSocket(newToken: string): WebSocket {
+export function connectWebSocket(newToken?: string): WebSocket {
   const tokenToUse = newToken || localStorage.getItem("token");
-  console.log('Token para WS:', tokenToUse);
   
   if (!tokenToUse) throw new Error("Token não encontrado para conectar WebSocket");
   if (ws && ws.readyState === WebSocket.OPEN) {

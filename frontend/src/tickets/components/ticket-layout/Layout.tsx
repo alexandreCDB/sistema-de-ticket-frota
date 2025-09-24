@@ -1,6 +1,7 @@
 // frontend/src/components/Layout.tsx
 import React, { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+//@ts-ignore
 import './Layout.css';
 import {
   FaTicketAlt,
@@ -37,19 +38,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
     return location.pathname === basePath;
   };
 
-  const isMyTicketsActive = () => {
-    return (
-      isNavLinkActive('/dashboard/tickets') &&
-      new URLSearchParams(location.search).get('tab')?.startsWith('my-')
-    );
-  };
 
-  const isAssignedTicketsActive = () => {
-    return (
-      isNavLinkActive('/dashboard/tickets') &&
-      !new URLSearchParams(location.search).get('tab')?.startsWith('my-')
-    );
-  };
 
   return (
     <AnimatedPageWrapper>
@@ -62,8 +51,8 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
               {user?.is_super_admin
                 ? 'Super Admin'
                 : user?.is_admin
-                ? 'Técnico/Admin'
-                : 'Usuário Padrão'}
+                  ? 'Técnico/Admin'
+                  : 'Usuário Padrão'}
             </p>
           </div>
 
@@ -137,9 +126,17 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
             </ul>
           </nav>
 
-          <button onClick={handleLogout} className="logout-button">
-            Sair
-          </button>
+          <NavLink
+            to="/"
+            end
+
+          >
+            <button
+              // onClick={handleLogout} 
+              className="logout-button">
+              VOLTAR
+            </button>
+          </NavLink>
         </aside>
 
         <div className="header-bar">

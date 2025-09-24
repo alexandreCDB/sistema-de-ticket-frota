@@ -209,7 +209,7 @@ def create_ticket(db: Session, ticket_data: TicketCreate, requester_id: int, att
         admins: List[User] = db.query(User).filter(User.is_admin == True, User.is_active == True).all()
         print(f"[quantidade de registro]: {len(admins)}")
 
-        asyncio.create_task(notify_ticket_wsb_async(db_ticket, msg="Novo chamado criado. Tk:"+ str(db_ticket.id),notif_type= "ticket_created"))
+        # asyncio.create_task(notify_ticket_wsb_async(db_ticket, msg="Novo chamado criado. Tk:"+ str(db_ticket.id),notif_type= "ticket_created"))
         for admin in admins:           
             user_data = {c.name: getattr(admin, c.name) for c in admin.__table__.columns}            
             asyncio.create_task(notify_ticket_created_async(user_id=admin.id, ticket_id=db_ticket.id))

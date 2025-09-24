@@ -1,11 +1,12 @@
 # backend/crud/message.py
+import asyncio
 from sqlalchemy.orm import Session
+from backend.ticket.events.notification import notify_message_sent
 from backend.ticket.models.message import Message
 from backend.ticket.models.ticket import Ticket # Para verificar se o ticket existe
 from backend.models.user import User
 from backend.ticket.schemas.message import MessageCreate
 from datetime import datetime
-from backend.ticket.events.notification import notify_message_sent
 
 # Obter uma mensagem pelo ID
 def get_message(db: Session, message_id: int):
@@ -55,8 +56,8 @@ def create_message(db: Session, message: MessageCreate):
     db.refresh(db_message)
 
    ######################################## Evento para criar msg - att wallace
-    notify_message_sent(db, user_id=db_message.sender_id, ticket_id=db_message.ticket_id)
-
+    notify_message_sent(db, user_id=db_message.sender_id, ticket_id=db_message.ticket_id, message_id=db_message.id)
+    # asyncio.create_task(notify_ticket_ws_message_async(user_id=db_message.,id_msg=note.id, ticket=note.ticket,notif_type="ticket_message_page",msg=note.message))
 
     return db_message
 

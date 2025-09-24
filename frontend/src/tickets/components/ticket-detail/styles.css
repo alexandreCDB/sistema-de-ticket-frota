@@ -1,0 +1,235 @@
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(24, 39, 75, 0.4) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000 !important;
+  backdrop-filter: blur(5px) !important;
+  padding: 1rem !important;
+}
+
+.modal-content {
+  background-color: rgb(240, 240, 240) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  width: min(90%, 500px) !important;
+  max-height: 95vh !important;
+  margin: auto !important;
+  animation: slide-down 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto !important;
+  align-content: stretch !important;
+  justify-items: center !important;
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 90% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    max-width: 100% !important;
+    border-radius: 12px !important;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-25px) !important;
+    opacity: 0 !important;
+  }
+  to {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+}
+h2{
+  margin: 10px;
+}
+.modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 1.5rem !important;
+  border-bottom: 1px solid var(--frota-color-border) !important;
+}
+
+.modal-title {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: var(--frota-color-text-primary) !important;
+  margin: 10px !important;
+}
+
+.modal-subtitle {
+  font-size: 1rem !important;
+  color: var(--frota-color-text-secondary) !important;
+  margin: 0.25rem 0 0 0 !important;
+  font-weight: 500 !important;
+}
+
+
+
+.cancelar{
+  background: rgba(255, 0, 0, 0.781) !important;
+  color: white !important;
+}
+.finalizar{
+  background: rgba(0, 128, 0, 0.781) !important;
+  color: white !important;
+} 
+
+.modal-close-button {
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  background-color: #ff0303 !important;
+  border: none !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--frota-color-text-secondary) !important;
+  cursor: pointer !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+  font-size: 1.25rem !important;
+}
+
+.modal-close-button:hover {
+  background-color: #E2E8F0 !important;
+}
+
+.modal-body {
+  padding: 1.5rem !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+}
+
+.form-group {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.form-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: var(--frota-color-text-secondary) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100% !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--frota-color-border) !important;
+  background-color: #F8FAFC !important;
+  font-size: 1rem !important;
+  font-family: 'Inter', sans-serif !important;
+  color: var(--frota-color-text-primary) !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+  box-sizing: border-box !important;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none !important;
+  border-color: var(--frota-color-primary-end) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important;
+}
+
+.form-textarea {
+  resize: vertical !important;
+  min-height: 90px !important;
+}
+
+.alert-box {
+  background-color: #FEFCE8 !important;
+  border: 1px solid #FDE047 !important;
+  color: #A16207 !important;
+  padding: 1rem !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;
+}
+.alert-box strong {
+  color: #854D0E !important;
+}
+
+.error-box {
+  background-color: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+  color: #B91C1C !important;
+  padding: 1rem !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  text-align: center !important;
+  font-weight: 500 !important;
+}
+
+.modal-footer {
+  padding: 1.5rem !important;
+  border-top: 1px solid var(--frota-color-border) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1rem !important;
+  background-color: var(--frota-color-surface) !important;
+}
+
+.modal-footer .btn {
+  width: 100% !important;
+  padding: 0.85rem 1rem !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-footer .btn-secondary {
+  background-color: var(--frota-color-surface) !important;
+  color: var(--frota-color-text-secondary) !important;
+  border: 1px solid var(--frota-color-border) !important;
+}
+.modal-footer .btn-secondary:hover:not(:disabled) {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(to right, var(--frota-color-primary-start), var(--frota-color-primary-end)) !important;
+  color: white !important;
+  border: 1px solid transparent !important;
+}
+.modal-footer .btn-primary:hover:not(:disabled) {
+  opacity: 0.9 !important;
+  box-shadow: 0 4px 15px -5px rgba(139, 92, 246, 0.4) !important;
+}
+
+.modal-footer .btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}

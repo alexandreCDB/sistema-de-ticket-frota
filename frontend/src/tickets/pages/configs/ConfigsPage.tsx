@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+//@ts-ignore
 import './ConfigsPage.css'
 //@ts-ignore
 import pass from '../../../assets/images/senha.png';
@@ -19,7 +20,7 @@ const ConfigsPage = () => {
 
     const handleLogout = async () => {
         try {
-            await fetch(`${API_URL}/ticket/auth/logout/`, {
+            await fetch(`${API_URL}/auth/logout/`, {
                 method: "POST",
                 credentials: "include", // envia o cookie HttpOnly
             });

@@ -1,3 +1,4 @@
+@import url(./styles.css);
 .ticket-detail-container {
     background-color: hsl(210, 20%, 100%);
     ;
@@ -92,91 +93,98 @@ h4 {
     padding-bottom: 5px;
 }
 
+
+.messages-wrapper {
+  border-radius: 20px;
+  overflow: hidden; /* garante que o scroll fique dentro */
+  background: #ece5dd;
+}
 .messages-section {
-    margin-bottom: 30px;
-    max-height: 400px;
-    min-height: 200px;
-    padding-right: 10px;
-    overflow-y: auto;
-    border: 1px solid transparent;
-    box-shadow: 0px 0px 2px rgb(160, 158, 158);
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: #ece5dd; /* fundo padrão do WhatsApp */
+  border-radius: 8px;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  border-radius: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #ece5dd;
+  min-height: 500px;
 }
 
-/* Scrollbar - Chrome, Edge, Safari */
+.message-row {
+  display: flex;
+  align-items: flex-end;
+}
+
+.message-row.my-message {
+  justify-content: flex-end;
+}
+
+.message-row.other-message {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+      min-width: 40%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Balão enviado (verde claro WhatsApp) */
+.my-message .message-bubble {
+  background: #dcf8c6;
+  border-bottom-right-radius: 0;
+}
+
+/* Balão recebido (branco WhatsApp) */
+.other-message .message-bubble {
+  background: #fff;
+  border-bottom-left-radius: 0;
+}
+
+/* Nome do remetente */
+.message-header {
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #075e54; /* verde escuro WhatsApp */
+}
+
+/* Hora da mensagem */
+.message-time {
+  font-size: 11px;
+  color: #666;
+  text-align: right;
+  margin-top: 2px;
+  display: block;
+}
+/* Scrollbar estilizado (Chrome, Edge, Safari) */
 .messages-section::-webkit-scrollbar {
-    width: 8px;
+  width: 6px;
 }
 
 .messages-section::-webkit-scrollbar-track {
-    background: transparent;
+  background: #ece5dd; /* fundo igual ao chat */
 }
 
 .messages-section::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+  background-color: #bbb;
+  border-radius: 10px;
+  border: 2px solid #ece5dd; /* espaço entre barra e fundo */
 }
 
 .messages-section::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.message-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    /* scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.15) transparent; */
-}
-
-.message-item {
-    position: relative;
-    background-color: var(--color-background);
-    padding: 15px;
-    border-radius: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--color-border);
-    max-width: 60%;
-    margin: 10px 0;
-}
-
-/* Mensagem do usuário (lado direito) */
-.message-item.my-message {
-    align-self: flex-end;
-    background-color: hsl(210, 20%, 95%);
-    border-color: hsl(210, 20%, 90%);
-}
-
-.message-item.my-message::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    right: 10px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid hsl(210, 20%, 95%);
-    /* mesma cor da bolha */
-    border-left: 10px solid transparent;
-}
-
-/* Mensagem do outro usuário (lado esquerdo) */
-.message-item.other-message {
-    align-self: flex-start;
-    background-color: #fff;
-}
-
-.message-item.other-message::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 10px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid #fff;
-    /* mesma cor da bolha */
-    border-right: 10px solid transparent;
+  background-color: #999;
 }
 
 .message-sender {
@@ -266,7 +274,21 @@ h4 {
     padding: 0 30px;
     margin-bottom: 50px;
 }
+.emoji-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
 
+.emoji-picker {
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
+  z-index: 10;
+}
 .button-danger {
     color: white !important;
     background-color: rgb(197, 30, 30) !important;
@@ -283,7 +305,12 @@ h4 {
 }
 
 .send-msg {
-    background: #77b3f387 !important;
+    background: rgb(0, 123, 255) !important;
+    color: white !important;
+}
+.send-msg:hover {
+    background: rgba(0, 123, 255, 0.671) !important;
+    color: white !important;
 }
 
 @media (max-width: 768px) {
@@ -306,16 +333,25 @@ h4 {
 }
 
 .btn-voltar {
-    background-color: #2563eb !important;
-    /* azul forte */
+    background-color: #1a73e8 !important; /* azul Google */
     color: #fff !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.75rem !important;
-    /* box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important; */
-    transition: all 0.2s ease-in-out !important;
+    padding: 0.5rem 1.2rem !important;
+    border-radius: 4px !important; /* leve arredondado, padrão Google */
+    border: none !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease !important;
 }
 
 .btn-voltar:hover {
-    background-color: #1d4ed8 !important;
-    transform: scale(1.05) !important;
+    background-color: #1669c1 !important; /* azul hover */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important; /* leve sombra ao passar */
+    transform: translateY(-1px) !important; /* leve “flutuação” */
+}
+
+.btn-voltar:active {
+    background-color: #145ab3 !important; /* azul ativo */
+    transform: translateY(1px) !important; /* efeito clique */
+    box-shadow: none !important;
 }
