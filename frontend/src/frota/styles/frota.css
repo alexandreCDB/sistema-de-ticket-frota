@@ -47,6 +47,7 @@
   margin: 0 auto;
   padding: 0 2rem;
 }
+
 /* Adicione este código ao final de src/frota/styles/frota.css */
 
 /*
@@ -68,4 +69,41 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+/* ===== RESPONSIVIDADE GLOBAL BÁSICA ===== */
+
+/* Ajustes para tablets */
+@media (max-width: 1024px) {
+  .frota-container {
+    padding: 0 1.5rem;
+    max-width: 100%;
+  }
+}
+
+/* Ajustes para mobile */
+@media (max-width: 768px) {
+  .frota-container {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .frota-container {
+    padding: 0 0.75rem;
+  }
+}
+
+/* Utilitários globais de responsividade */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }

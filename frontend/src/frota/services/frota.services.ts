@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Vehicle, Booking, BookingWithVehicle } from '../types';
+import { Vehicle, Booking, BookingWithVehicle, VehicleWithBookings } from '../types';
 
 // @ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
@@ -9,6 +9,14 @@ interface CheckoutData {
   purpose: string | null;
   observation: string | null;
   start_mileage: number | null;
+}
+
+interface ScheduleData {
+    vehicle_id: number;
+    start_time: string;
+    end_time: string;
+    purpose: string | null;
+    observation: string | null;
 }
 
 export async function checkoutVehicle(data: CheckoutData) {
@@ -116,6 +124,41 @@ export async function completeReturn(bookingId: number, data: { end_mileage: num
   }
 }
 
+export async function createSchedule(data: ScheduleData) {
+  const response = await fetch(`${API_URL}/frotas/bookings/schedule`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha ao agendar o veículo.');
+  }
+
+  return response.json();
+}
+
+export async function cancelBooking(bookingId: number) {
+    try {
+        const response = await fetch(`${API_URL}/frotas/bookings/${bookingId}/deny`, {
+            method: 'PATCH',
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Falha ao cancelar a reserva.');
+        }
+        return response.json();
+    } catch (error: any) {
+        console.error('Erro ao cancelar reserva:', error);
+        throw error;
+    }
+}
+
 export function useVehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -184,4 +227,52 @@ export function useMyBookings() {
   }, [fetchBookings]);
 
   return { bookings, isLoading, error, refetchBookings: fetchBookings };
+}
+
+export function useVehiclesWithBookings() {
+    const [vehicles, setVehicles] = useState<VehicleWithBookings[] | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const [vehiclesResponse, bookingsResponse] = await Promise.all([
+                fetch(`${API_URL}/frotas/vehicles`, { credentials: 'include' }),
+                fetch(`${API_URL}/frotas/bookings/`, { credentials: 'include' })
+            ]);
+
+            if (!vehiclesResponse.ok || !bookingsResponse.ok) {
+                throw new Error('Falha ao buscar dados da frota.');
+            }
+
+            const vehicles: Vehicle[] = await vehiclesResponse.json();
+            const bookings: Booking[] = await bookingsResponse.json();
+
+            const bookingsWithVehicles: BookingWithVehicle[] = await Promise.all(
+                bookings.map(async (booking) => {
+                    const vehicle = await getVehicle(booking.vehicle_id);
+                    return { ...booking, vehicle };
+                })
+            );
+
+            const vehiclesWithBookings = vehicles.map(v => ({
+                ...v,
+                bookings: bookingsWithVehicles.filter(b => b.vehicle_id === v.id)
+            }));
+
+            setVehicles(vehiclesWithBookings);
+        } catch (err: any) {
+            setError(err.message || 'Falha ao buscar dados.');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    return { vehicles, isLoading, error, refetchVehicles: fetchData };
 }

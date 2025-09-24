@@ -1,16 +1,19 @@
 import React from 'react';
 import './styles.css'; 
 import { Vehicle } from '../../types';
-import defaultVehicleImage from '../../../assets/onix.png'; // Verifique se este caminho está correto!
+import defaultVehicleImage from '../../../assets/onix.png';
 import { Users, GitBranch, MoreVertical } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
+  bookingStatus?: string;
   onRetirar?: (vehicle: Vehicle) => void;
-  onDevolver?: (vehicle: Vehicle) => void;
+  onDevolver?: () => void; // onDevolver não precisa mais do booking.id
+  onAgendar?: (vehicle: Vehicle) => void;
+  onCancelar?: () => void;
 }
 
-export function VehicleCard({ vehicle, onRetirar, onDevolver }: VehicleCardProps) {
+export function VehicleCard({ vehicle, bookingStatus, onRetirar, onDevolver, onAgendar, onCancelar }: VehicleCardProps) {
   
   const statusMap = {
     available: { text: 'Disponível', className: 'status-available' },
@@ -20,16 +23,17 @@ export function VehicleCard({ vehicle, onRetirar, onDevolver }: VehicleCardProps
   };
 
   const currentStatus = statusMap[vehicle.status] || { text: 'Desconhecido', className: 'status-unknown' };
-
   const imageUrl = vehicle.image_url || defaultVehicleImage;
 
   return (
     <div className="vehicle-card">
       <div className="vehicle-header">
         <h3 className="vehicle-name">{vehicle.name}</h3>
-        <span className={`vehicle-status-badge ${currentStatus.className}`}>
-          {currentStatus.text}
-        </span>
+        {vehicle.status && (
+            <span className={`vehicle-status-badge ${currentStatus.className}`}>
+              {currentStatus.text}
+            </span>
+        )}
       </div>
       
       <div className="vehicle-image-wrapper">
@@ -54,23 +58,28 @@ export function VehicleCard({ vehicle, onRetirar, onDevolver }: VehicleCardProps
       </div>
 
       <div className="vehicle-actions">
-        {vehicle.status === 'available' && onRetirar && (
-          <>
-            <button className="btn btn-primary" onClick={() => onRetirar(vehicle)}>
-              Retirar Veículo
-            </button>
-            <button className="btn btn-secondary">Agendar</button>
-          </>
+        {onRetirar && (
+          <button className="btn btn-primary" onClick={() => onRetirar(vehicle)}>
+            Retirar Veículo
+          </button>
         )}
-        {vehicle.status === 'in-use' && onDevolver && (
-            <button className="btn btn-success" onClick={() => onDevolver(vehicle)}>
-              Devolver Veículo
-            </button>
+        {onAgendar && (
+          <button className="btn btn-secondary" onClick={() => onAgendar(vehicle)}>Agendar</button>
         )}
-        {vehicle.status !== 'available' && vehicle.status !== 'in-use' && (
-           <button className="btn-disabled" disabled>
-             Indisponível
-           </button>
+        {onDevolver && (
+          <button className="btn btn-success" onClick={onDevolver}>
+            Devolver Veículo
+          </button>
+        )}
+        {onCancelar && (
+          <button className="btn btn-danger" onClick={onCancelar}>
+            Cancelar Reserva
+          </button>
+        )}
+        {!(onRetirar || onAgendar || onDevolver || onCancelar) && (
+            <button className="btn-disabled" disabled>
+              Indisponível
+            </button>
         )}
       </div>
     </div>

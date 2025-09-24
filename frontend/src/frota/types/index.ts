@@ -1,5 +1,3 @@
-// Este ficheiro define o "contrato" de dados para todo o módulo de frotas.
-
 export interface Vehicle {
   id: number;
   name: string;
@@ -10,14 +8,6 @@ export interface Vehicle {
   passengers: number | null;
   features: string | null;
   created_at: string;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  is_admin: boolean;
 }
 
 export interface Booking {
@@ -37,11 +27,12 @@ export interface Booking {
   handled_by: number | null;
 }
 
-// Novo tipo que garante que o objeto 'vehicle' e 'user' estão sempre presentes
-export interface BookingWithDetails extends Booking {
-  vehicle: Vehicle;
-
-}
+// O tipo que a página de Meus Veículos precisa
 export interface BookingWithVehicle extends Booking {
   vehicle: Vehicle;
+}
+
+// Tipo de veículo que inclui suas reservas
+export interface VehicleWithBookings extends Vehicle {
+  bookings: BookingWithVehicle[];
 }

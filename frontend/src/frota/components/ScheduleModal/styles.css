@@ -1,0 +1,282 @@
+/* src/frota/components/CheckoutModal/styles.css */
+
+/* ===== MODAL RESPONSIVO ===== */
+
+/* Container da modal - centralização perfeita */
+.modal {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-dialog {
+  width: auto;
+  max-width: 95vw;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-height: 90vh; /* Limite máximo de altura */
+}
+
+/* Responsividade da modal por tamanho de tela */
+@media (max-width: 480px) {
+  .modal {
+    padding: 15px;
+  }
+  
+  .modal-content {
+    max-width: 350px;
+    max-height: 85vh;
+  }
+}
+
+@media (max-width: 380px) {
+  .modal {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    max-width: 320px;
+    max-height: 80vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-content {
+    max-width: 450px;
+  }
+}
+
+/* Garantir centralização e animação suave */
+.modal.show .modal-dialog {
+  transform: none !important;
+}
+
+.modal.fade .modal-dialog {
+  transition: all 0.3s ease-out;
+  transform: translate(0, 0) scale(0.9);
+}
+
+.modal.show .modal-dialog {
+  transform: translate(0, 0) scale(1);
+}
+
+/* Conteúdo interno da modal - SEM BARRA DE ROLAGEM VISÍVEL */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto; /* Permite rolagem mas esconde a barra */
+  -webkit-overflow-scrolling: touch;
+  
+  /* Esconder barra de rolagem em todos os navegadores */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge */
+}
+
+/* Esconder barra no Webkit (Chrome, Safari) */
+.modal-body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  background: transparent;
+}
+
+@media (max-width: 480px) {
+  .modal-body {
+    padding: 1.25rem;
+  }
+}
+
+/* Header da modal com mais espaço inferior */
+.modal-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  border-bottom: none;
+  text-align: center;
+}
+
+/* Footer da modal com mais espaço */
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  border-top: 1px solid var(--frota-color-border);
+}
+
+@media (max-width: 480px) {
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+/* Ajustes para diferentes alturas de tela */
+@media (max-height: 700px) {
+  .modal-content {
+    max-height: 85vh;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-header {
+    padding: 1rem 1.5rem 0.25rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem;
+  }
+}
+
+@media (max-height: 600px) {
+  .modal {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    max-height: 80vh;
+  }
+  
+  .modal-body {
+    padding: 0.75rem;
+  }
+}
+
+/* ===== ESTILOS ESPECÍFICOS DO CALENDÁRIO ===== */
+
+/* Container do calendário */
+.calendar-wrapper {
+  padding: 0.5rem 0 1rem; /* Mais espaço inferior */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.react-datepicker {
+  width: 100%;
+  max-width: 280px;
+  font-family: 'Inter', sans-serif;
+  border: 1px solid var(--frota-color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+}
+
+/* Estilos do cabeçalho customizado */
+.react-datepicker-custom-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0.5rem;
+  align-items: center;
+}
+
+.react-datepicker-custom-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--frota-color-text-primary);
+}
+
+.react-datepicker-custom-header select {
+  border: 1px solid var(--frota-color-border);
+  border-radius: 8px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--frota-color-text-primary);
+  background-color: var(--frota-color-surface);
+}
+
+.react-datepicker__header {
+  background-color: var(--frota-color-surface);
+  border-bottom: none;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.react-datepicker__current-month, 
+.react-datepicker__day-name {
+  color: var(--frota-color-text-primary);
+  font-weight: 600;
+}
+
+.react-datepicker__day-name {
+  color: var(--frota-color-text-secondary);
+}
+
+.react-datepicker__day--selected, 
+.react-datepicker__day--in-selecting-range, 
+.react-datepicker__day--in-range {
+  background-color: var(--frota-color-primary-end);
+  color: white;
+  border-radius: 50%;
+}
+
+/* Estilo para os dias já reservados */
+.react-datepicker__day--highlighted-custom-1.booked-day {
+  background-color: var(--frota-color-status-reserved);
+  color: var(--frota-color-text-primary);
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.react-datepicker__day--disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.react-datepicker__day--disabled.booked-day {
+  background-color: var(--frota-color-status-reserved) !important;
+  color: var(--frota-color-text-primary) !important;
+  font-weight: 700;
+}
+
+/* ===== FORMULÁRIO DA MODAL ===== */
+.modal-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Mais espaço entre os campos */
+  padding-bottom: 0.5rem; /* Espaço extra no final */
+}
+
+.modal-form-fields input,
+.modal-form-fields select,
+.modal-form-fields textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Espaçamento extra para os últimos elementos */
+.modal-form-fields > *:last-child {
+  margin-bottom: 0; /* Remove margem extra do último elemento */
+}
+
+/* Garantir que o conteúdo não fique colado */
+.modal-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Se precisar de mais espaço no final, adicione esta classe */
+.modal-spacer {
+  height: 1rem;
+  content: "";
+}

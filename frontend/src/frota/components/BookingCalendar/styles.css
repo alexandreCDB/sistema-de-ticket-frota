@@ -1,0 +1,43 @@
+/* Estilos para o calendário */
+.react-datepicker {
+  border-color: var(--frota-color-border);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.react-datepicker__header {
+  background-color: var(--frota-color-primary-end);
+  border-bottom: none;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: #fff;
+}
+
+.react-datepicker__day-name {
+  font-weight: 600;
+}
+
+/* Estilo para os dias reservados */
+.react-datepicker__day--highlighted-custom-1.booked-day {
+  background-color: var(--frota-color-status-reserved); /* Amarelo */
+  color: var(--frota-color-text-primary);
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+/* Estilo para o popover com os detalhes */
+.tooltip {
+  position: absolute;
+  background-color: white;
+  border: 1px solid var(--frota-color-border);
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 10;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}

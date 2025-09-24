@@ -58,9 +58,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Retirar Veículo</h2>
-            <p className="modal-subtitle">{vehicle.name} • {vehicle.license_plate}</p>
+            
           </div>
-          <button onClick={onClose} className="modal-close-button"><X size={24} /></button>
+          
         </div>
         
         <form className="modal-body" onSubmit={handleSubmit}>
