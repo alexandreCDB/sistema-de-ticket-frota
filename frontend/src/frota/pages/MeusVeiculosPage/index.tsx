@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './styles.css';
-import { useMyBookings, completeReturn } from '../../services/frota.services';
+import { useMyBookings, completeReturn, cancelBooking } from '../../services/frota.services';
 import { FrotaHeader } from '../../components/Header';
 import { VehicleCard } from '../../components/VehicleCard';
 import { ReturnVehicleModal } from '../../components/ReturnVehicleModal';
@@ -38,6 +38,20 @@ export default function MeusVeiculosPage() {
     }
   };
 
+  const handleCancelBooking = async (bookingId: number) => {
+      const confirmCancel = window.confirm("Tem certeza que deseja cancelar esta reserva?");
+      if (!confirmCancel) return;
+
+      try {
+          await cancelBooking(bookingId);
+          alert("Reserva cancelada com sucesso!");
+          refetchBookings();
+      } catch (err) {
+          console.error('Erro ao cancelar reserva:', err);
+          alert('Erro ao cancelar reserva. Tente novamente.');
+      }
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return <div className="page-status">A carregar os seus veículos...</div>;
@@ -47,20 +61,22 @@ export default function MeusVeiculosPage() {
       return <div className="page-status error">{error}</div>;
     }
 
-    // CORREÇÃO: Filtra por status 'in-use' ou 'confirmed' para exibir o veículo
-    const activeBookings = bookings?.filter(b => b.status === 'in-use' || b.status === 'confirmed') || [];
+    const userBookings = bookings?.filter(b => b.status !== 'denied' && b.status !== 'completed') || [];
 
-    if (activeBookings.length === 0) {
-        return <p className="empty-message">Você não tem veículos retirados no momento.</p>;
+    if (userBookings.length === 0) {
+        return <p className="empty-message">Você não tem veículos agendados no momento.</p>;
     }
 
     return (
       <div className="vehicle-grid">
-          {activeBookings.map((booking) => (
+          {userBookings.map((booking) => (
               <VehicleCard 
                 key={booking.id} 
                 vehicle={booking.vehicle} 
-                onDevolver={() => handleOpenReturnModal(booking)} 
+                // Ação de devolução só aparece se a reserva estiver em uso
+                onDevolver={booking.status === 'in-use' ? () => handleOpenReturnModal(booking) : undefined}
+                // Ação de cancelar só aparece se a reserva NÃO estiver em uso
+                onCancelar={booking.status !== 'in-use' ? () => handleCancelBooking(booking.id) : undefined}
               />
           ))}
       </div>
