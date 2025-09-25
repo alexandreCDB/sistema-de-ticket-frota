@@ -1,0 +1,41 @@
+.tabs-container {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.tabs-header {
+  display: flex !important;
+  justify-content: flex-start !important;
+  border-bottom: 2px solid var(--frota-color-border) !important;
+  margin-bottom: 2rem !important;
+  overflow-x: auto !important;
+}
+
+.tab-button {
+  padding: 0.75rem 0.25rem !important;
+  margin-right: 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color:black;
+  background-color: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  border-bottom: 3px solid transparent !important;
+  margin-bottom: -2px !important;
+  transition: all 0.2s ease-in-out !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+
+.tab-button.active {
+  color: #000000 !important;
+  border-bottom-color: #ef4444 !important;
+  background-color: transparent !important;
+  border-radius: 0px !important;
+}
+
+.tab-content {
+  /* O conteúdo de cada aba será renderizado aqui */
+}

@@ -1,0 +1,183 @@
+/* --- ESTILOS DO NOVO CARD DE SOLICITAÇÃO --- */
+
+.request-item {
+  display: flex !important;
+  flex-wrap: wrap !important; /* Permite que os botões quebrem para a próxima linha em telas menores */
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem 1.5rem !important; /* Espaçamento entre as seções (info e botões) */
+  padding: 1.5rem !important;
+  border-radius: 12px !important;
+  background-color: var(--frota-color-surface, #ffffff) !important; /* Fallback branco */
+  border: 1px solid var(--frota-color-border, #e0e0e0) !important; /* Fallback cinza */
+  border-left-width: 6px !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.request-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Cores de fundo e borda baseadas no tipo */
+/* Ajustadas para combinar com as cores dos cards na imagem de referência */
+.request-item.checkout { 
+  border-left-color: #22c55e !important; /* Verde */
+  background-color: #f0fdf4 !important; /* Verde claro */
+}
+.request-item.schedule { 
+  border-left-color: #ef4444 !important; /* Vermelho */
+  background-color: #fef2f2 !important; /* Vermelho claro */
+}
+
+.card-content {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important; /* Permite que os blocos internos quebrem */
+  gap: 1.5rem 2.5rem !important; /* Espaçamento entre vehicle-info e request-details-grid */
+  flex-grow: 1 !important; /* Faz esta parte ocupar o espaço disponível */
+}
+
+.vehicle-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  flex-shrink: 0 !important; /* Impede o encolhimento */
+}
+
+.icon-wrapper {
+  background-color: #e0e7ff !important; /* Azul claro */
+  color: #4f46e5 !important; /* Azul escuro */
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.75rem !important;
+  flex-shrink: 0 !important;
+}
+
+.vehicle-details h4 {
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  color: var(--frota-color-text-primary, #333333) !important;
+}
+
+.vehicle-details p {
+  margin: 0.25rem 0 0 0 !important;
+  font-size: 0.9rem !important;
+  color: var(--frota-color-text-secondary, #666666) !important;
+}
+
+.request-details-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(180px, 1fr)) !important; /* 2 colunas, min 180px */
+  gap: 0.75rem 2.5rem !important; /* Espaçamento entre os itens da grade */
+  font-size: 0.9rem !important;
+  color: var(--frota-color-text-secondary, #666666) !important;
+  flex-grow: 1 !important; /* Permite que a grade ocupe o espaço */
+}
+
+.request-details-grid p {
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  white-space: nowrap !important; /* Impede que o texto quebre a linha */
+}
+
+/* Estilo para o texto forte dentro da grid, se houver */
+.request-details-grid p strong {
+    color: var(--frota-color-text-primary, #333333) !important;
+    font-weight: 500 !important;
+}
+
+
+.item-actions {
+  display: flex !important;
+  gap: 1rem !important;
+  flex-shrink: 0 !important; /* Impede que os botões encolham */
+  margin-left: auto !important; /* Empurra os botões para a direita */
+}
+
+.item-actions button {
+  padding: 0.65rem 1.25rem !important;
+  border-radius: 8px !important;
+  border: none !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-approve {
+  background-color: #22c55e !important; /* Verde */
+  color: white !important;
+}
+.btn-approve:hover {
+  background-color: #16a34a !important; /* Verde escuro */
+}
+
+.btn-deny {
+  background-color: #ef4444 !important; /* Vermelho */
+  color: white !important;
+}
+.btn-deny:hover {
+  background-color: #dc2626 !important; /* Vermelho escuro */
+}
+
+
+/* --- RESPONSIVIDADE PARA O LAYOUT MOBILE --- */
+@media (max-width: 992px) {
+  .request-details-grid {
+    grid-template-columns: 1fr !important; /* Uma única coluna em telas médias */
+  }
+  .card-content {
+      gap: 1rem !important; /* Reduz o espaçamento */
+  }
+}
+
+@media (max-width: 768px) {
+  .request-item {
+    flex-direction: column !important;
+    align-items: stretch !important; /* Alinha os itens para ocupar a largura toda */
+    padding: 1rem !important;
+  }
+
+  .card-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+    width: 100% !important;
+  }
+
+  .request-details-grid {
+    width: 100% !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Volta para 2 colunas no mobile para economizar espaço vertical */
+    gap: 0.5rem 1rem !important;
+  }
+
+  .item-actions {
+    width: 100% !important;
+    margin-top: 1rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* Botões ocupam a largura toda */
+    margin-left: 0 !important; /* Centraliza ou alinha à esquerda conforme necessário */
+  }
+  .item-actions button {
+      width: 100% !important; /* Garante que os botões preencham o grid */
+  }
+}
+
+@media (max-width: 480px) {
+    .request-details-grid {
+      grid-template-columns: 1fr !important; /* Força 1 coluna em telas muito pequenas */
+  }
+}

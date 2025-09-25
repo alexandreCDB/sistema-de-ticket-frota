@@ -1,71 +1,54 @@
 import React from 'react';
-import { Booking, Vehicle } from '../../types';
-import { Car, Users, Calendar, Tag } from 'lucide-react';
-import defaultVehicleImage from '../../../assets/onix.png';
 import './styles.css';
+import { BookingWithVehicle } from '../../types';
+import defaultVehicleImage from '../../../assets/onix.png';
+import { Clock, User, Calendar, Tag, GitBranch } from 'lucide-react';
+import { format } from 'date-fns';
 
 interface BookingCardProps {
-  booking: Booking;
-  vehicle: Vehicle;
-  onApprove: (bookingId: number) => void;
-  onDeny: (bookingId: number) => void;
+  booking: BookingWithVehicle;
+  onApprove?: (bookingId: number) => void;
+  onDeny?: (bookingId: number) => void;
 }
 
-export function BookingCard({ booking, vehicle, onApprove, onDeny }: BookingCardProps) {
-  const imageUrl = vehicle.image_url || defaultVehicleImage;
+export const BookingCard: React.FC<BookingCardProps> = ({ booking, onApprove, onDeny }) => {
+  const imageUrl = booking.vehicle.image_url || defaultVehicleImage;
+
+  // Função para formatar a data
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'dd/MM/yyyy');
+    } catch {
+      return 'Data inválida';
+    }
+  };
 
   return (
     <div className="booking-card">
-      <div className="card-image-wrapper">
-        <img src={imageUrl} alt={vehicle.name} className="card-main-image" />
+      <div className="booking-card-image">
+        <img src={imageUrl} alt={booking.vehicle.name} />
       </div>
-
-      <div className="card-content">
-        <div className="card-header">
-          <h3 className="card-title">{vehicle.name}</h3>
-          <span className="booking-badge pending">Pendente</span>
+      <div className="booking-card-content">
+        <div className="booking-card-header">
+          <h3 className="booking-vehicle-name">{booking.vehicle.name}</h3>
+          <span className="booking-status-badge">{booking.status}</span>
         </div>
-        
-        <div className="booking-details-grid">
-          <div className="detail-item">
-            <Car size={16} />
-            <span className="detail-label">Placa:</span>
-            <span className="detail-value">{vehicle.license_plate}</span>
-          </div>
-          <div className="detail-item">
-            <Users size={16} />
-            <span className="detail-label">Solicitante:</span>
-            <span className="detail-value">{booking.user_id}</span>
-          </div>
-          <div className="detail-item">
-            <Tag size={16} />
-            <span className="detail-label">Tipo:</span>
-            <span className="detail-value">{booking.type === 'checkout' ? 'Retirada' : 'Agendamento'}</span>
-          </div>
-          {booking.start_time && (
-            <div className="detail-item">
-              <Calendar size={16} />
-              <span className="detail-label">Data:</span>
-              <span className="detail-value">{new Date(booking.start_time).toLocaleDateString()}</span>
-            </div>
-          )}
-          {booking.purpose && (
-            <div className="detail-item full-width">
-              <span className="detail-label">Motivo:</span>
-              <span className="detail-value">{booking.purpose}</span>
-            </div>
-          )}
+        <div className="booking-card-details">
+          <div className="detail-item"><GitBranch size={14} /> <strong>Placa:</strong> {booking.vehicle.license_plate}</div>
+          <div className="detail-item"><User size={14} /> <strong>Solicitante ID:</strong> {booking.user_id}</div>
+          <div className="detail-item"><Tag size={14} /> <strong>Tipo:</strong> {booking.type === 'checkout' ? 'Retirada' : 'Agendamento'}</div>
+          <div className="detail-item"><Calendar size={14} /> <strong>Data:</strong> {formatDate(booking.start_time)}</div>
         </div>
-        
-        <div className="card-actions">
-          <button className="btn btn-success" onClick={() => onApprove(booking.id)}>
-            Aprovar
-          </button>
-          <button className="btn btn-danger" onClick={() => onDeny(booking.id)}>
-            Negar
-          </button>
+        <div className="booking-card-purpose">
+          <p><strong>Motivo:</strong> {booking.purpose || 'Não informado'}</p>
         </div>
+        { (onApprove && onDeny) && (
+          <div className="booking-card-actions">
+            <button className="btn btn-success" onClick={() => onApprove(booking.id)}>Aprovar</button>
+            <button className="btn btn-danger" onClick={() => onDeny(booking.id)}>Negar</button>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};

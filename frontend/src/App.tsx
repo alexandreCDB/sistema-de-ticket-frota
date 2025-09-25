@@ -11,7 +11,7 @@ import TicketsPage from "./tickets/pages/ticket-page/TicketsPage";
 import TicketDetail from "./tickets/components/ticket-detail/TicketDetail";
 import ConfigsPage from "./tickets/pages/configs/ConfigsPage";
 import ManagerUser from "./tickets/pages/manager-user/manager-user";
-import FrotaAdminPage from '../../frontend/src/frota/components/FrotaAdminPage/index';
+import FrotaAdminPage from './frota/components/FrotaAdminPage/index';
 import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';

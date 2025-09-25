@@ -47,9 +47,9 @@ export const ReturnVehicleModal = ({
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Devolver Veículo</h2>
-            <p className="modal-subtitle">{booking.vehicle.name} • {booking.vehicle.license_plate}</p>
+            
           </div>
-          <button onClick={onClose} className="modal-close-button"><X size={24} /></button>
+          
         </div>
         
         <form className="modal-body" onSubmit={handleSubmit}>

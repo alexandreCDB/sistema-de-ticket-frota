@@ -61,26 +61,22 @@ export default function MeusVeiculosPage() {
       return <div className="page-status error">{error}</div>;
     }
 
-    // --- CORREÇÃO NA LÓGICA DE FILTRAGEM ---
-    // A linha abaixo foi alterada para mostrar apenas os status 'in-use' (em uso) e 'confirmed' (confirmado/aprovado).
-    // Isto irá excluir as reservas com status 'pending' (pendente).
-    const activeBookings = bookings?.filter(b => b.status === 'in-use' || b.status === 'confirmed') || [];
+    // O filtro correto: mostra apenas reservas APROVADAS ('confirmed') ou JÁ EM USO ('in-use')
+    const approvedBookings = bookings?.filter(b => b.status === 'in-use' || b.status === 'confirmed') || [];
 
-    if (activeBookings.length === 0) {
+    if (approvedBookings.length === 0) {
         return <p className="empty-message">Você não tem veículos retirados ou agendamentos confirmados no momento.</p>;
     }
 
     return (
         <div className="vehicle-grid">
-            {activeBookings.map((booking) => (
+            {approvedBookings.map((booking) => (
                 <VehicleCard 
                   key={booking.id} 
                   vehicle={booking.vehicle} 
-                  bookingStatus={booking.status}
-                  // Ação de devolução só aparece se a reserva estiver 'in-use'
-                  onDevolver={booking.status === 'in-use' ? () => handleOpenReturnModal(booking) : undefined}
-                  // Ação de cancelar só aparece se a reserva estiver 'confirmed' (mas ainda não em uso)
-                  onCancelar={booking.status === 'confirmed' ? () => handleCancelBooking(booking.id) : undefined}
+                  booking={booking} // Passa o objeto de reserva completo para o card
+                  onDevolver={() => handleOpenReturnModal(booking)}
+                  onCancelar={() => handleCancelBooking(booking.id)}
                 />
             ))}
         </div>
