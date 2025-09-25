@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, APIRouter, WebSocket, WebSocketDisconnect
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,6 +21,7 @@ from backend.frota.routers.vehicle import router as frota_vehicles_router
 from backend.frota.routers.booking import router as frota_bookings_router
 
 # 4. Import do Gerenciador de WebSocket
+from backend.websocket.service.settings import get_system_stats
 from backend.websocket.service.ws_instance import manager
 
 # --- LIFESPAN PARA STARTUP/SHUTDOWN ---
@@ -33,6 +35,19 @@ async def lifespan(app: FastAPI):
     yield
     print("Application shutdown event triggered.")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    broadcast_task = asyncio.create_task(broadcast_system_stats())
+    print("✅ Lifespan iniciado: broadcast ativo")
+    yield
+    broadcast_task.cancel()
+    try:
+        await broadcast_task
+    except asyncio.CancelledError:
+        print("✅ Lifespan finalizado: broadcast cancelado")
+        
+        
+        
 app = FastAPI(
     title="Sistema Integrado de Gestão",
     description="API para gerenciamento de tickets e frota de veículos.",
@@ -50,6 +65,8 @@ origins = [
     "http://192.168.56.1:5173",
     "http://192.168.13.136:5173",
     "http://192.168.13.136:8000",
+    "http://192.168.13.159:8000",
+    "http://192.168.13.159:5173",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -101,6 +118,14 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             await manager.broadcast(f"Echo: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+        
+async def broadcast_system_stats():
+    while True:
+        stats = get_system_stats()
+        # print("Broadcasting system stats:", stats)
+        stats["connections"] = sum(len(conns) for conns in manager.active_connections.values())
+        await manager.broadcast("system_stats", stats)
+        await asyncio.sleep(2)
         
 # --- MONTAGEM FINAL ---
 # Monta o router principal com o prefixo /api na aplicação

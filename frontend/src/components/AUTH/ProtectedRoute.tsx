@@ -18,6 +18,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!user) {
+    console.log("Usuário não autenticado, redirecionando para /login");
+    
     return <Navigate to="/login" replace />;
   }
 
