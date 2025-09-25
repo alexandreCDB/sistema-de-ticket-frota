@@ -1,7 +1,9 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
+//@ts-ignore
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays, getMonth, getYear } from 'date-fns';
+//@ts-ignore
 import './styles.css';
 import { Vehicle, Booking } from '../../types';
 import { X, Calendar as CalendarIcon, MessageSquare, Users } from 'lucide-react';

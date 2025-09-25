@@ -3,10 +3,11 @@
 //
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClipboardList, Truck } from 'lucide-react';
+import { ClipboardList, ShieldCheck, Truck, UserCog } from 'lucide-react';
 
 // --- MUDANÇA PRINCIPAL ---
 // Importa o arquivo de estilo que criamos.
+//@ts-ignore
 import './home.css';
 
 const Home = () => {
@@ -18,6 +19,10 @@ const Home = () => {
 
   const goToFrotas = () => {
     navigate('/frotas');
+  };
+
+    const goToMaster = () => {
+    navigate('/master');
   };
 
   return (
@@ -51,6 +56,17 @@ const Home = () => {
             Agende e gerencie a utilização dos veículos da empresa.
           </p>
         </div>
+
+        <div className="module-card" onClick={goToMaster}>
+          <div className="module-icon icon-master">
+            <ShieldCheck size={64} />
+          </div>
+          <h2>Administrador</h2>
+          <p>
+            Funções administrativas e de configuração do sistema.
+          </p>
+        </div>
+
 
       </div>
     </div>

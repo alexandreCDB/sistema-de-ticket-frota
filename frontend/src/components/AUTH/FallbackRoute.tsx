@@ -7,7 +7,7 @@ const FallbackRoute: React.FC = () => {
 
   if (loadingUser) return <p>Carregando...</p>;
 
-  if (user) return <Navigate to="/tickets/dashboard" replace />;
+  if (user) return <Navigate to="/" replace />;
 
   
   return <Navigate to="/login" replace />;

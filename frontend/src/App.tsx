@@ -15,6 +15,7 @@ import FrotaAdminPage from '../../frontend/src/frota/components/FrotaAdminPage/i
 import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
+import AdminDashboard from "./administrador/pages/main/AdminDashboard";
 
 function App() {
   const { user, loadingUser } = useAuth();
@@ -46,6 +47,18 @@ function App() {
           {user?.is_admin && (
             <Route path="admin" element={<ProtectedRoute><FrotaAdminPage /></ProtectedRoute>} />
           )}
+        </Route>
+
+
+         <Route path="/master/*" >
+          <Route index element={<AdminDashboard />} />
+          {/* <Route path="dashboard" element={<Dashboard />} />
+          <Route path="create-ticket" element={<CreateTicketForm/>} />
+          <Route path="tickets" element={<TicketsPage/>} />
+          <Route path="assigned" element={<TicketsPage/>} />
+          <Route path="manage-users" element={<ManagerUser/>} />
+          <Route path="settings" element={<ConfigsPage/>} />
+          <Route path="tickets/:ticketId" element={<TicketDetail/>} /> */}
         </Route>
 
         <Route path="*" element={<FallbackRoute />} />

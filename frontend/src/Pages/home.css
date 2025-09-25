@@ -94,6 +94,11 @@
   color: #22c55e; /* Verde */
 }
 
+.icon-master {
+  color: #ff009d; /* Verde */
+}
+
+
 
 /* Media query para telas maiores (desktops) */
 @media (min-width: 768px) {
