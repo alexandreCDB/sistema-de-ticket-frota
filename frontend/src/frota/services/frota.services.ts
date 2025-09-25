@@ -4,6 +4,8 @@ import { Vehicle, Booking, BookingWithVehicle, VehicleWithBookings } from '../ty
 // @ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
 
+// --- INTERFACES PARA PAYLOADS DE API ---
+
 interface CheckoutData {
   vehicle_id: number;
   purpose: string | null;
@@ -19,6 +21,20 @@ interface ScheduleData {
     observation: string | null;
 }
 
+// NOVA INTERFACE para o formulário de criação/edição de veículos
+interface VehicleFormData {
+  name: string;
+  model: string | null;
+  license_plate: string;
+  passengers: number | null;
+  // --- CAMPOS ADICIONADOS ---
+  image_url: string | null;
+  features: string | null;
+}
+
+
+// --- FUNÇÕES DE API ---
+
 export async function checkoutVehicle(data: CheckoutData) {
   const response = await fetch(`${API_URL}/frotas/bookings/checkout`, {
     method: 'POST',
@@ -33,7 +49,6 @@ export async function checkoutVehicle(data: CheckoutData) {
     const errorData = await response.json();
     throw new Error(errorData.detail || 'Falha ao retirar o veículo.');
   }
-
   return response.json();
 }
 
@@ -159,6 +174,72 @@ export async function cancelBooking(bookingId: number) {
     }
 }
 
+// --- NOVAS FUNÇÕES PARA GESTÃO DE VEÍCULOS ---
+
+/**
+ * Cria um novo veículo.
+ */
+// Em src/frota/services/frota.service.ts
+
+export async function createVehicle(data: VehicleFormData) {
+  const response = await fetch(`${API_URL}/frotas/vehicles/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+
+  const responseData = await response.json();
+
+  if (!response.ok) {
+    // Agora, em vez de atirar apenas 'detail', atiramos o objeto de erro completo
+    throw responseData; 
+  }
+
+  return responseData;
+}
+
+/**
+ * ATENÇÃO: A função abaixo é um placeholder.
+ * O seu backend ainda não tem um endpoint para editar veículos.
+ */
+export async function updateVehicle(id: number, data: VehicleFormData) {
+  console.warn("Endpoint de EDIÇÃO ainda não implementado no backend.");
+  // Exemplo de como seria a chamada:
+  // const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+  //   method: 'PUT', // ou 'PATCH'
+  //   headers: { 'Content-Type': 'application/json' },
+  //   credentials: 'include',
+  //   body: JSON.stringify(data),
+  // });
+  // if (!response.ok) throw new Error('Falha ao atualizar o veículo.');
+  // return response.json();
+  
+  // Simula uma resposta bem-sucedida para fins de teste
+  return Promise.resolve({ ...data, id });
+}
+
+/**
+ * ATENÇÃO: A função abaixo é um placeholder.
+ * O seu backend ainda não tem um endpoint para remover veículos.
+ */
+export async function deleteVehicle(id: number) {
+  console.warn("Endpoint de REMOÇÃO ainda não implementado no backend.");
+  // Exemplo de como seria a chamada:
+  // const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+  //   method: 'DELETE',
+  //   credentials: 'include',
+  // });
+  // if (!response.ok) throw new Error('Falha ao remover o veículo.');
+  // return response.ok;
+
+  // Simula uma resposta bem-sucedida para fins de teste
+  return Promise.resolve(true);
+}
+
+
+// --- HOOKS CUSTOMIZADOS ---
+
 export function useVehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -247,20 +328,15 @@ export function useVehiclesWithBookings() {
                 throw new Error('Falha ao buscar dados da frota.');
             }
 
-            const vehicles: Vehicle[] = await vehiclesResponse.json();
-            const bookings: Booking[] = await bookingsResponse.json();
+            const vehiclesData: Vehicle[] = await vehiclesResponse.json();
+            const bookingsData: Booking[] = await bookingsResponse.json();
 
-            const bookingsWithVehicles: BookingWithVehicle[] = await Promise.all(
-                bookings.map(async (booking) => {
-                    const vehicle = await getVehicle(booking.vehicle_id);
-                    return { ...booking, vehicle };
-                })
-            );
-
-            const vehiclesWithBookings = vehicles.map(v => ({
-                ...v,
-                bookings: bookingsWithVehicles.filter(b => b.vehicle_id === v.id)
-            }));
+            const vehiclesWithBookings = vehiclesData.map(vehicle => {
+                const vehicleBookings = bookingsData
+                    .filter(b => b.vehicle_id === vehicle.id)
+                    .map(b => ({ ...b, vehicle })); // Adiciona o detalhe do veículo a cada reserva
+                return { ...vehicle, bookings: vehicleBookings };
+            });
 
             setVehicles(vehiclesWithBookings);
         } catch (err: any) {

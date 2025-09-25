@@ -2,7 +2,10 @@ import React from 'react';
 import { FrotaHeader } from '../Header'; 
 import { Tabs } from '../Tabs';
 import { PendingRequests } from './PendingRequests';
-import { FleetStatus } from './FleetStatus'; // Importa o novo componente
+import { FleetStatus } from './FleetStatus';
+import { History } from './History';
+// --- MUDANÇA 1: Importar o novo componente de Gestão de Veículos ---
+import { VehicleManagement } from './VehicleManagement';
 import './styles.css'; 
 
 export default function FrotaAdminPage() { 
@@ -14,15 +17,16 @@ export default function FrotaAdminPage() {
     },
     {
       label: 'Status da Frota',
-      content: <FleetStatus /> // <<< AQUI ESTÁ A MUDANÇA
+      content: <FleetStatus />
     },
     {
       label: 'Histórico',
-      content: <div className="empty-message">Em breve...</div>
+      content: <History />
     },
     {
       label: 'Gestão de Veículos',
-      content: <div className="empty-message">Em breve...</div>
+      // --- MUDANÇA 2: Substituir o "Em breve..." pelo componente funcional ---
+      content: <VehicleManagement />
     }
   ];
 

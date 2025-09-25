@@ -1,0 +1,47 @@
+.vehicle-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--frota-color-surface);
+  border: 1px solid var(--frota-color-border);
+  border-radius: 10px;
+}
+.item-icon-wrapper {
+  background-color: #f1f5f9;
+  color: var(--frota-color-text-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-info-main h4 { margin: 0; font-size: 1.1rem; }
+.item-info-main p { margin: 0.15rem 0 0 0; font-size: 0.9rem; color: var(--frota-color-text-secondary); }
+.item-info-secondary p { margin: 0; font-size: 0.9rem; }
+.item-info-secondary strong { color: var(--frota-color-text-primary); font-weight: 500; }
+.status-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-pill.status-available { background-color: #DCFCE7; color: #166534; }
+.status-pill.status-in-use { background-color: #FEF3C7; color: #92400E; }
+.status-pill.status-reserved { background-color: #EEF2FF; color: #4338CA; }
+.status-pill.status-maintenance { background-color: #FEE2E2; color: #991B1B; }
+.item-list-actions { display: flex; gap: 0.5rem; }
+.btn-icon {
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--frota-color-text-secondary);
+  display: flex;
+}
+.btn-icon:hover { background-color: #f1f5f9; }
+.btn-icon-danger:hover { background-color: #FEF2F2; color: #991B1B; }

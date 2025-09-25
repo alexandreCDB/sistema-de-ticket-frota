@@ -85,3 +85,82 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Adicionar ao final de src/frota/styles/frota.css */
+
+/* Importação obrigatória para o estilo do calendário */
+@import "react-datepicker/dist/react-datepicker.css";
+
+/* Container para os filtros na página de histórico */
+.history-filters {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--frota-color-surface);
+  border: 1px solid var(--frota-color-border);
+  border-radius: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--frota-color-text-secondary);
+}
+
+/* Estilo para os campos de data */
+.date-picker-input {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--frota-color-border);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  width: 150px; /* Largura fixa para os campos de data */
+}
+
+/* Estilo para o botão de limpar */
+.clear-filter-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--frota-color-border);
+  background-color: var(--frota-color-surface);
+  color: var(--frota-color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: auto; /* Alinha o botão com os campos */
+}
+
+.clear-filter-button:hover {
+  background-color: #f8fafc;
+}
+
+/* Pequenos ajustes no calendário para combinar com o design */
+.react-datepicker {
+  font-family: 'Inter', sans-serif !important;
+  border-radius: 12px !important;
+  border-color: var(--frota-color-border) !important;
+}
+
+.react-datepicker__header {
+  background-color: #f8fafc !important;
+}
+
+.react-datepicker__current-month {
+    font-weight: 600 !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: var(--frota-color-primary-end) !important;
+  border-radius: 50% !important;
+}

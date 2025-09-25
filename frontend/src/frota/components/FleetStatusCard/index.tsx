@@ -17,7 +17,7 @@ export const FleetStatusCard: React.FC<FleetStatusCardProps> = ({ booking }) => 
     'maintenance': { text: 'Manutenção', className: 'status-maintenance' },
   };
 
-  const currentStatus = statusMap[booking.status] || { text: booking.status, className: 'status-default' };
+  const currentStatus = statusMap[vehicle.status] || { text: vehicle.status, className: 'status-default' };
 
   return (
     <div className="status-card-wrapper">
@@ -30,7 +30,7 @@ export const FleetStatusCard: React.FC<FleetStatusCardProps> = ({ booking }) => 
         </div>
       </div>
       <div className="status-card-body">
-        <h4>{vehicle.name}</h4>
+        <h4>{vehicle.name} {vehicle.year}</h4>
         <p className="vehicle-plate">{vehicle.license_plate}</p>
         
         <div className="driver-info">
