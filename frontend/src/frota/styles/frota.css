@@ -1,23 +1,16 @@
 /* src/frota/styles/frota.css */
 
-/* Importando uma fonte moderna do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Estas variáveis de cores e fontes ficarão disponíveis para todos os 
-  componentes do módulo Frota, pois este arquivo será importado 
-  pela nossa página principal.
-*/
 :root {
-  /* Paleta de Cores do Design */
-  --frota-color-primary-start: #F97316; /* Laranja */
-  --frota-color-primary-end: #8B5CF6;   /* Roxo */
-  --frota-color-background: #F8FAFC;    /* Fundo da página (cinza bem claro) */
-  --frota-color-surface: #FFFFFF;      /* Fundo dos cards */
-  --frota-color-text-primary: #1E293B;  /* Texto principal (cinza escuro) */
-  --frota-color-text-secondary: #64748B;/* Texto secundário (cinza médio) */
-  --frota-color-border: #E2E8F0;       /* Bordas */
+  --frota-color-primary-start: #F97316;
+  --frota-color-primary-end: #8B5CF6;
+  --frota-color-background: #F8FAFC;
+  --frota-color-surface: #FFFFFF;
+  --frota-color-text-primary: #1E293B;
+  --frota-color-text-secondary: #64748B;
+  --frota-color-border: #E2E8F0;
 
-  /* Cores de Status */
   --frota-color-status-available-bg: #F0FDF4;
   --frota-color-status-available-icon-bg: #22C55E;
   --frota-color-status-available-text: #166534;
@@ -35,7 +28,6 @@
   --frota-color-status-maintenance-text: #B91C1C;
 }
 
-/* Estilos de base para o módulo frota */
 .frota-module {
   font-family: 'Inter', sans-serif;
   background-color: var(--frota-color-background);
@@ -48,32 +40,20 @@
   padding: 0 2rem;
 }
 
-/* Adicione este código ao final de src/frota/styles/frota.css */
-
-/*
-  Este seletor garante que o container principal da nossa aplicação
-  ocupe 100% da altura da tela, preenchendo todo o espaço.
-*/
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--frota-color-background); /* Garante o fundo branco */
+  background-color: var(--frota-color-background);
 }
 
-/*
-  A classe 'frota-module' também deve ocupar toda a altura disponível
-  para que o fundo branco se aplique em todo o módulo.
-*/
 .frota-module {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* ===== RESPONSIVIDADE GLOBAL BÁSICA ===== */
-
-/* Ajustes para tablets */
+/* Responsividade Global */
 @media (max-width: 1024px) {
   .frota-container {
     padding: 0 1.5rem;
@@ -81,7 +61,6 @@
   }
 }
 
-/* Ajustes para mobile */
 @media (max-width: 768px) {
   .frota-container {
     padding: 0 1rem;
@@ -94,7 +73,6 @@
   }
 }
 
-/* Utilitários globais de responsividade */
 img {
   max-width: 100%;
   height: auto;

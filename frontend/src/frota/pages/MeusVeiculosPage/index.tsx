@@ -61,25 +61,29 @@ export default function MeusVeiculosPage() {
       return <div className="page-status error">{error}</div>;
     }
 
-    const userBookings = bookings?.filter(b => b.status !== 'denied' && b.status !== 'completed') || [];
+    // --- CORREÇÃO NA LÓGICA DE FILTRAGEM ---
+    // A linha abaixo foi alterada para mostrar apenas os status 'in-use' (em uso) e 'confirmed' (confirmado/aprovado).
+    // Isto irá excluir as reservas com status 'pending' (pendente).
+    const activeBookings = bookings?.filter(b => b.status === 'in-use' || b.status === 'confirmed') || [];
 
-    if (userBookings.length === 0) {
-        return <p className="empty-message">Você não tem veículos agendados no momento.</p>;
+    if (activeBookings.length === 0) {
+        return <p className="empty-message">Você não tem veículos retirados ou agendamentos confirmados no momento.</p>;
     }
 
     return (
-      <div className="vehicle-grid">
-          {userBookings.map((booking) => (
-              <VehicleCard 
-                key={booking.id} 
-                vehicle={booking.vehicle} 
-                // Ação de devolução só aparece se a reserva estiver em uso
-                onDevolver={booking.status === 'in-use' ? () => handleOpenReturnModal(booking) : undefined}
-                // Ação de cancelar só aparece se a reserva NÃO estiver em uso
-                onCancelar={booking.status !== 'in-use' ? () => handleCancelBooking(booking.id) : undefined}
-              />
-          ))}
-      </div>
+        <div className="vehicle-grid">
+            {activeBookings.map((booking) => (
+                <VehicleCard 
+                  key={booking.id} 
+                  vehicle={booking.vehicle} 
+                  bookingStatus={booking.status}
+                  // Ação de devolução só aparece se a reserva estiver 'in-use'
+                  onDevolver={booking.status === 'in-use' ? () => handleOpenReturnModal(booking) : undefined}
+                  // Ação de cancelar só aparece se a reserva estiver 'confirmed' (mas ainda não em uso)
+                  onCancelar={booking.status === 'confirmed' ? () => handleCancelBooking(booking.id) : undefined}
+                />
+            ))}
+        </div>
     );
   };
 
@@ -89,7 +93,7 @@ export default function MeusVeiculosPage() {
       <main className="frota-container page-layout">
         <section>
           <h2 className="section-title">Meus Veículos</h2>
-          <p className="section-subtitle">Veículos que estão atualmente sob sua responsabilidade</p>
+          <p className="section-subtitle">Veículos que estão atualmente sob sua responsabilidade ou agendados</p>
           {renderContent()}
         </section>
         <ReturnVehicleModal

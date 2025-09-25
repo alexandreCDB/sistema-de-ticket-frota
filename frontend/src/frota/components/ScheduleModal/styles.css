@@ -5,57 +5,64 @@
 /* Container da modal - centralização perfeita */
 .modal {
   display: flex !important;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  z-index: 1000 !important;
 }
 
 .modal-dialog {
-  width: auto;
-  max-width: 95vw;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: auto !important;
+  max-width: 95vw !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .modal-content {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  max-height: 90vh; /* Limite máximo de altura */
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 auto !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  background-color: white !important;
+  border: 1px solid #E2E8F0 !important;
+  position: relative !important;
 }
 
 /* Responsividade da modal por tamanho de tela */
 @media (max-width: 480px) {
   .modal {
-    padding: 15px;
+    padding: 15px !important;
   }
   
   .modal-content {
-    max-width: 350px;
-    max-height: 85vh;
+    max-width: 350px !important;
   }
 }
 
 @media (max-width: 380px) {
   .modal {
-    padding: 10px;
+    padding: 10px !important;
   }
   
   .modal-content {
-    max-width: 320px;
-    max-height: 80vh;
+    max-width: 320px !important;
   }
 }
 
 @media (min-width: 768px) {
   .modal-content {
-    max-width: 450px;
+    max-width: 450px !important;
   }
 }
 
@@ -65,98 +72,154 @@
 }
 
 .modal.fade .modal-dialog {
-  transition: all 0.3s ease-out;
-  transform: translate(0, 0) scale(0.9);
+  transition: all 0.3s ease-out !important;
+  transform: translate(0, 0) scale(0.9) !important;
 }
 
 .modal.show .modal-dialog {
-  transform: translate(0, 0) scale(1);
+  transform: translate(0, 0) scale(1) !important;
 }
 
-/* Conteúdo interno da modal - SEM BARRA DE ROLAGEM VISÍVEL */
+/* Conteúdo interno da modal */
 .modal-body {
-  padding: 1.5rem;
-  overflow-y: auto; /* Permite rolagem mas esconde a barra */
-  -webkit-overflow-scrolling: touch;
-  
-  /* Esconder barra de rolagem em todos os navegadores */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE e Edge */
+  padding: 1.5rem !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-/* Esconder barra no Webkit (Chrome, Safari) */
 .modal-body::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  background: transparent;
+  display: none !important;
+  width: 0 !important;
+  background: transparent !important;
 }
 
 @media (max-width: 480px) {
   .modal-body {
-    padding: 1.25rem;
+    padding: 1rem !important;
+    max-height: 65vh !important;
   }
 }
 
-/* Header da modal com mais espaço inferior */
+/* Header e Footer da modal */
 .modal-header {
-  padding: 1.5rem 1.5rem 0.5rem;
-  border-bottom: none;
-  text-align: center;
+  padding: 1.5rem 1.5rem 0.5rem !important;
+  border-bottom: none !important;
+  text-align: center !important;
+  position: relative !important;
 }
 
-/* Footer da modal com mais espaço */
+/* Botão de fechar vermelho */
+.modal-close-button {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border: none !important;
+  background: #dc2626 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1001 !important;
+  transition: all 0.2s !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.modal-close-button:hover {
+  background: #b91c1c !important;
+  transform: scale(1.1) !important;
+}
+
 .modal-footer {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 1.5rem;
-  border-top: 1px solid var(--frota-color-border);
+  display: flex !important;
+  gap: 1rem !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  padding: 1rem 1.5rem !important;
+  border-top: 1px solid #E2E8F0 !important;
+  background-color: white !important;
 }
 
 @media (max-width: 480px) {
   .modal-footer {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.25rem;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    padding: 1rem !important;
   }
   
   .modal-footer .btn {
-    width: 100%;
-    margin: 0;
+    width: 100% !important;
+    margin: 0 !important;
   }
+}
+
+/* Estilos dos botões */
+.modal-footer .btn {
+  width: 100% !important;
+  padding: 0.85rem 1rem !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #F8FAFC !important;
+  color: #64748B !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.modal-footer .btn-secondary:hover:not(:disabled) {
+  background-color: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(to right, #F97316, #8B5CF6) !important;
+  color: white !important;
+  border: 1px solid transparent !important;
+}
+
+.modal-footer .btn-primary:hover:not(:disabled) {
+  opacity: 0.9 !important;
+  box-shadow: 0 4px 15px -5px rgba(139, 92, 246, 0.4) !important;
+}
+
+.modal-footer .btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 
 /* Ajustes para diferentes alturas de tela */
 @media (max-height: 700px) {
-  .modal-content {
-    max-height: 85vh;
-  }
-  
   .modal-body {
-    padding: 1rem;
+    max-height: 60vh !important;
+    padding: 0 1rem 0.5rem !important;
   }
   
   .modal-header {
-    padding: 1rem 1.5rem 0.25rem;
-  }
-  
-  .modal-footer {
-    padding: 1rem;
+    padding: 1rem 1rem 0.5rem !important;
   }
 }
 
 @media (max-height: 600px) {
   .modal {
-    padding: 10px;
-  }
-  
-  .modal-content {
-    max-height: 80vh;
+    padding: 10px !important;
   }
   
   .modal-body {
-    padding: 0.75rem;
+    max-height: 55vh !important;
   }
 }
 
@@ -164,119 +227,137 @@
 
 /* Container do calendário */
 .calendar-wrapper {
-  padding: 0.5rem 0 1rem; /* Mais espaço inferior */
-  display: flex;
-  justify-content: center;
-  width: 100%;
+  padding: 1rem 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
 }
 
 .react-datepicker {
-  width: 100%;
-  max-width: 280px;
-  font-family: 'Inter', sans-serif;
-  border: 1px solid var(--frota-color-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem;
+  width: 100% !important;
+  max-width: 280px !important;
+  font-family: 'Inter', sans-serif !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.5rem !important;
+  background-color: white !important;
 }
 
 /* Estilos do cabeçalho customizado */
 .react-datepicker-custom-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 0.5rem;
-  align-items: center;
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 1rem 0.5rem !important;
+  align-items: center !important;
 }
 
 .react-datepicker-custom-header button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--frota-color-text-primary);
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 1.5rem !important;
+  color: #1E293B !important;
 }
 
 .react-datepicker-custom-header select {
-  border: 1px solid var(--frota-color-border);
-  border-radius: 8px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--frota-color-text-primary);
-  background-color: var(--frota-color-surface);
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: #1E293B !important;
+  background-color: white !important;
 }
 
 .react-datepicker__header {
-  background-color: var(--frota-color-surface);
-  border-bottom: none;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  background-color: white !important;
+  border-bottom: none !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 
 .react-datepicker__current-month, 
 .react-datepicker__day-name {
-  color: var(--frota-color-text-primary);
-  font-weight: 600;
+  color: #1E293B !important;
+  font-weight: 600 !important;
 }
 
 .react-datepicker__day-name {
-  color: var(--frota-color-text-secondary);
+  color: #64748B !important;
 }
 
 .react-datepicker__day--selected, 
 .react-datepicker__day--in-selecting-range, 
 .react-datepicker__day--in-range {
-  background-color: var(--frota-color-primary-end);
-  color: white;
-  border-radius: 50%;
+  background-color: #8B5CF6 !important;
+  color: white !important;
+  border-radius: 50% !important;
 }
 
 /* Estilo para os dias já reservados */
 .react-datepicker__day--highlighted-custom-1.booked-day {
-  background-color: var(--frota-color-status-reserved);
-  color: var(--frota-color-text-primary);
-  border-radius: 50%;
-  font-weight: 700;
+  background-color: #8B5CF6 !important;
+  color: #1E293B !important;
+  border-radius: 50% !important;
+  font-weight: 700 !important;
 }
 
 .react-datepicker__day--disabled {
-  color: #ccc;
-  cursor: not-allowed;
+  color: #ccc !important;
+  cursor: not-allowed !important;
 }
 
 .react-datepicker__day--disabled.booked-day {
-  background-color: var(--frota-color-status-reserved) !important;
-  color: var(--frota-color-text-primary) !important;
-  font-weight: 700;
+  background-color: #8B5CF6 !important;
+  color: #1E293B !important;
+  font-weight: 700 !important;
 }
 
 /* ===== FORMULÁRIO DA MODAL ===== */
 .modal-form-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* Mais espaço entre os campos */
-  padding-bottom: 0.5rem; /* Espaço extra no final */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
 }
 
 .modal-form-fields input,
 .modal-form-fields select,
 .modal-form-fields textarea {
-  width: 100%;
-  box-sizing: border-box;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 8px !important;
+  border: 1px solid #E2E8F0 !important;
+  background-color: #F8FAFC !important;
+  font-size: 1rem !important;
+  font-family: 'Inter', sans-serif !important;
+  color: #1E293B !important;
 }
 
-/* Espaçamento extra para os últimos elementos */
-.modal-form-fields > *:last-child {
-  margin-bottom: 0; /* Remove margem extra do último elemento */
+.modal-form-fields input::placeholder,
+.modal-form-fields textarea::placeholder {
+  color: #94A3B8 !important;
 }
 
-/* Garantir que o conteúdo não fique colado */
-.modal-content > *:last-child {
-  margin-bottom: 0;
+.modal-form-fields input:focus,
+.modal-form-fields textarea:focus {
+  outline: none !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important;
 }
 
-/* Se precisar de mais espaço no final, adicione esta classe */
-.modal-spacer {
-  height: 1rem;
-  content: "";
+/* Garantir que tudo fique dentro do card */
+.modal-content * {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+/* Forçar o modal a ficar por cima de tudo */
+.modal {
+  z-index: 9999 !important;
+}
+
+.modal-content {
+  z-index: 10000 !important;
 }

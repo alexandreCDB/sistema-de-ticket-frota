@@ -1,0 +1,60 @@
+/* src/frota/components/SuccessToast/styles.css */
+
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  background-color: var(--frota-color-surface);
+  color: var(--frota-color-text-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--frota-color-border);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  
+  /* Animação de entrada */
+  animation: slide-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--frota-color-status-available-bg);
+  color: var(--frota-color-status-available-icon-bg);
+}
+
+.toast-message {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.toast-close-button {
+  background: none;
+  border: none;
+  color: var(--frota-color-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 1rem;
+}
