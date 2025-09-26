@@ -4,6 +4,8 @@ import teste from "../../assets/logo.png";
 import useAuthService from "./AuthForm.service";
 //@ts-ignore
 import "./AuthForm.css";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface AuthFormProps {
   onLoginSuccess?: () => void;
@@ -85,7 +87,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
 
         <p className="registrar">
           {isRegistering ? "Já tem uma conta?" : "Não tem uma conta?"}
-          <button
+          <button className="link-button"
             type="button"
             onClick={() => {
               setIsRegistering(!isRegistering);

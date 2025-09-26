@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthForm from "./components/AUTH/AuthForm";
 import ProtectedRoute from "./components/AUTH/ProtectedRoute";
 import PublicRoute from "./components/AUTH/PublicRoute";
@@ -16,19 +16,31 @@ import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
+import { Navigate } from "react-router-dom";
+import { JSX } from "react";
+
+// Wrapper para rotas de admin
+function AdminRoute({ children }: { children: JSX.Element }) {
+  const { user, loadingUser } = useAuth();
+
+  if (loadingUser) return <p>Carregando...</p>; // espera carregar o user
+
+  if (!user?.is_admin && !user?.is_super_admin) {
+    return <Navigate to="/" replace />; // não é admin → redireciona para home
+  }
+
+  return children;
+}
 
 function App() {
-  const { user, loadingUser } = useAuth();
+  const { loadingUser } = useAuth();
 
   if (loadingUser) {
     return <p>A carregar aplicação...</p>;
   }
 
   return (
-    <>
-      {/* Sino aparece em todas as rotas, menos no login */}
-      {location.pathname !== "/login" && <NotificationBell />}
-
+    <Router>
       <Routes>
         {/* Public */}
         <Route path="/login" element={<PublicRoute><AuthForm /></PublicRoute>} />
@@ -61,28 +73,18 @@ function App() {
           } />
         </Route>
 
+        {/* Painel Master/Admin */}
+        <Route path="/master/*" element={
+          <ProtectedRoute>
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          </ProtectedRoute>
+        } />
 
-         <Route path="/master/*" >
-          <Route index element={<AdminDashboard />} />
-          {/* <Route path="dashboard" element={<Dashboard />} />
-          <Route path="create-ticket" element={<CreateTicketForm/>} />
-          <Route path="tickets" element={<TicketsPage/>} />
-          <Route path="assigned" element={<TicketsPage/>} />
-          <Route path="manage-users" element={<ManagerUser/>} />
-          <Route path="settings" element={<ConfigsPage/>} />
-          <Route path="tickets/:ticketId" element={<TicketDetail/>} /> */}
-        </Route>
-
+        {/* Catch-all */}
         <Route path="*" element={<FallbackRoute />} />
       </Routes>
-    </>
-  );
-}
-
-export default function App() {
-  return (
-    <Router>
-      <AppContent />
     </Router>
   );
 }

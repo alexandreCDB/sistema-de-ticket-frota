@@ -21,27 +21,27 @@ const Home = () => {
     navigate('/frotas');
   };
 
-    const goToMaster = () => {
+  const goToMaster = () => {
     navigate('/master');
   };
 
   return (
     <div className="home-container">
-      
+
       <div className="home-header">
         <h1>Bem-vindo ao Sistema Integrado</h1>
         <p>Por favor, selecione o módulo que deseja acessar.</p>
       </div>
 
       <div className="modules-container">
-        
+
         {/* Card do Sistema de Tickets */}
         <div className="module-card" onClick={goToTickets}>
           <div className="module-icon icon-tickets">
             <ClipboardList size={64} />
           </div>
-          <h2>Sistema de Tickets</h2>
-          <p>
+          <h2 className='title0'>Sistema de Tickets</h2>
+          <p className='description'>
             Gerencie chamados, acompanhe solicitações e suporte técnico.
           </p>
         </div>
@@ -51,8 +51,8 @@ const Home = () => {
           <div className="module-icon icon-frotas">
             <Truck size={64} />
           </div>
-          <h2>Controle de Frota</h2>
-          <p>
+          <h2 className='title0'>Controle de Frota</h2>
+          <p className='description'>
             Agende e gerencie a utilização dos veículos da empresa.
           </p>
         </div>
@@ -61,8 +61,8 @@ const Home = () => {
           <div className="module-icon icon-master">
             <ShieldCheck size={64} />
           </div>
-          <h2>Administrador</h2>
-          <p>
+          <h2 className='title0'>Administrador</h2>
+          <p className='description'>
             Funções administrativas e de configuração do sistema.
           </p>
         </div>

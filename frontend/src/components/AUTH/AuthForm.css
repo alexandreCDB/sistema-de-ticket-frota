@@ -1,11 +1,26 @@
 .container {
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    background-image: url("../../assets/back.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* cobre toda a tela */
+    background: rgba(0, 0, 0, 0.4);
+    /* camada escura */
+    z-index: 0;
 }
 
 .auth-container {
@@ -13,8 +28,8 @@
     /* Ocupa 90% da largura disponível */
     max-width: 400px;
     /* Mas não mais que 400px em telas grandes */
-    background: transparent;
-    box-shadow: 0 0px 4px rgb(251, 249, 252);
+    background: rgba(49, 49, 49, 0.521);
+    box-shadow: 0 0px 4px rgba(49, 49, 49, 0.521);
     color: white;
     border-radius: 40px;
     /* Bordas arredondadas como na imagem */
@@ -31,7 +46,7 @@
     /* Centraliza itens Robotonos */
     justify-content: center;
     /* Centraliza itens Robotonos */
-    height: 70%;
+    /* height: 70%; */
     gap: 30px;
 
 }
@@ -95,7 +110,8 @@ textarea:focus {
 }
 
 /* Estilos para botões (exceto logout e sidebar) */
-/* button:not(.logout-button):not(.sidebar-nav a) {
+.login-button,
+.link-button {
     appearance: none;
     background-color: #FAFBFC;
     border: 1px solid rgba(27, 31, 35, 0.15);
@@ -121,12 +137,13 @@ textarea:focus {
     word-wrap: break-word;
 }
 
-button:not(.logout-button):not(.sidebar-nav a):hover {
+.login-button,
+.link-button :hover {
     background-color: hsl(0, 1%, 36%);
     color: white;
-} */
+}
 
-.message-success {
+*/ .message-success {
     color: green;
     margin-top: 15px;
     font-size: 0.95em;
@@ -149,13 +166,18 @@ button:not(.logout-button):not(.sidebar-nav a):hover {
 
 .registrar {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+    ;
     /* Ajustado para um valor menor e responsivo */
 }
 
 .login-button {
-    width: 150px !important;
-    background-color: #f47e1a !important;
-    color: white !important;
+    width: 80%;
+    background-color: #f47e1a;
+    color: white;
     margin-top: 20px;
     margin-bottom: 25px;
 }
@@ -240,10 +262,9 @@ button:not(.logout-button):not(.sidebar-nav a):hover {
 @media (max-width: 768px) {
     .auth-container {
         width: 95%;
-        /* Ocupa mais largura em telas menores */
         padding: 15px;
         border-radius: 20px;
-        top: -65px;
+        /* top: -65px; */
     }
 
     .auth-container form {
@@ -272,11 +293,11 @@ button:not(.logout-button):not(.sidebar-nav a):hover {
     textarea {
         padding: 25px;
         font-size: 0.95em;
-        width: 90%;
+        /* width: 90%; */
     }
 
     .login-button {
-        width: 100px !important;
+        /* width: 100px !important; */
         /* Botão menor */
         padding: 10px;
         font-size: 1em;
@@ -290,7 +311,7 @@ button:not(.logout-button):not(.sidebar-nav a):hover {
 
     .logo,
     .img-login {
-        width: 150px;
+        /* width: 150px; */
         /* Logo e imagem de login menores */
     }
 
