@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AuthForm from "./components/AUTH/AuthForm";
 import ProtectedRoute from "./components/AUTH/ProtectedRoute";
 import PublicRoute from "./components/AUTH/PublicRoute";
@@ -16,6 +16,7 @@ import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
+import { JSX } from "react";
 
 // Wrapper para rotas de admin
 function AdminRoute({ children }: { children: JSX.Element }) {
