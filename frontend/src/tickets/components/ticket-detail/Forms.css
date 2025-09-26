@@ -8,6 +8,7 @@
   margin: 20px auto;
   text-align: left;
   box-shadow: 2px 5px 20px 0px #3939393d;
+
 }
 
 .form-container h3 {
@@ -18,7 +19,7 @@
 
 .form-group {
   margin-bottom: 20px;
-  
+
 }
 
 .form-group label {
@@ -31,33 +32,39 @@
 .form-group input[type="text"],
 .form-group textarea,
 .form-group select {
-  width: 100%; /* Ajusta para padding e borda */
+  width: 100%;
+  /* Ajusta para padding e borda */
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1em;
-  box-sizing: border-box; /* Garante que padding e borda não aumentem a largura */
+  box-sizing: border-box;
+  /* Garante que padding e borda não aumentem a largura */
   background-color: rgb(240, 240, 240);
   color: black;
 }
 
 .form-group textarea {
-  resize: vertical; /* Permite redimensionar verticalmente */
-  
+  resize: vertical;
+  /* Permite redimensionar verticalmente */
+
 }
 
 .form-group select {
-  appearance: none; /* Remove o estilo padrão do select */
+  appearance: none;
+  /* Remove o estilo padrão do select */
   -webkit-appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2C146.2L146.2%2C287c-4.6%2C4.6-12%2C4.6-16.6%2C0L5.4%2C146.2c-4.6-4.6-4.6-12%2C0-16.6l16.6-16.6%20124%2C124%20124-124%2016.6%2C16.6C291.6%2C134.2%2C291.6%2C141.6%2C287%2C146.2z%22%2F%3E%3C%2Fsvg%3E'); /* Ícone de seta */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2C146.2L146.2%2C287c-4.6%2C4.6-12%2C4.6-16.6%2C0L5.4%2C146.2c-4.6-4.6-4.6-12%2C0-16.6l16.6-16.6%20124%2C124%20124-124%2016.6%2C16.6C291.6%2C134.2%2C291.6%2C141.6%2C287%2C146.2z%22%2F%3E%3C%2Fsvg%3E');
+  /* Ícone de seta */
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 12px;
-  padding-right: 30px; /* Espaço para o ícone da seta */
+  padding-right: 30px;
+  /* Espaço para o ícone da seta */
 }
 
 .form-container button[type="submit"] {
-  background-color: #4dc468 !important; 
+  background-color: #4dc468 !important;
   color: white !important;
   padding: 12px 20px;
   border: none;
@@ -73,55 +80,55 @@
 }
 
 .file-upload-wrapper {
-display: inline-block;
-position: relative;
+  display: inline-block;
+  position: relative;
 }
 
 input[type="file"] {
-display: none;
+  display: none;
 }
 
 .custom-file-upload {
-display: inline-block;
-padding: 10px 20px;
-font-size: 16px;
-font-weight: 500;
-color: white;
-background: linear-gradient(to right, #ebe4e2, #c5ddc8);
-border-radius: 5px;
-cursor: pointer;
-transition: background 0.3s ease;
-width: 30%;
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  background: linear-gradient(to right, #ebe4e2, #c5ddc8);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 30%;
 }
 
 .custom-file-upload:hover {
-/* background: linear-gradient(to right, #2575fc, #6a11cb); */
+  /* background: linear-gradient(to right, #2575fc, #6a11cb); */
 }
 
 .file-upload-wrapper {
-    width: 95%;
+  width: 95%;
 }
 
 @media (max-width: 768px) {
 
   .form-container {
-
     padding: 10px;
     margin: 1px;
   }
+
   .form-container h3 {
-      margin-bottom: 10px;
+    margin-bottom: 10px;
   }
 
-.custom-file-upload {
+  .custom-file-upload {
 
-width: 93%;
-}
+    width: 93%;
+  }
 
 
 
-    .main-content {
-        /* margin-bottom: 80px; */
-    }
+  .main-content {
+    /* margin-bottom: 80px; */
+  }
 
 }

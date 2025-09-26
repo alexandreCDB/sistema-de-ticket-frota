@@ -38,11 +38,16 @@ async def notify_ticket_created_async(user_id: int, ticket_id: int):
         await manager.send_to_user(
             notification.user_id,
             "ticket_created",
-            json.dumps({
+            {
                 "id": notification.id,
                 "ticket_id": ticket_id,
                 "message": notification.message,
-            })
+            }
+            # json.dumps({
+            #     "id": notification.id,
+            #     "ticket_id": ticket_id,
+            #     "message": notification.message,
+            # })
         )
     except Exception as e:
         db.rollback()

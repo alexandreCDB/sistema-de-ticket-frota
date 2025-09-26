@@ -68,6 +68,7 @@ class ConnectionManager:
             for conn in self.active_connections[user_id]:
                 print(f"Enviando mensagem para usuário {user_id}: {message}")
                 await conn.send_text(json.dumps(self.set_msg(type, message)))
+                # await conn.send_text(json.dumps(self.set_msg(type, message)))
 
     async def broadcast(self, type:str, message: str):
         for conns in self.active_connections.values():

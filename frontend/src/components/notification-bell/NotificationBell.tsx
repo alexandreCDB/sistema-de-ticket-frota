@@ -44,6 +44,8 @@ const NotificationBell: React.FC = () => {
             <strong>{count}</strong> notificações:
           </p>
           <ul className="listmsg">
+
+            
             {notifications.map((msg, idx) => (
               <li key={idx}>
                 <span>🔔</span>
@@ -53,16 +55,16 @@ const NotificationBell: React.FC = () => {
                   onClick={() => markAsRead(msg.id)} // agora usa o hook
                 >
 
-                  {"message" in msg
-                    ? msg.message
-                    : "text" in msg
-                      ? msg.text
-                      : "Mensagem indisponível"
-                  }
+                  {msg.message  ?? "Mensagem indisponível"}
 
                 </Link>
               </li>
             ))}
+
+
+
+
+
           </ul>
           <button className="mark-read" onClick={markAllAsRead}>
             Marcar como lidas

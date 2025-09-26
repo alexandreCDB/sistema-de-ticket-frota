@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AnimatedPageWrapper from '../../../components/Animated/AnimatedPageWrapper';
 import * as TicketService from './TicketDetail.service';
-import Picker from "emoji-picker-react";
+// import Picker from "emoji-picker-react";
 //@ts-ignore
 import './TicketDetail.css';
 //@ts-ignore
@@ -239,7 +239,7 @@ const TicketDetail: React.FC = () => {
         )}
 
         {isUserSuperAdmin && !isTicketClosed && (
-          <div className="delegation-section mt-20 detail-card">
+          <div className="delegation-section detail-card">
             <h4>Delegar Chamado</h4>
             <select value={selectedAssigneeId} onChange={e => setSelectedAssigneeId(e.target.value)} disabled={updatingAssignee}>
               <option value="">Não Atribuído</option>

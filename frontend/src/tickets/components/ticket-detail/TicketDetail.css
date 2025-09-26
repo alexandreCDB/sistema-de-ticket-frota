@@ -26,8 +26,16 @@
     margin-bottom: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     border-radius: 10px;
-}
 
+
+}
+.delegation-section.detail-card {
+    display: flex
+;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
 .detail-card p {
     margin-bottom: 10px;
     line-height: 1.6;
