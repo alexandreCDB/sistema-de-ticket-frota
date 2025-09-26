@@ -106,7 +106,7 @@ function TicketsPage() {
         <div className="tickets-page-container">
             {/* O bloco de abas só aparece se a rota for de tickets */}
             {location.pathname === '/tickets/tickets' && (
-                <div className="tabs-container">
+                <div className="tabs-container0">
                     {/* Abas para Meus Chamados */}
                     {activeTab.startsWith('my-') && (
                         <>

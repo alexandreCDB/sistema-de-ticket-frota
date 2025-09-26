@@ -74,3 +74,6 @@ uploads/
 .env
 .env.development
 .env.production
+frontend/.env
+frontend/.env.development
+frontend/.env.production

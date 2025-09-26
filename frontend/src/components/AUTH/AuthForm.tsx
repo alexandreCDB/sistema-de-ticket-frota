@@ -1,8 +1,7 @@
 import { useState, FormEvent } from "react";
 //@ts-ignore
 import teste from "../../assets/logo.png";
-import { useAuth } from "../AUTH/AuthContext";
-import { useNavigate } from "react-router-dom";  // 🔹 importa aqui
+import useAuthService from "./AuthForm.service";
 //@ts-ignore
 import "./AuthForm.css";
 
