@@ -17,9 +17,10 @@ import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
 import NotificationBell from "./components/notification-bell/NotificationBell";
+import AdminRoute from "./components/AUTH/AdminRoute"; // ✅ novo import
 
 function AppContent() {
-  const { user, loadingUser } = useAuth();
+  const { loadingUser } = useAuth();
   const location = useLocation();
 
   if (loadingUser) {
@@ -32,32 +33,81 @@ function AppContent() {
       {location.pathname !== "/login" && <NotificationBell />}
 
       <Routes>
-        <Route path="/login" element={<PublicRoute><AuthForm /></PublicRoute>} />
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        {/* Rotas públicas */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <AuthForm />
+            </PublicRoute>
+          }
+        />
+
+        {/* Home protegida */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
         
-        <Route path="/tickets/*" element={<ProtectedRoute><DashboardLayoutRoute /></ProtectedRoute>}>
+        {/* Tickets */}
+        <Route
+          path="/tickets/*"
+          element={
+            <ProtectedRoute>
+              <DashboardLayoutRoute />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="create-ticket" element={<CreateTicketForm/>} />
-          <Route path="tickets" element={<TicketsPage/>} />
-          <Route path="assigned" element={<TicketsPage/>} />
-          <Route path="manage-users" element={<ManagerUser/>} />
-          <Route path="settings" element={<ConfigsPage/>} />
-          <Route path="tickets/:ticketId" element={<TicketDetail/>} />
+          <Route path="create-ticket" element={<CreateTicketForm />} />
+          <Route path="tickets" element={<TicketsPage />} />
+          <Route path="assigned" element={<TicketsPage />} />
+          <Route path="manage-users" element={<ManagerUser />} />
+          <Route path="settings" element={<ConfigsPage />} />
+          <Route path="tickets/:ticketId" element={<TicketDetail />} />
         </Route>
 
+        {/* Frota */}
         <Route path="/frotas">
-          <Route index element={<ProtectedRoute><ListaVeiculosPage /></ProtectedRoute>} />
-          <Route path="meus-veiculos" element={<ProtectedRoute><MeusVeiculosPage /></ProtectedRoute>} />
-          {user?.is_admin && (
-            <Route path="admin" element={<ProtectedRoute><FrotaAdminPage /></ProtectedRoute>} />
-          )}
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <ListaVeiculosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="meus-veiculos"
+            element={
+              <ProtectedRoute>
+                <MeusVeiculosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="admin"
+            element={
+              <ProtectedRoute>
+                <AdminRoute>
+                  <FrotaAdminPage />
+                </AdminRoute>
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
-        <Route path="/master/*" >
+        {/* Super Admin */}
+        <Route path="/master/*">
           <Route index element={<AdminDashboard />} />
         </Route>
 
+        {/* Fallback */}
         <Route path="*" element={<FallbackRoute />} />
       </Routes>
     </>

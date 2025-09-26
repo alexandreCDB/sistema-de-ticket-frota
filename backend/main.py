@@ -19,37 +19,48 @@ from backend.ticket.routers import users_router, tickets_router, messages_router
 # 3. Roteadores da Frota
 from backend.frota.routers.vehicle import router as frota_vehicles_router
 from backend.frota.routers.booking import router as frota_bookings_router
+from backend.frota.routers.upload import router as frota_upload_router
 
 # 4. Import do Gerenciador de WebSocket
 from backend.websocket.service.settings import get_system_stats
 from backend.websocket.service.ws_instance import manager
-from backend.frota.routers.upload import router as frota_upload_router
 
 
-# --- LIFESPAN PARA STARTUP/SHUTDOWN ---
+# --- FUNÇÃO LIFESPAN UNIFICADA ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Setup inicial do banco
     print("Application startup event triggered.")
     print("Criando tabelas da Frota (se não existirem)...")
     vehicle.Base.metadata.create_all(bind=frota_engine)
     booking.Base.metadata.create_all(bind=frota_engine)
     print("Configuração do banco de dados completa.")
-    yield
-    print("Application shutdown event triggered.")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+    # Setup do websocket
     broadcast_task = asyncio.create_task(broadcast_system_stats())
     print("✅ Lifespan iniciado: broadcast ativo")
-    yield
+
+    yield  # app roda aqui
+
+    # Shutdown
     broadcast_task.cancel()
     try:
         await broadcast_task
     except asyncio.CancelledError:
         print("✅ Lifespan finalizado: broadcast cancelado")
-        
-        
-        
+    print("Application shutdown event triggered.")
+
+
+# --- TAREFA DO WEBSOCKET ---
+async def broadcast_system_stats():
+    while True:
+        stats = get_system_stats()
+        stats["connections"] = sum(len(conns) for conns in manager.active_connections.values())
+        await manager.broadcast("system_stats", stats)
+        await asyncio.sleep(2)
+
+
+# --- APP ---
 app = FastAPI(
     title="Sistema Integrado de Gestão",
     description="API para gerenciamento de tickets e frota de veículos.",
@@ -80,7 +91,7 @@ app.add_middleware(
 
 # --- SERVIR ARQUIVOS ESTÁTICOS (UPLOADS) ---
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-upload_directory = os.path.join(current_file_path, "..", "uploads")
+upload_directory = os.path.join(current_file_path, "uploads")  # 👈 corrigido para "uploads" na raiz
 if not os.path.exists(upload_directory):
     os.makedirs(upload_directory)
 app.mount("/uploads", StaticFiles(directory=upload_directory), name="uploads")
@@ -101,14 +112,9 @@ api_router.include_router(ticket_api_router)
 
 # --- FROTA ---
 frota_api_router = APIRouter(prefix="/frotas")
-
-# Importante: incluímos o prefixo "/" dentro do router de veículos
-# Assim, GET /api/frotas/vehicles/ → lista todos
-# GET /api/frotas/vehicles/{vehicle_id} → pega por id
 frota_api_router.include_router(frota_vehicles_router, prefix="/vehicles", tags=["Frota - Veículos"])
 frota_api_router.include_router(frota_bookings_router, prefix="/bookings", tags=["Frota - Reservas"])
-frota_api_router.include_router(frota_upload_router, tags=["Frota - Uploads"])
-
+frota_api_router.include_router(frota_upload_router, prefix="/upload", tags=["Frota - Uploads"])
 api_router.include_router(frota_api_router)
 
 # --- WEBSOCKET ---
@@ -122,15 +128,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
             await manager.broadcast(f"Echo: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        
-async def broadcast_system_stats():
-    while True:
-        stats = get_system_stats()
-        # print("Broadcasting system stats:", stats)
-        stats["connections"] = sum(len(conns) for conns in manager.active_connections.values())
-        await manager.broadcast("system_stats", stats)
-        await asyncio.sleep(2)
-        
+
+
 # --- MONTAGEM FINAL ---
-# Monta o router principal com o prefixo /api na aplicação
 app.include_router(api_router)

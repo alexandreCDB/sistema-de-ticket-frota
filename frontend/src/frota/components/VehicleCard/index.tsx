@@ -4,6 +4,10 @@ import { Vehicle, Booking } from '../../types';
 import defaultVehicleImage from '../../../assets/onix.png';
 import { Users, GitBranch, XCircle, Undo2, CalendarCheck2 } from 'lucide-react';
 
+// --- ADICIONADO: Pega a base do URL da sua API ---
+// @ts-ignore
+const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', ''); // ex: http://localhost:8000
+
 interface VehicleCardProps {
   vehicle: Vehicle;
   booking?: Booking;
@@ -27,24 +31,22 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
   const displayStatus = booking?.status || vehicle.status;
   const currentStatus = statusMap[displayStatus] || { text: displayStatus, className: 'status-unknown' };
 
-  const imageUrl = vehicle.image_url || defaultVehicleImage;
+  // --- CORREÇÃO: Monta a URL completa da imagem ---
+  const imageUrl = vehicle.image_url 
+    ? `${API_URL_BASE}${vehicle.image_url}` // Junta a base do servidor com o caminho da imagem
+    : defaultVehicleImage; // Usa a imagem padrão se não houver URL
 
-  // --- LÓGICA DE RENDERIZAÇÃO DOS BOTÕES CORRIGIDA ---
+  // --- LÓGICA DE RENDERIZAÇÃO DOS BOTÕES (inalterada) ---
   const renderActions = () => {
-    // Contexto: Página "Meus Veículos" (quando 'booking' é passado)
     if (booking) {
-      // Se a reserva já está 'em uso', a única ação é devolver.
       if (booking.status === 'in-use') {
         return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
       }
       
-      // Se a reserva foi APROVADA ('confirmed') mas ainda não está em uso
       if (booking.status === 'confirmed') {
-        // Se for uma RETIRADA, a única ação é devolver.
         if (booking.type === 'checkout') {
           return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
         }
-        // Se for um AGENDAMENTO, mostra AMBOS os botões.
         if (booking.type === 'schedule') {
           return (
             <>
@@ -56,7 +58,6 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
       }
     }
 
-    // Contexto: Página Principal "Ver Frota"
     if (onRetirar && onAgendar && vehicle.status === 'available') {
       return (
         <>
@@ -66,7 +67,6 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
       );
     }
     
-    // Caso padrão para qualquer outra situação
     return <button className="btn-disabled" disabled>Indisponível</button>;
   };
 

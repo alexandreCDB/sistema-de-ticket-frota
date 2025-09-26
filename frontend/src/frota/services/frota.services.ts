@@ -314,10 +314,11 @@ export async function uploadVehicleImage(file: File): Promise<{ file_url: string
   const formData = new FormData();
   formData.append('file', file);
 
+  // O URL foi corrigido para /frotas/upload/image
   const response = await fetch(`${API_URL}/frotas/upload/image`, {
     method: 'POST',
     credentials: 'include',
-    body: formData, // Envia como FormData, não JSON
+    body: formData,
   });
 
   if (!response.ok) {
@@ -326,7 +327,6 @@ export async function uploadVehicleImage(file: File): Promise<{ file_url: string
   }
   return response.json();
 }
-
 export function useVehiclesWithBookings() {
     const [vehicles, setVehicles] = useState<VehicleWithBookings[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
