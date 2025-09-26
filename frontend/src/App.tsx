@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import AuthForm from "./components/AUTH/AuthForm";
 import ProtectedRoute from "./components/AUTH/ProtectedRoute";
 import PublicRoute from "./components/AUTH/PublicRoute";
@@ -16,16 +16,21 @@ import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
+import NotificationBell from "./components/notification-bell/NotificationBell";
 
-function App() {
+function AppContent() {
   const { user, loadingUser } = useAuth();
+  const location = useLocation();
 
   if (loadingUser) {
     return <p>A carregar aplicação...</p>;
   }
 
   return (
-    <Router>
+    <>
+      {/* Sino aparece em todas as rotas, menos no login */}
+      {location.pathname !== "/login" && <NotificationBell />}
+
       <Routes>
         <Route path="/login" element={<PublicRoute><AuthForm /></PublicRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
@@ -49,22 +54,20 @@ function App() {
           )}
         </Route>
 
-
-         <Route path="/master/*" >
+        <Route path="/master/*" >
           <Route index element={<AdminDashboard />} />
-          {/* <Route path="dashboard" element={<Dashboard />} />
-          <Route path="create-ticket" element={<CreateTicketForm/>} />
-          <Route path="tickets" element={<TicketsPage/>} />
-          <Route path="assigned" element={<TicketsPage/>} />
-          <Route path="manage-users" element={<ManagerUser/>} />
-          <Route path="settings" element={<ConfigsPage/>} />
-          <Route path="tickets/:ticketId" element={<TicketDetail/>} /> */}
         </Route>
 
         <Route path="*" element={<FallbackRoute />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}

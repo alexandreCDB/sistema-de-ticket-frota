@@ -1,6 +1,8 @@
 import { useState, FormEvent } from "react";
 //@ts-ignore
 import teste from "../../assets/logo.png";
+//@ts-ignore
+import back from "../../assets/back.png";
 import useAuthService from "./AuthForm.service";
 //@ts-ignore
 import "./AuthForm.css";

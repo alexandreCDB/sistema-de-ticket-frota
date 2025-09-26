@@ -12,7 +12,6 @@ import {
   FaTachometerAlt,
 } from 'react-icons/fa';
 import AnimatedPageWrapper from '../../../components/Animated/AnimatedPageWrapper';
-import NotificationBell from '../../../components/notification-bell/NotificationBell';
 //@ts-ignore
 import boa from '../../../assets/logo.png';
 
@@ -140,7 +139,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
         </aside>
 
         <div className="header-bar">
-          <NotificationBell />
+          
         </div>
 
         <main className="main-content">{children}</main>

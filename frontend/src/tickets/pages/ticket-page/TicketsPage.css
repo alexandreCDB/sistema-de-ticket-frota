@@ -12,15 +12,15 @@
     padding: 0 20px; /* Exemplo: padding horizontal, sem padding vertical extra aqui */
 }
 
-.tabs-container {
-    display: flex;
+.tabs-container0 {
+    display: flex !important;
     /* REMOVA OU COMENTE ESTA LINHA ABAIXO, pois ela é a causadora do desalinhamento */
-    /* margin-left: 16%; */
+    /* margin-left: 16% !important; */
 
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px !important;
+    border-bottom: 1px solid #ccc !important;
+    /* overflow-x: auto !important; */
+    -webkit-overflow-scrolling: touch !important;
 
     /* Opcional: Adicione padding se os botões estiverem muito colados nas bordas do container */
     /* padding: 0 20px; */ /* Pode ser útil se o tickets-page-container não tiver padding */
