@@ -310,6 +310,23 @@ export function useMyBookings() {
   return { bookings, isLoading, error, refetchBookings: fetchBookings };
 }
 
+export async function uploadVehicleImage(file: File): Promise<{ file_url: string }> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_URL}/frotas/upload/image`, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData, // Envia como FormData, não JSON
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha no upload da imagem.');
+  }
+  return response.json();
+}
+
 export function useVehiclesWithBookings() {
     const [vehicles, setVehicles] = useState<VehicleWithBookings[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -351,4 +368,6 @@ export function useVehiclesWithBookings() {
     }, [fetchData]);
 
     return { vehicles, isLoading, error, refetchVehicles: fetchData };
+
+    
 }

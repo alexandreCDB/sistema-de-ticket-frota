@@ -1,7 +1,8 @@
 import { useState, FormEvent } from "react";
 //@ts-ignore
 import teste from "../../assets/logo.png";
-import useAuthService from "./AuthForm.service";
+import { useAuth } from "../AUTH/AuthContext";
+import { useNavigate } from "react-router-dom";  // 🔹 importa aqui
 //@ts-ignore
 import "./AuthForm.css";
 
@@ -15,19 +16,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { message, error, handleLogin, handleRegister, setMessage } =
-    useAuthService();
+  const { message, error, login, register, setMessage } = useAuth();
+  const navigate = useNavigate(); // 🔹 cria o navigate
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isRegistering) {
-      await handleRegister(email, password, confirmPassword);
+      await register(email, password, confirmPassword);
       return;
     }
 
-    await handleLogin(email, password);
-    if (onLoginSuccess) onLoginSuccess();
+    await login(email, password);
+
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    } else {
+      navigate("/", { replace: true }); // 🔹 sempre vai pra Home
+    }
   };
 
   return (
@@ -84,7 +90,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
             type="button"
             onClick={() => {
               setIsRegistering(!isRegistering);
-              setMessage(null); // limpa mensagens quando alterna
+              setMessage(null);
             }}
             style={{
               background: "transparent",

@@ -23,6 +23,8 @@ from backend.frota.routers.booking import router as frota_bookings_router
 # 4. Import do Gerenciador de WebSocket
 from backend.websocket.service.settings import get_system_stats
 from backend.websocket.service.ws_instance import manager
+from backend.frota.routers.upload import router as frota_upload_router
+
 
 # --- LIFESPAN PARA STARTUP/SHUTDOWN ---
 @asynccontextmanager
@@ -105,6 +107,8 @@ frota_api_router = APIRouter(prefix="/frotas")
 # GET /api/frotas/vehicles/{vehicle_id} → pega por id
 frota_api_router.include_router(frota_vehicles_router, prefix="/vehicles", tags=["Frota - Veículos"])
 frota_api_router.include_router(frota_bookings_router, prefix="/bookings", tags=["Frota - Reservas"])
+frota_api_router.include_router(frota_upload_router, tags=["Frota - Uploads"])
+
 api_router.include_router(frota_api_router)
 
 # --- WEBSOCKET ---

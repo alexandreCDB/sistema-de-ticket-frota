@@ -1,18 +1,22 @@
-import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../components/AUTH/AuthContext";
 
-interface ProtectedRouteProps {
-  user: any | null; // você pode tipar melhor conforme seu modelo de usuário
-  loadingUser: boolean;
-  userError: string | null;
-  children: ReactNode;
-}
+const ProtectedRoute: React.FC = () => {
+  const { user, isLoading } = useAuth();
+  
+  // Enquanto verifica o utilizador, mostra uma mensagem
+  if (isLoading) {
+    return <p>A carregar...</p>;
+  }
 
-const ProtectedRoutec: React.FC<ProtectedRouteProps> = ({ user, loadingUser, userError, children }) => {  
-  if (loadingUser) return <p>Carregando...</p>;
-  if (userError) return <p style={{ color: 'red' }}>{userError}</p>;
-  if (!user) return <Navigate to="/login" replace />;
-  return <>{children}</>;
+  // Se a verificação terminou e não há utilizador, redireciona para o login
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  // Se há utilizador, permite o acesso às rotas filhas
+  return <Outlet />; 
 };
 
-export default ProtectedRoutec;
+export default ProtectedRoute;
