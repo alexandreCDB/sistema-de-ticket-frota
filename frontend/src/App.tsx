@@ -16,8 +16,6 @@ import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
-import { Navigate } from "react-router-dom";
-import { JSX } from "react";
 
 // Wrapper para rotas de admin
 function AdminRoute({ children }: { children: JSX.Element }) {
