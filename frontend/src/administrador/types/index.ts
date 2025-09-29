@@ -3,8 +3,8 @@ export interface User {
   name: string;
   email: string;
   status: "online" | "offline";
-  lastSeen: string;
-  role: string;
+  is_admin: boolean;
+  is_super_admin: boolean;
 }
 
 export interface SystemStats {

@@ -28,6 +28,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     setIsLoading(true);
 
     setTimeout(() => {
+      alert('Em desenvolvimento: funcionalidade de atualização de perfil não implementada.');
       console.log('Perfil atualizado:', { name, email });
       setIsLoading(false);
       onClose();

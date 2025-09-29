@@ -95,6 +95,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen, onClose, userName, 
       <ChangePasswordModal 
         isOpen={showPasswordModal} 
         onClose={() => setShowPasswordModal(false)} 
+        user={user!}
       />
       <EditProfileModal
         isOpen={showProfileModal}

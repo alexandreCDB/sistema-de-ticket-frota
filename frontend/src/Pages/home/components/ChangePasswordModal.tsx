@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import { X, Eye, EyeOff, Lock } from 'lucide-react';
 //@ts-ignore
 import '../styles/modal.css';
+import { IUser } from '../../../components/AUTH/interfaces/user';
+//@ts-ignore
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user: IUser
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose }) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose,user }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,16 +37,25 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
       return;
     }
 
-    setIsLoading(true);
-    
-    setTimeout(() => {
-      console.log('Senha alterada com sucesso');
+    await fetch(`${API_URL}/ticket/users/${user?.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password: newPassword })
+      , credentials: 'include',
+    }).then(() => {
+      alert('Senha redefinida com sucesso');
       setIsLoading(false);
       onClose();
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-    }, 1000);
+    }).catch((err) => {
+      alert(err);
+    });
+    setIsLoading(true);    
+   
   };
 
   return (
@@ -63,7 +77,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
     {/* Form */}
     <form onSubmit={handleSubmit} className="epm-modal-body">
       {/* Senha Atual */}
-      <div className="epm-form-group">
+      {/* <div className="epm-form-group">
         <label className="epm-form-label">Senha Atual</label>
         <div className="epm-form-input-container">
           <input
@@ -81,7 +95,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Nova Senha */}
       <div className="epm-form-group">
