@@ -204,37 +204,32 @@ export async function createVehicle(data: VehicleFormData) {
  * O seu backend ainda não tem um endpoint para editar veículos.
  */
 export async function updateVehicle(id: number, data: VehicleFormData) {
-  console.warn("Endpoint de EDIÇÃO ainda não implementado no backend.");
-  // Exemplo de como seria a chamada:
-  // const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
-  //   method: 'PUT', // ou 'PATCH'
-  //   headers: { 'Content-Type': 'application/json' },
-  //   credentials: 'include',
-  //   body: JSON.stringify(data),
-  // });
-  // if (!response.ok) throw new Error('Falha ao atualizar o veículo.');
-  // return response.json();
-  
-  // Simula uma resposta bem-sucedida para fins de teste
-  return Promise.resolve({ ...data, id });
+  const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha ao atualizar o veículo.');
+  }
+  return response.json();
 }
-
 /**
  * ATENÇÃO: A função abaixo é um placeholder.
  * O seu backend ainda não tem um endpoint para remover veículos.
  */
 export async function deleteVehicle(id: number) {
-  console.warn("Endpoint de REMOÇÃO ainda não implementado no backend.");
-  // Exemplo de como seria a chamada:
-  // const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
-  //   method: 'DELETE',
-  //   credentials: 'include',
-  // });
-  // if (!response.ok) throw new Error('Falha ao remover o veículo.');
-  // return response.ok;
-
-  // Simula uma resposta bem-sucedida para fins de teste
-  return Promise.resolve(true);
+  const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha ao remover o veículo.');
+  }
+  return response.ok; // Retorna true se a resposta for bem-sucedida (ex: 204)
 }
 
 

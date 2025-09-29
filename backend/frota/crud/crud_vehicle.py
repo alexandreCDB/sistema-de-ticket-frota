@@ -1,4 +1,3 @@
-# backend/frota/crud/crud_vehicle.py
 from sqlalchemy.orm import Session
 from ..models.vehicle import Vehicle
 
@@ -15,11 +14,27 @@ def create_vehicle(db: Session, vehicle_data: dict):
     db.refresh(v)
     return v
 
-def update_vehicle_status(db: Session, vehicle_id: int, status: str):
+# --- FUNÇÃO DE ATUALIZAÇÃO (NOVA) ---
+def update_vehicle(db: Session, vehicle_id: int, vehicle_data: dict):
+    # Procura o veículo na base de dados
     v = get_vehicle(db, vehicle_id)
     if not v:
         return None
-    v.status = status
+    
+    # Atualiza cada campo do veículo com os novos dados
+    for key, value in vehicle_data.items():
+        setattr(v, key, value)
+        
     db.commit()
     db.refresh(v)
     return v
+
+# --- FUNÇÃO DE EXCLUSÃO (NOVA) ---
+def delete_vehicle(db: Session, vehicle_id: int):
+    v = get_vehicle(db, vehicle_id)
+    if not v:
+        return None # Retorna None se o veículo não for encontrado
+    
+    db.delete(v)
+    db.commit()
+    return True # Retorna True em caso de sucesso
