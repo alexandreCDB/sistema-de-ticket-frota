@@ -21,12 +21,12 @@ export const VehicleManagement = () => {
     setVehicleToEdit(null);
   };
 
-  const handleSave = async (vehicleData: any, vehicleId?: number) => {
+   const handleSave = async (vehicleData: any, vehicleId?: number) => {
     setIsSaving(true);
     try {
       if (vehicleId) {
         await updateVehicle(vehicleId, vehicleData);
-        alert('Veículo atualizado com sucesso! (Função de placeholder)');
+        alert('Veículo atualizado com sucesso!'); // Mensagem corrigida
       } else {
         await createVehicle(vehicleData);
         alert('Veículo criado com sucesso!');
@@ -41,11 +41,11 @@ export const VehicleManagement = () => {
     }
   };
 
-  const handleDelete = async (vehicle: Vehicle) => {
+   const handleDelete = async (vehicle: Vehicle) => {
     if (window.confirm(`Tem a certeza que quer remover o veículo ${vehicle.name}?`)) {
       try {
         await deleteVehicle(vehicle.id);
-        alert('Veículo removido com sucesso! (Função de placeholder)');
+        alert('Veículo removido com sucesso!'); // Mensagem corrigida
         refetchVehicles();
       } catch (err: any) {
         console.error('Erro ao remover veículo:', err);

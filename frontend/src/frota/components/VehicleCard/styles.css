@@ -177,8 +177,8 @@
 
 /* Botão Primário (Roxo) */
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  background: linear-gradient(90deg, #F97316 0%, #8B5CF6 100%) !important;
+  color: white !important;
 }
 .btn-primary:hover {
   background-color: var(--primary-color-hover);

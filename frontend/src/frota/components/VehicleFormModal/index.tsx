@@ -100,9 +100,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
       <div className="form-modal-content">
         <div className="form-modal-header">
           <h3>{isEditing ? 'Editar Veículo' : 'Adicionar Novo Veículo'}</h3>
-          <button className="close-button" onClick={onClose}>
-            <X size={20} />
-          </button>
+          
         </div>
 
         <form onSubmit={handleSubmit}>
