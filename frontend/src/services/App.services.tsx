@@ -40,6 +40,8 @@ export default function useAuthService() {
           throw new Error(data.detail || 'Erro no login');
         }
 
+        console.log('Login response data:', await response.clone().json()); // Verifique a resposta do login
+        
         onLoginSuccess?.();
       }
     } catch (err: any) {

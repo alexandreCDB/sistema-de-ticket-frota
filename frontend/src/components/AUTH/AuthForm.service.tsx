@@ -59,9 +59,13 @@ export default function useAuthService() {
         throw new Error(data.detail || "Erro no login");
       }
       const data = await res.json();
+      console.log('Login response data:', data); // Verifique a resposta do login
+      
       const token = data.access_token;
+      const user_e = data.user_e;
       localStorage.setItem("token", token);
-      // conecta no WebSocket usando o token
+      localStorage.setItem("user_current", user_e);
+      
       connectWebSocket(token);
 
       setMessage("Login bem-sucedido!");

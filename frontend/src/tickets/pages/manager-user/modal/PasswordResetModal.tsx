@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+//@ts-ignore
 import './PasswordResetModal.css'
 import { IUser } from '../../../../components/AUTH/interfaces/user';
 //@ts-ignore

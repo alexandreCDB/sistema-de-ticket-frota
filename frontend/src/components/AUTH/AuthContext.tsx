@@ -78,8 +78,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const data = await res.json();
       const accessToken = data.access_token;
+      const user_e = data.user_e;
       setToken(accessToken);
       localStorage.setItem("token", accessToken);
+      localStorage.setItem("user_current", user_e);
 
       setMessage("Login bem-sucedido!");
       await fetchCurrentUser();

@@ -28,7 +28,6 @@ export function connectWebSocket(newToken?: string): WebSocket {
   };
 
   ws.onmessage = (event) => {
-    console.log("📩 Mensagem recebida:", event.data);
   };
 
   ws.onclose = (event) => {

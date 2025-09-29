@@ -42,7 +42,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
         secure=False,
         samesite="lax"
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer",   "user_e": user.email}
 
 @router.post("/logout")
 def logout(response: Response):
