@@ -45,3 +45,30 @@
 }
 .btn-icon:hover { background-color: #f1f5f9; }
 .btn-icon-danger:hover { background-color: #FEF2F2; color: #991B1B; }
+
+@media (max-width: 768px) {
+  .vehicle-list-item {
+    /* Muda de grid horizontal para um layout de cartão vertical */
+    grid-template-columns: 1fr auto; /* Coluna para info, coluna para ações */
+    grid-template-areas: 
+      "main actions"
+      "secondary actions"
+      "status actions";
+    gap: 0.5rem 1rem;
+    padding: 1rem;
+  }
+
+  /* Esconde o ícone grande para poupar espaço */
+  .item-icon-wrapper {
+    display: none;
+  }
+
+  .item-info-main { grid-area: main; }
+  .item-info-secondary { grid-area: secondary; display: flex; flex-direction: column; gap: 0.25rem; }
+  .item-info-status { grid-area: status; }
+  .item-list-actions { 
+    grid-area: actions;
+    flex-direction: column; /* Empilha os botões de editar/remover */
+    align-self: center;
+  }
+}

@@ -39,3 +39,18 @@
 .tab-content {
   /* O conteúdo de cada aba será renderizado aqui */
 }
+
+@media (max-width: 768px) {
+  .tabs-nav {
+    /* Permite scroll horizontal nas abas se não couberem na tela */
+    overflow-x: auto;
+    /* Adiciona um pouco de espaço no final para não cortar a sombra */
+    padding-bottom: 8px;
+    display: contents;
+  }
+
+  /* Remove a margem para dar mais espaço */
+  .tab-button {
+    margin-right: 1.5rem !important;
+  }
+}

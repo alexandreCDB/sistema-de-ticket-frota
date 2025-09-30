@@ -74,3 +74,20 @@
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+@media (max-width: 768px) {
+  .management-header {
+    flex-direction: column; /* Empilha o título e o botão */
+    align-items: flex-start; /* Alinha tudo à esquerda */
+    gap: 1rem;
+  }
+}
+
+/* --- RESPONSIVIDADE PARA O STATUS DA FROTA --- */
+@media (max-width: 480px) {
+  .fleet-status-grid {
+    /* Em telas muito pequenas, força uma única coluna */
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

@@ -69,3 +69,30 @@
 .history-item.denied .history-status {
   color: var(--frota-color-status-maintenance-icon-bg);
 }
+
+@media (max-width: 768px) {
+  .history-item {
+    /* Muda a grelha para um layout de duas colunas mais simples */
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 
+      "icon main"
+      "icon time"
+      "status status";
+    gap: 0.5rem 1rem;
+  }
+  
+  .history-icon-wrapper { grid-area: icon; align-self: start; }
+  .history-details { grid-area: main; }
+  .history-time { grid-area: time; text-align: left; justify-content: flex-start; }
+  .history-time p { justify-content: flex-start; }
+  
+  .history-status {
+    grid-area: status;
+    border-left: none;
+    border-top: 1px solid var(--frota-color-border);
+    padding-left: 0;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+}

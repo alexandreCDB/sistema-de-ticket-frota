@@ -266,6 +266,8 @@ export function useVehicles() {
   return { vehicles, isLoading, error, refetchVehicles: fetchVehicles };
 }
 
+
+
 export function useMyBookings() {
   const [bookings, setBookings] = useState<BookingWithVehicle[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -366,3 +368,4 @@ export function useVehiclesWithBookings() {
 
     
 }
+

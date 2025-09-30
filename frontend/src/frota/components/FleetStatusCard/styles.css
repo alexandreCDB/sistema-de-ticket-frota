@@ -1,75 +1,104 @@
-.status-card-wrapper {
-  background-color: var(--frota-color-surface);
-  border: 1px solid var(--frota-color-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
-}
-.status-card-wrapper:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+/* Container para a grade de cards */
+.fleet-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
 }
 
-.status-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+/* Card principal */
+.fleet-status-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
 }
 
-.status-card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f1f5f9;
-  color: var(--frota-color-text-secondary);
+.fleet-status-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-.status-card-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+/* Estilo da imagem do carro */
+.car-image-container {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
 }
 
-.status-card-badge.status-available { background-color: #DCFCE7; color: #166534; }
-.status-card-badge.status-in-use { background-color: #FEF3C7; color: #92400E; }
-.status-card-badge.status-reserved { background-color: #EEF2FF; color: #4338CA; }
-.status-card-badge.status-maintenance { background-color: #FEE2E2; color: #991B1B; }
-.status-card-badge.status-default { background-color: #f1f5f9; color: var(--frota-color-text-secondary); }
-
-.status-card-body h4 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--frota-color-text-primary);
+.car-image {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
-.status-card-body .vehicle-plate {
-  font-size: 0.9rem;
-  color: var(--frota-color-text-secondary);
-  margin: 0.25rem 0 1.5rem 0;
+/* Cabeçalho minimalista com nome e status */
+.card-header-minimal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    gap: 0.25rem;
 }
 
-.driver-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  border-top: 1px solid var(--frota-color-border);
-  padding-top: 1.5rem;
+.car-name-minimal {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
 }
 
-.info-line {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--frota-color-text-secondary);
+/* Estilo do badge de status */
+.status-badge-minimal {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    text-transform: uppercase;
 }
-.info-line span {
-  font-weight: 500;
+
+.status-in-use {
+    background-color: #ffe8e8; /* Vermelho claro */
+    color: #d9534f; /* Vermelho escuro */
+}
+
+.status-reserved {
+    background-color: #fff3e0; /* Laranja claro */
+    color: #f0ad4e; /* Laranja escuro */
+}
+
+/* Corpo do card com informações */
+.card-body-minimal {
+    padding: 0 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: left;
+}
+
+.info-row .icon {
+    color: #999;
+    flex-shrink: 0;
+}
+
+.info-text {
+    flex-grow: 1;
+    text-align: left;
 }

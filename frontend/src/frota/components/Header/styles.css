@@ -54,15 +54,7 @@
   border-bottom-color: var(--frota-color-primary-end);
 }
 
-.user-area {
-  padding: 0.5rem;
-  background-color: #f1f5f9;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--frota-color-text-secondary);
-}
+
 
 .admin-link {
   display: flex;

@@ -3,7 +3,7 @@ import { useVehicles, createVehicle, updateVehicle, deleteVehicle } from '../../
 import { Vehicle } from '../../types';
 import { VehicleListItem } from '../VehicleListItem';
 import { VehicleFormModal } from '../VehicleFormModal';
-import './styles.css'; // Reutiliza o CSS da página de admin
+import './styles.css';
 
 export const VehicleManagement = () => {
   const { vehicles, isLoading, error, refetchVehicles } = useVehicles();
@@ -15,43 +15,25 @@ export const VehicleManagement = () => {
     setVehicleToEdit(vehicle);
     setIsModalOpen(true);
   };
+  const handleCloseModal = () => { setIsModalOpen(false); setVehicleToEdit(null); };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setVehicleToEdit(null);
-  };
-
-   const handleSave = async (vehicleData: any, vehicleId?: number) => {
+  const handleSave = async (vehicleData: any, vehicleId?: number) => {
     setIsSaving(true);
     try {
-      if (vehicleId) {
-        await updateVehicle(vehicleId, vehicleData);
-        alert('Veículo atualizado com sucesso!'); // Mensagem corrigida
-      } else {
-        await createVehicle(vehicleData);
-        alert('Veículo criado com sucesso!');
-      }
+      if (vehicleId) await updateVehicle(vehicleId, vehicleData);
+      else await createVehicle(vehicleData);
       refetchVehicles();
       handleCloseModal();
     } catch (err: any) {
       console.error('Erro ao guardar veículo:', err);
       alert(err.message || 'Erro ao guardar veículo.');
-    } finally {
-      setIsSaving(false);
-    }
+    } finally { setIsSaving(false); }
   };
 
-   const handleDelete = async (vehicle: Vehicle) => {
-    if (window.confirm(`Tem a certeza que quer remover o veículo ${vehicle.name}?`)) {
-      try {
-        await deleteVehicle(vehicle.id);
-        alert('Veículo removido com sucesso!'); // Mensagem corrigida
-        refetchVehicles();
-      } catch (err: any) {
-        console.error('Erro ao remover veículo:', err);
-        alert(err.message || 'Erro ao remover veículo.');
-      }
-    }
+  const handleDelete = async (vehicle: Vehicle) => {
+    if (!window.confirm(`Tem a certeza que quer remover o veículo ${vehicle.name}?`)) return;
+    try { await deleteVehicle(vehicle.id); refetchVehicles(); } 
+    catch (err: any) { console.error(err); alert(err.message || 'Erro ao remover veículo.'); }
   };
 
   if (isLoading) return <div className="page-status">A carregar veículos...</div>;

@@ -39,9 +39,7 @@ export const FrotaHeader = () => {
             </Link>
           )}
         </nav>
-        <div className="user-area">
-          <User size={24} />
-        </div>
+        
       </div>
     </header>
   );

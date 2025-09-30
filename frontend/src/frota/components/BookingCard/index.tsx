@@ -5,6 +5,10 @@ import defaultVehicleImage from '../../../assets/onix.png';
 import { Clock, User, Calendar, Tag, GitBranch } from 'lucide-react';
 import { format } from 'date-fns';
 
+// --- PASSO 1: Importar a variável de ambiente com o endereço do seu servidor ---
+// @ts-ignore
+const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', ''); // Ex: http://localhost:8000
+
 interface BookingCardProps {
   booking: BookingWithVehicle;
   onApprove?: (bookingId: number) => void;
@@ -12,7 +16,11 @@ interface BookingCardProps {
 }
 
 export const BookingCard: React.FC<BookingCardProps> = ({ booking, onApprove, onDeny }) => {
-  const imageUrl = booking.vehicle.image_url || defaultVehicleImage;
+  
+  // --- PASSO 2: Lógica para decidir qual imagem usar ---
+  const imageUrl = booking.vehicle.image_url
+    ? `${API_URL_BASE}${booking.vehicle.image_url}` // Se houver URL no banco, constrói o endereço completo
+    : defaultVehicleImage; // Senão, usa a imagem padrão
 
   // Função para formatar a data
   const formatDate = (dateString: string) => {
@@ -26,6 +34,7 @@ export const BookingCard: React.FC<BookingCardProps> = ({ booking, onApprove, on
   return (
     <div className="booking-card">
       <div className="booking-card-image">
+        {/* --- PASSO 3: Usar a variável 'imageUrl' aqui --- */}
         <img src={imageUrl} alt={booking.vehicle.name} />
       </div>
       <div className="booking-card-content">
