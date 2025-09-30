@@ -13,8 +13,6 @@ interface PendingRequestItemProps {
 export const PendingRequestItem: React.FC<PendingRequestItemProps> = ({ booking, onApprove, onDeny }) => {
 
   const isSchedule = booking.type === 'schedule';
-  // Adiciona classes para a cor da borda e do fundo
-  // Use 'schedule' para vermelho e 'checkout' para verde como no seu exemplo desejado
   const cardClass = isSchedule ? 'request-item schedule' : 'request-item checkout'; 
 
   const formatDate = (dateString: string) => format(new Date(dateString), 'dd/MM/yyyy');
@@ -28,16 +26,15 @@ export const PendingRequestItem: React.FC<PendingRequestItemProps> = ({ booking,
             🚗
           </div>
           <div className="vehicle-details">
-            {/* Certifique-se que booking.vehicle.year existe ou remova */}
             <h4>{booking.vehicle.name} {booking.vehicle.year}</h4> 
             <p>{booking.vehicle.license_plate}</p>
           </div>
         </div>
 
         <div className="request-details-grid">
-          <p><User size={14} /> Solicitante: {booking.user?.name || `ID ${booking.user_id}`}</p>
+          {/* Alterado para mostrar email do usuário */}
+          <p><User size={14} /> Solicitante: {booking.user?.email || `ID ${booking.user_id}`}</p>
           <p><Clock size={14} /> Horário: {formatTime(booking.start_time)}</p>
-          {/* Mudei a ordem para bater com a imagem que você enviou: Finalidade antes da Data */}
           <p><Info size={14} /> Finalidade: {booking.purpose}</p> 
           <p><Calendar size={14} /> Data: {formatDate(booking.start_time)}</p>
         </div>

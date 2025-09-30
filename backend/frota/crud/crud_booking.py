@@ -1,8 +1,15 @@
 # backend/frota/crud/crud_booking.py
-from sqlalchemy.orm import Session
-from datetime import datetime, timedelta, timezone # Importe o 'timezone'
+from sqlalchemy.orm import Session, joinedload
+from datetime import datetime, timezone, timedelta
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
+
+# Importa banco e CRUD global
+from backend.database.database import get_db as get_global_db
+from backend.crud.user import get_user
+from backend.models.user import User
+
+# --- CRUD da frota ---
 
 def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, observation:str=None, start_mileage:int=None):
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).with_for_update().first()
@@ -11,7 +18,6 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
     if vehicle.status not in ("available",):
         raise ValueError("Vehicle not available")
         
-    # Use timezone.utc para tornar o datetime ciente do fuso horário
     now_utc = datetime.now(timezone.utc)
     
     b = Booking(
@@ -30,10 +36,14 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
     db.add(b)
     db.commit()
     db.refresh(b)
+    
+    # Injeta user do banco global
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, user_id)
+    
     return b
 
 def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time, end_time, purpose=None, observation=None):
-    # check overlap with confirmed/pending bookings for same vehicle
     overlap = db.query(Booking).filter(
         Booking.vehicle_id == vehicle_id,
         Booking.status.in_(["pending", "confirmed"]),
@@ -57,13 +67,29 @@ def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time, end_ti
     db.add(b)
     db.commit()
     db.refresh(b)
+    
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, user_id)
+    
     return b
 
 def get_bookings(db: Session, skip:int=0, limit:int=200):
-    return db.query(Booking).offset(skip).limit(limit).all()
+    bookings = db.query(Booking).options(joinedload(Booking.vehicle)).offset(skip).limit(limit).all()
+    
+    # Injeta usuário do banco global
+    global_db = next(get_global_db())
+    for b in bookings:
+        b.user = get_user(global_db, b.user_id)
+        
+    return bookings
 
 def get_booking(db: Session, booking_id:int):
-    return db.query(Booking).filter(Booking.id == booking_id).first()
+    b = db.query(Booking).options(joinedload(Booking.vehicle)).filter(Booking.id == booking_id).first()
+    if not b:
+        return None
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, b.user_id)
+    return b
 
 def approve_booking(db: Session, booking_id:int, approver_id:int):
     b = get_booking(db, booking_id)
@@ -74,23 +100,18 @@ def approve_booking(db: Session, booking_id:int, approver_id:int):
     b.handled_by = approver_id
     
     v = db.query(Vehicle).filter(Vehicle.id == b.vehicle_id).first()
-    if not v:
-        db.commit()
-        db.refresh(b)
-        return b
-        
-    # CORREÇÃO: use datetime.now(timezone.utc) para garantir que a comparação seja válida
-    now_utc = datetime.now(timezone.utc)
-    two_hours_from_now = now_utc + timedelta(hours=2)
-
-    # Lógica de negócio: o status do veículo só muda se for para agora
-    if b.start_time.replace(tzinfo=timezone.utc) <= two_hours_from_now:
-        v.status = "reserved"
-    else:
-        v.status = "available"
+    if v:
+        now_utc = datetime.now(timezone.utc)
+        two_hours_from_now = now_utc + timedelta(hours=2)
+        v.status = "reserved" if b.start_time <= two_hours_from_now else "available"
     
     db.commit()
     db.refresh(b)
+    
+    # Atualiza user
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, b.user_id)
+    
     return b
 
 def deny_booking(db: Session, booking_id:int):
@@ -98,11 +119,17 @@ def deny_booking(db: Session, booking_id:int):
     if not b:
         return None
     b.status = "denied"
+    
     v = db.query(Vehicle).filter(Vehicle.id == b.vehicle_id).first()
     if v:
         v.status = "available"
+    
     db.commit()
     db.refresh(b)
+    
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, b.user_id)
+    
     return b
 
 def complete_return(db: Session, booking_id:int, end_mileage:int=None, parking_location:str=None):
@@ -113,9 +140,15 @@ def complete_return(db: Session, booking_id:int, end_mileage:int=None, parking_l
     b.end_mileage = end_mileage
     b.parking_location = parking_location
     b.status = "completed"
+    
     v = db.query(Vehicle).filter(Vehicle.id == b.vehicle_id).first()
     if v:
         v.status = "available"
+    
     db.commit()
     db.refresh(b)
+    
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, b.user_id)
+    
     return b

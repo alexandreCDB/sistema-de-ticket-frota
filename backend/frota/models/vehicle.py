@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, TIMESTAMP
 from sqlalchemy.sql import func
-# A linha abaixo foi corrigida.
-# Importa o objeto 'Base' diretamente do arquivo 'database.py' que está um nível acima.
 from ..database import Base
+from sqlalchemy.orm import relationship
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
@@ -11,7 +10,10 @@ class Vehicle(Base):
     model = Column(String(255), nullable=True)
     license_plate = Column(String(50), unique=True, nullable=False, index=True)
     image_url = Column(String(500), nullable=True)
-    status = Column(String(30), nullable=False, default="available")  # available, in-use, reserved, maintenance
+    status = Column(String(30), nullable=False, default="available")
     passengers = Column(Integer, nullable=True)
-    features = Column(Text, nullable=True)  # JSON string or text
+    features = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+    # relacionamento inverso
+    bookings = relationship("Booking", back_populates="vehicle")

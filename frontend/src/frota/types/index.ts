@@ -27,12 +27,18 @@ export interface Booking {
   handled_by: number | null;
 }
 
-// O tipo que a página de Meus Veículos precisa
-export interface BookingWithVehicle extends Booking {
-  vehicle: Vehicle;
-}
 
 // Tipo de veículo que inclui suas reservas
 export interface VehicleWithBookings extends Vehicle {
   bookings: BookingWithVehicle[];
+}
+
+export interface User {
+  id: number;
+  email: string;
+}
+
+export interface BookingWithVehicle extends Booking {
+  vehicle: Vehicle;
+  user: User;  // <-- agora existe
 }

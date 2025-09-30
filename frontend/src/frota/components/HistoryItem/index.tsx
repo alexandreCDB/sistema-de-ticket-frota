@@ -24,7 +24,10 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ booking }) => {
 
       <div className="history-details">
         <h4>{booking.vehicle.name} <span>({booking.vehicle.license_plate})</span></h4>
-        <p><strong>Utilizador:</strong> {booking.user?.name || `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}</p>
+       <p>
+      <strong>Utilizador:</strong> {booking.user?.email || `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}
+        </p>
+
       </div>
 
       <div className="history-time">

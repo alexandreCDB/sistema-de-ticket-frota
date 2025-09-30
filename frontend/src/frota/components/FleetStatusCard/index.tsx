@@ -36,7 +36,10 @@ export const FleetStatusCard: React.FC<FleetStatusCardProps> = ({ booking }) => 
         <div className="driver-info">
           <div className="info-line">
             <User size={14} />
-            <span>Condutor: {user?.name || `ID: ${booking.user_id}`}</span>
+            <span>
+            Condutor: {booking.user?.email.split('@')[0] || `ID: ${booking.user_id}`}
+            </span>
+
           </div>
           <div className="info-line">
             <MapPin size={14} />

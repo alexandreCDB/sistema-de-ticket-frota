@@ -5,9 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# MUDANÇA PRINCIPAL: Agora ele lê a URL completa do banco principal do .env
 PRINCIPAL_DATABASE_URL = os.getenv("PRINCIPAL_DATABASE_URL")
-
 if not PRINCIPAL_DATABASE_URL:
     print("AVISO: PRINCIPAL_DATABASE_URL não definida no .env. Usando SQLite como fallback.")
     PRINCIPAL_DATABASE_URL = "sqlite:///./sql_app.db"
@@ -26,9 +24,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-# As funções de drop/create continuam aqui, mas não serão chamadas pelo main.py
-def create_all_tables():
-    print("Criando tabelas no banco principal...")
-    Base.metadata.create_all(bind=engine)
-    print("Tabelas criadas.")

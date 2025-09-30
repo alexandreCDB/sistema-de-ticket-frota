@@ -6,6 +6,8 @@
   flex-direction: column;
   overflow: hidden;
   transition: all 0.2s ease;
+
+  
 }
 
 @media (min-width: 768px) {
@@ -19,18 +21,25 @@
   width: 100%;
   height: 200px;
   background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 @media (min-width: 768px) {
   .booking-card-image {
     width: 250px;
     height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
 .booking-card-image img {
   width: 100%;
-  height: 100%;
+  height: 75%;
   object-fit: cover;
 }
 
@@ -43,8 +52,8 @@
 
 .booking-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-end;
+  align-items: flex-end !important;
   margin-bottom: 1rem;
 }
 
@@ -66,12 +75,15 @@
 }
 
 .booking-card-details {
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   font-size: 0.9rem;
   color: var(--frota-color-text-secondary);
   margin-bottom: 1rem;
+  justify-content: flex-start;
+  margin-top: -44px;
+  gap: 40px;
 }
 
 .booking-card-details .detail-item {
@@ -106,5 +118,55 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+/* ===== RESPONSIVO PARA TABLET/MOBILE ===== */
+@media (max-width: 768px) {
+  .booking-card {
+    flex-direction: column; /* Deixa imagem em cima e detalhes abaixo */
+    padding: 12px;
+  }
+
+  .booking-card-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .booking-card-header h3 {
+    font-size: 1.1rem; /* menor no mobile */
+  }
+
+  .booking-card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* duas colunas de mesmo tamanho */
+    gap: 12px; /* espaço entre os itens */
+  }
+
+
+  .detail-item {
+    font-size: 0.9rem;
+  }
+
+  .booking-card-actions button {
+    width: 48%; /* dois botões lado a lado ocupando menos espaço */
+    font-size: 0.9rem;
+  }
+
+  .booking-card-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 4%;
+    margin-top: 10px;
+  }
+
+  .booking-card-purpose p {
+    font-size: 0.95rem;
+  }
+
+  .booking-status-badge {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+  }
 }
 
