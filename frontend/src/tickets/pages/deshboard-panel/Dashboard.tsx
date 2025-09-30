@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+//@ts-ignore
 import "./DashboardPanels.css";
 import AnimatedPageWrapper from "../../../components/Animated/AnimatedPageWrapper";
 import { getPanelsForUser, PanelConfig } from "./dashboardPanelsLogic";

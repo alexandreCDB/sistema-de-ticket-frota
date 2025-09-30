@@ -17,11 +17,11 @@ import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
 import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
 import NotificationBell from "./components/notification-bell/NotificationBell";
-import AdminRoute from "./components/AUTH/AdminRoute"; 
+import AdminRoute from "./components/AUTH/AdminRoute";
 import Home from "./Pages/home/home";
 
 function AppContent() {
-  const { loadingUser } = useAuth();
+  const { loadingUser, user } = useAuth();
   const location = useLocation();
 
   if (loadingUser) {
@@ -53,7 +53,7 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-        
+
         {/* Tickets */}
         <Route
           path="/tickets/*"
@@ -105,7 +105,10 @@ function AppContent() {
 
         {/* Super Admin */}
         <Route path="/master/*">
-          <Route index element={<AdminDashboard />} />
+          <Route index element={<AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+          } />
         </Route>
 
         {/* Fallback */}

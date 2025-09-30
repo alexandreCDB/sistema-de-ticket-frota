@@ -5,7 +5,19 @@ export interface User {
   status: "online" | "offline";
   is_admin: boolean;
   is_super_admin: boolean;
+  is_active: boolean;
+  lastSeen:Date ;
 }
+
+export interface UserRow {
+  id: number;
+  name: string;
+  email: string;
+  status: "online" | "offline";
+  role: string;
+  lastSeen: string;
+  is_active: boolean;
+} 
 
 export interface SystemStats {
   cpu: {
@@ -24,3 +36,4 @@ export interface SystemStats {
   uptime: string;     // tempo de uptime
   connections: number; // número de conexões ativas
 }
+

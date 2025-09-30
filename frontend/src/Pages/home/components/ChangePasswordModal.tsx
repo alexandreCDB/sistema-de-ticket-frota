@@ -13,7 +13,7 @@ interface ChangePasswordModalProps {
   user: IUser
 }
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose,user }) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClose, user }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +26,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (newPassword !== confirmPassword) {
       alert('As senhas não coincidem');
       return;
@@ -54,30 +54,30 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
     }).catch((err) => {
       alert(err);
     });
-    setIsLoading(true);    
-   
+    setIsLoading(true);
+
   };
 
   return (
     <div className="epm-modal-overlay fade-in">
-  <div className="epm-modal-content">
-    {/* Header */}
-    <div className="epm-modal-header">
-      <div className="epm-modal-title-container">
-        <div className="epm-modal-icon blue">
-          <Lock size={16} />
+      <div className="epm-modal-content">
+        {/* Header */}
+        <div className="epm-modal-header">
+          <div className="epm-modal-title-container">
+            <div className="epm-modal-icon blue">
+              <Lock size={16} />
+            </div>
+            <h3 className="epm-modal-title">Alterar Senha</h3>
+          </div>
+          <button onClick={onClose} className="epm-modal-close">
+            <X size={20} />
+          </button>
         </div>
-        <h3 className="epm-modal-title">Alterar Senha</h3>
-      </div>
-      <button onClick={onClose} className="epm-modal-close">
-        <X size={20} />
-      </button>
-    </div>
 
-    {/* Form */}
-    <form onSubmit={handleSubmit} className="epm-modal-body">
-      {/* Senha Atual */}
-      {/* <div className="epm-form-group">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="epm-modal-body">
+          {/* Senha Atual */}
+          {/* <div className="epm-form-group">
         <label className="epm-form-label">Senha Atual</label>
         <div className="epm-form-input-container">
           <input
@@ -97,62 +97,62 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
         </div>
       </div> */}
 
-      {/* Nova Senha */}
-      <div className="epm-form-group">
-        <label className="epm-form-label">Nova Senha</label>
-        <div className="epm-form-input-container">
-          <input
-            type={showNewPassword ? 'text' : 'password'}
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="epm-form-input"
-            required
-            minLength={6}
-          />
-          <button
-            type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
-            className="epm-password-toggle"
-          >
-            {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
-        </div>
-      </div>
+          {/* Nova Senha */}
+          <div className="epm-form-group">
+            <label className="epm-form-label">Nova Senha</label>
+            <div className="epm-form-input-container">
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="epm-form-input"
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="epm-password-toggle"
+              >
+                {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
 
-      {/* Confirmar Senha */}
-      <div className="epm-form-group">
-        <label className="epm-form-label">Confirmar Nova Senha</label>
-        <div className="epm-form-input-container">
-          <input
-            type={showConfirmPassword ? 'text' : 'password'}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="epm-form-input"
-            required
-            minLength={6}
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="epm-password-toggle"
-          >
-            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
-        </div>
-      </div>
+          {/* Confirmar Senha */}
+          <div className="epm-form-group">
+            <label className="epm-form-label">Confirmar Nova Senha</label>
+            <div className="epm-form-input-container">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="epm-form-input"
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="epm-password-toggle"
+              >
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
 
-      {/* Buttons */}
-      <div className="epm-form-actions">
-        <button type="button" onClick={onClose} className="epm-btn epm-btn-secondary">
-          Cancelar
-        </button>
-        <button type="submit" disabled={isLoading} className="epm-btn epm-btn-primary">
-          {isLoading ? 'Alterando...' : 'Alterar Senha'}
-        </button>
+          {/* Buttons */}
+          <div className="epm-form-actions">
+            <button type="button" onClick={onClose} className="epm-btn epm-btn-secondary">
+              Cancelar
+            </button>
+            <button type="submit" disabled={isLoading} className="epm-btn epm-btn-primary">
+              {isLoading ? 'Alterando...' : 'Alterar Senha'}
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
+    </div>
 
   );
 };

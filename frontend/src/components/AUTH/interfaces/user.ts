@@ -4,4 +4,5 @@ export interface IUser {
   is_admin: boolean
   is_super_admin: boolean
   id: number
+  lastSeen: Date;
 }

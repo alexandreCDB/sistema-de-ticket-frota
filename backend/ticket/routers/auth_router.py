@@ -1,7 +1,7 @@
 #
 # Arquivo: backend/ticket/routers/auth_router.py (VERSÃO CORRIGIDA)
 #
-from datetime import timedelta
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -30,6 +30,9 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     if not user or not user.is_active:
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos/inativo")
 
+    user.lastSeen = datetime.utcnow()
+    db.commit()  # salva no banco
+    db.refresh(user) 
     access_token_expires = timedelta(hours=12)
     access_token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
 
