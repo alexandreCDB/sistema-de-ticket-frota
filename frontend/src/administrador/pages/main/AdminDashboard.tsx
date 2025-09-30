@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LayoutDashboard, Users, Settings, RefreshCw } from "lucide-react";
 import { useSystemStats } from "../../hooks/useSystemStats";
-import { useUsers } from "../../hooks/useUsers";
+// import { useUsers } from "../../hooks/useUsers";
 import DashboardTab from "./../../components/DashboardTab/DashboardTab";
 import UsersTab from "./../../components/UsersTab/UsersTab";
 import SettingsTab from "./../../components/SettingsTab/SettingsTab";
@@ -10,10 +10,13 @@ import "./AdminDashboard.css";
 import { User } from "../../types";
 import { useDashboardStats } from "./AdminDashboard.service";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../../tickets/services/App.services";
 
 const AdminDashboard: React.FC = () => {
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const { stats, users } = useDashboardStats();
+  
 
 
   const onlineUsersCount = users.filter((u) => u.status === "online").length;
@@ -32,6 +35,17 @@ const AdminDashboard: React.FC = () => {
           <button onClick={() => setActiveTab("settings")} className={`nav-item ${activeTab === "settings" ? "active" : ""}`}>
             <Settings className="icon" /> <span>Settings</span>
           </button>
+          <NavLink
+            to="/"
+            end
+
+          >
+            <button
+              // onClick={handleLogout} 
+              className="logout-button">
+              VOLTAR
+            </button>
+          </NavLink>
         </nav>
 
         <main className="content">
@@ -59,17 +73,7 @@ const AdminDashboard: React.FC = () => {
           {activeTab === "dashboard" && <DashboardTab stats={stats} user={users} />}
           {activeTab === "users" && <UsersTab />}
           {activeTab === "settings" && <SettingsTab />}
-          <NavLink
-            to="/"
-            end
-
-          >
-            <button
-              // onClick={handleLogout} 
-              className="logout-button">
-              VOLTAR
-            </button>
-          </NavLink>
+          
         </main>
       </div>
     </div>

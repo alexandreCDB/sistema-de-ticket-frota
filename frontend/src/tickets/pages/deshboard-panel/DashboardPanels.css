@@ -156,7 +156,7 @@
 @media (max-width: 768px) {
 
 .main-content {
-  width:auto;
+  /* width:auto; */
 }
 .page-wrapper {
     height:auto;

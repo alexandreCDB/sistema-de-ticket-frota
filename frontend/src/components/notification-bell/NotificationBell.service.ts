@@ -85,15 +85,15 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
             normalized = {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
-              message: data.message.message, // já vem como "message"
+              message: data.message.message, 
             };
             break;
 
-          case "ticket_message":
+          case "ticket_message":          
             normalized = {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
-              message: data.message.text, // aqui vem "text"
+              message: data.message.message, 
             };
             break;
 
@@ -101,7 +101,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
             normalized = {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
-              message: `Ticket encerrado: ${data.message.reason}`,
+              message: `Ticket encerrado: ${data.message.ticket_id}`,
             };
             break;
 
