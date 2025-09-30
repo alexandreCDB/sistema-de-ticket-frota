@@ -1,0 +1,127 @@
+/* Estilos do Header */
+.header {
+  background: white !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+.header-container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1rem !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  height: 4rem !important;
+}
+
+/* Logo e Nome da Empresa */
+.header-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.header-logo {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  border-radius: 0.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 1.125rem !important;
+}
+
+.header-title {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.header-title h1 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #1a202c !important;
+  line-height: 1.2 !important;
+}
+
+.header-subtitle {
+  font-size: 0.75rem !important;
+  color: #718096 !important;
+}
+
+/* Menu do Usuário */
+.user-menu {
+  position: relative !important;
+}
+
+.user-button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.5rem !important;
+  border-radius: 0.5rem !important;
+  background: transparent !important;
+  transition: background-color 0.2s !important;
+  border: none;
+  cursor: pointer;
+}
+
+.user-button:hover {
+  background-color: #f7fafc !important;
+}
+
+.user-info {
+  text-align: right !important;
+}
+
+.user-name {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #1a202c !important;
+}
+
+.user-email {
+  font-size: 0.75rem !important;
+  color: #718096 !important;
+}
+
+.user-avatar {
+  width: 2rem !important;
+  height: 2rem !important;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+}
+
+.chevron-icon {
+  color: #a0aec0 !important;
+  transition: transform 0.2s !important;
+}
+
+.chevron-icon.rotated {
+  transform: rotate(180deg) !important;
+}
+
+/* Responsividade do Header */
+@media (max-width: 640px) {
+  .header-title h1 {
+    font-size: 1.125rem !important;
+  }
+  
+  .header-subtitle {
+    display: none !important;
+  }
+  
+  .user-info {
+    display: none !important;
+  }
+}

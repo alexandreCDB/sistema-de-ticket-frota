@@ -1,0 +1,251 @@
+/* Estilos da Página Home */
+.home-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.home-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Hero Section */
+.home-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.home-hero h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1a202c;
+  margin-bottom: 1rem;
+}
+
+.home-hero p {
+  font-size: 1.125rem;
+  color: #718096;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+/* Modules Grid */
+.modules-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.module-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.module-card:hover::before {
+  transform: scaleX(1);
+}
+
+.module-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+}
+
+.module-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.module-card:hover .module-icon {
+  transform: scale(1.1);
+}
+
+.module-icon.tickets {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+.module-card:hover .module-icon.tickets {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.module-icon.frotas {
+  background-color: #dcfce7;
+  color: #22c55e;
+}
+
+.module-card:hover .module-icon.frotas {
+  background-color: #22c55e;
+  color: white;
+}
+
+.module-icon.master {
+  background-color: #f3e8ff;
+  color: #8b5cf6;
+}
+
+.module-card:hover .module-icon.master {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.module-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 0.75rem;
+}
+
+.module-description {
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.module-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3b82f6;
+  transition: color 0.2s;
+}
+
+.module-card:hover .module-link {
+  color: #2563eb;
+}
+
+.module-link svg {
+  margin-left: 0.25rem;
+  transition: transform 0.3s ease;
+}
+
+.module-card:hover .module-link svg {
+  transform: translateX(4px);
+}
+
+/* Stats Section */
+.stats-section {
+  margin-top: 4rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number.blue { color: #3b82f6; }
+.stat-number.green { color: #22c55e; }
+.stat-number.purple { color: #8b5cf6; }
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #718096;
+}
+
+/* Responsividade */
+@media (min-width: 768px) {
+  .modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stats-section {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .modules-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero h1 {
+    font-size: 1.875rem;
+  }
+  
+  .home-hero p {
+    font-size: 1rem;
+  }
+  
+  .module-card {
+    padding: 1.5rem;
+  }
+  
+  .module-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .module-title {
+    font-size: 1.125rem;
+  }
+  
+  .module-description {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-main {
+    padding: 1rem;
+  }
+  
+  .home-hero {
+    margin-bottom: 2rem;
+  }
+  
+  .module-card {
+    padding: 1rem;
+  }
+  
+  .stats-section {
+    margin-top: 2rem;
+  }
+}

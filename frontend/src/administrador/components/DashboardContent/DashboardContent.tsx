@@ -63,7 +63,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ stats, users }) => 
                   <p>{user.name}</p>
                   <p>{user.email}</p>
                 </div>
-                <span className="user-role">{user.role}</span>
+                <span className="user-role">{getUserRole(user)}</span>
               </div>
             ))}
           </div>
@@ -104,3 +104,9 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ stats, users }) => 
 );
 
 export default DashboardContent;
+
+export const getUserRole = (user: any) => {
+  if (user.is_super_admin) return "Super Admin";
+  if (user.is_admin) return "Admin";
+  return "Normal";
+}

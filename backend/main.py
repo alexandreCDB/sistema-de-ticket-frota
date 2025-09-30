@@ -22,7 +22,7 @@ from backend.frota.routers.booking import router as frota_bookings_router
 from backend.frota.routers.upload import router as frota_upload_router
 
 # 4. Import do Gerenciador de WebSocket
-from backend.websocket.service.settings import get_system_stats
+from backend.websocket.service.settings import get_online_users_data, get_system_stats
 from backend.websocket.service.ws_instance import manager
 
 
@@ -55,8 +55,12 @@ async def lifespan(app: FastAPI):
 async def broadcast_system_stats():
     while True:
         stats = get_system_stats()
+        users = await  get_online_users_data()
         stats["connections"] = sum(len(conns) for conns in manager.active_connections.values())
-        await manager.broadcast("system_stats", stats)
+        await manager.broadcast("system_stats", {
+            "server_stats": stats,
+            "users_stats": users
+        })
         await asyncio.sleep(2)
 
 

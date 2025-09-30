@@ -113,7 +113,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
                 </>
               )}
 
-              <li>
+              {/* <li>
                 <NavLink
                   to="/tickets/settings"
                   className={({ isActive }) => (isActive ? 'active' : '')}
@@ -121,7 +121,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
                   <FaCog className="icon" />
                   <span>Configurações</span>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </nav>
 

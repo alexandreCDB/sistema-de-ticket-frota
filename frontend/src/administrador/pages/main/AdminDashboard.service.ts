@@ -23,25 +23,23 @@ export const useDashboardStats = () => {
 
         // Atualiza stats se for do tipo system_stats
         if (data.type === "system_stats") {
-          setStats(data.message);
+          setStats(data.message.server_stats);
+          setUsers(data.message.users_stats);
+          
         }
-
-        // Atualiza usuários se for do tipo users_update
-        if (data.type === "users_update") {
-          setUsers(data.message);
-        }
+           
       } catch (err) {
-        console.error("Erro ao processar mensagem WS:", err);
-      }
-    };
+      console.error("Erro ao processar mensagem WS:", err);
+    }
+  };
 
-    ws.addEventListener("message", handleMessage);
+  ws.addEventListener("message", handleMessage);
 
-    return () => {
-      ws.removeEventListener("message", handleMessage);
-      // opcional: não desconecta aqui se quiser manter reconexão automática
-    };
-  }, []);
+  return () => {
+    ws.removeEventListener("message", handleMessage);
+    // opcional: não desconecta aqui se quiser manter reconexão automática
+  };
+}, []);
 
-  return { stats, users };
+return { stats, users };
 };

@@ -174,7 +174,7 @@ const TicketList: React.FC<TicketListProps> = ({
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
                   ⬅️ Anterior
                 </button>
-                <span>Página {currentPage} de {totalPages}</span>
+                <span style={{ color: "black" }}>Página {currentPage} de {totalPages}</span>
                 <button onClick={handleNextPage} disabled={currentPage === totalPages}>
                   Próximo ➡️
                 </button>
