@@ -139,7 +139,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               id: data.message.id,
               vehicle_id: data.message.vehicle_id,
               message: data.message.message,
-              routerLink: `/frotas/admin`,
+              routerLink: `/frotas/meus-veiculos`,
             };
             break;
 

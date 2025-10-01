@@ -137,11 +137,11 @@ async def notify_frota_deny_async(booking: Booking):
         finally:
             db_pm.close()
 
-async def notify_frota_return_async(vehicle_id: int):
+async def notify_frota_return_async(booking: Booking):
     # sessão para banco da frota
     db_frota = FleetSessionLocal()
     try:
-        vehicle = get_vehicle(db_frota, vehicle_id)
+        vehicle = get_vehicle(db_frota, booking.vehicle_id)
         
         if not vehicle:
             return
@@ -159,9 +159,9 @@ async def notify_frota_return_async(vehicle_id: int):
                 notification = notification_crud.create_notification_frota(
                     db=db_pm,
                     user_id=admin.id,
-                    vehicle_id=vehicle_id,
-                    message=f"Solicitação de retirada de veículo :  {vehicle.name} - {vehicle.license_plate}",
-                    notif_type=NotificationType.frota_checkout
+                    vehicle_id=booking.vehicle_id,
+                    message=f"Devolução de veículo :  {vehicle.name} - {vehicle.license_plate}",
+                    notif_type=NotificationType.frota_return
                 )
                 notifications.append(notification)
 
@@ -169,10 +169,10 @@ async def notify_frota_return_async(vehicle_id: int):
             for notification in notifications:
                 await manager.send_to_user(
                     notification.user_id,
-                    "frota_checkout",
+                    "frota_return",
                     {
                         "id": notification.id,
-                        "vehicle_id": vehicle_id,
+                        "vehicle_id": notification.vehicle_id,
                         "message": notification.message,
                     }
                 )
