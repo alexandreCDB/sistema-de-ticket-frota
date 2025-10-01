@@ -21,6 +21,23 @@ def create_notification(
     db.refresh(new_notification)
     return new_notification
 
+def create_notification_frota(
+    db: Session,
+    user_id: int,
+    vehicle_id: int,
+    message: Optional[str] = None,
+    notif_type: NotificationType = NotificationType.frota_checkout
+) -> Notification:
+    new_notification = Notification(
+        user_id=user_id,
+        vehicle_id=vehicle_id,
+        message=message,
+        notification_type=notif_type
+    )
+    db.add(new_notification)
+    db.commit()
+    db.refresh(new_notification)
+    return new_notification
 
 def mark_notification_as_read(db: Session, notification_id: int) -> Optional[Notification]:
     notification = db.query(Notification).filter(Notification.id == notification_id).first()

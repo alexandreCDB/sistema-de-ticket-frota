@@ -1,7 +1,7 @@
 # backend/frota/crud/crud_booking.py
-
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone, timedelta
+
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
 
@@ -33,7 +33,12 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
     db.add(b)
     db.commit()
     db.refresh(b)
-    return b # Retorna o objeto puro, sem o usuário
+    
+    # Injeta user do banco global
+    global_db = next(get_global_db())
+    b.user = get_user(global_db, user_id)
+    
+    return b
 
 def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time: datetime, end_time: datetime, purpose:str=None, observation:str=None):
     overlap = db.query(Booking).filter(

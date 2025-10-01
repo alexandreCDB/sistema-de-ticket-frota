@@ -53,6 +53,8 @@ const UsersTab: React.FC = () => {
       is_active: user.is_active
     };
   });
+  
+  
   const filteredAndSortedUsers = combinedUsers
     .filter(user =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

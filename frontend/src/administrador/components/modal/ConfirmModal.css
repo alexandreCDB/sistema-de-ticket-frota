@@ -1,4 +1,4 @@
-.modal {
+.cmodal {
   position: fixed;
   top: 30%;
   left: 50%;
@@ -12,17 +12,17 @@
   text-align: center;
 }
 
-.modal h3 {
+.cmodal h3 {
   margin-top: 0;
   margin-bottom: 10px;
 }
 
-.modal p {
+.cmodal p {
   margin-bottom: 20px;
   font-size: 16px;
 }
 
-.modal button {
+.cmodal button {
   margin: 0 10px;
   padding: 8px 14px;
   border: none;
@@ -30,12 +30,12 @@
   border-radius: 5px;
 }
 
-.modal button:first-of-type {
+.cmodal button:first-of-type {
   background-color: #dc3545;
   color: white;
 }
 
-.modal button:last-of-type {
+.cmodal button:last-of-type {
   background-color: #6c757d;
   color: white;
 }

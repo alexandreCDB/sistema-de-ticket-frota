@@ -19,13 +19,14 @@ import AdminDashboard from "./administrador/pages/main/AdminDashboard";
 import NotificationBell from "./components/notification-bell/NotificationBell";
 import AdminRoute from "./components/AUTH/AdminRoute";
 import Home from "./Pages/home/home";
+import Loading from "./components/Loads/Loading";
 
 function AppContent() {
   const { loadingUser, user } = useAuth();
   const location = useLocation();
 
   if (loadingUser) {
-    return <p>A carregar aplicação...</p>;
+    return <Loading />;
   }
 
   return (

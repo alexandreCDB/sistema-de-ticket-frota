@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
-from typing import List
-
-# --- Imports do Módulo Frota ---
+# As 3 linhas abaixo foram corrigidas para usar o caminho relativo correto (..)
 from ..crud.crud_booking import (
     create_checkout, create_schedule, approve_booking, deny_booking,
     complete_return, get_booking, get_all_bookings, get_bookings_by_user
@@ -53,12 +51,7 @@ def list_bookings(
     return bookings
 
 @router.post("/checkout", response_model=BookingRead)
-def checkout(
-    payload: BookingCheckout,
-    frota_db: Session = Depends(get_frota_db),
-    global_db: Session = Depends(get_global_db),
-    current_user: UserModel = Depends(get_current_user)
-):
+def checkout(payload: BookingCheckout, db: Session = Depends(get_db), user = Depends(get_current_user)):
     try:
         booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
         # Anexa o objeto do usuário antes de retornar para a resposta ser completa
@@ -66,6 +59,7 @@ def checkout(
         return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    return b
 
 @router.post("/schedule", response_model=BookingRead)
 def schedule(
@@ -83,56 +77,32 @@ def schedule(
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.patch("/{booking_id}/approve", response_model=BookingRead)
-def approve(
-    booking_id: int = Path(...),
-    frota_db: Session = Depends(get_frota_db),
-    global_db: Session = Depends(get_global_db),
-    current_user: UserModel = Depends(get_current_user)
-):
-    if not current_user.is_admin:
+def approve(booking_id: int = Path(...), db: Session = Depends(get_db), user = Depends(get_current_user)):
+    if not user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem aprovar")
     
     booking = approve_booking(frota_db, booking_id, current_user.id)
     if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-    
-    # Anexa o objeto do usuário antes de retornar
-    booking.user = get_user(global_db, booking.user_id)
-    return booking
+    return b
 
 @router.patch("/{booking_id}/deny", response_model=BookingRead)
-def deny(
-    booking_id: int = Path(...),
-    frota_db: Session = Depends(get_frota_db),
-    global_db: Session = Depends(get_global_db),
-    current_user: UserModel = Depends(get_current_user)
-):
-    if not current_user.is_admin:
+def deny(booking_id: int = Path(...), db: Session = Depends(get_db), user = Depends(get_current_user)):
+    if not user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem negar")
         
     booking = deny_booking(frota_db, booking_id)
     if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-        
-    # Anexa o objeto do usuário antes de retornar
-    booking.user = get_user(global_db, booking.user_id)
-    return booking
+    return b
 
 @router.post("/{booking_id}/return", response_model=BookingRead)
-def do_return(
-    booking_id: int,
-    payload: dict,
-    frota_db: Session = Depends(get_frota_db),
-    global_db: Session = Depends(get_global_db),
-    user: UserModel = Depends(get_current_user) # 'user' não é usado, mas mantém a autenticação
-):
+def do_return(booking_id: int, payload: dict, db: Session = Depends(get_db), user = Depends(get_current_user)):
+    # payload esperado: {"end_mileage": 54400, "parking_location":"G2-15"}
     end_mileage = payload.get("end_mileage")
     parking_location = payload.get("parking_location")
     
     booking = complete_return(frota_db, booking_id, end_mileage, parking_location)
     if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-        
-    # Anexa o objeto do usuário antes de retornar
-    booking.user = get_user(global_db, booking.user_id)
-    return booking
+    return b

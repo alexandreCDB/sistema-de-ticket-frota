@@ -45,11 +45,28 @@ const NotificationBell: React.FC = () => {
           </p>
           <ul className="listmsg">
 
-            
+
             {notifications.map((msg, idx) => (
               <li key={idx}>
                 <span>🔔</span>
-                <Link
+                {"ticket_id" in msg ? (
+                  <Link
+                    to={`${msg.routerLink}`}
+                    className="notification-link"
+                    onClick={() => markAsRead(msg.id)}
+                  >
+                    {msg.message ?? "Mensagem indisponível"}
+                  </Link>
+                ) : (
+                  <Link
+                    to={`${msg.routerLink}`}
+                    className="notification-link"
+                    onClick={() => markAsRead(msg.id)}
+                  >
+                    {msg.message ?? "Mensagem indisponível"}
+                  </Link>
+                )}
+                {/* <Link
                   to={`/tickets/tickets/${msg.ticket_id}`}
                   className="notification-link"
                   onClick={() => markAsRead(msg.id)} // agora usa o hook
@@ -57,7 +74,7 @@ const NotificationBell: React.FC = () => {
 
                   {msg.message  ?? "Mensagem indisponível"}
 
-                </Link>
+                </Link> */}
               </li>
             ))}
 

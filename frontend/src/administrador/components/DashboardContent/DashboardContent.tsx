@@ -59,8 +59,8 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ stats, users }) => 
             {users.filter(user => user.status === 'online').slice(0, 5).map(user => (
               <div key={user.id} className="user-item">
                 <div className="status-dot"></div>
-                <div className="user-info">
-                  <p>{user.name}</p>
+                <div className="suser-info">
+                  <strong style={{color:"black"}}>{user.name.split("@")[0].replace(/\./g, " ").toLocaleUpperCase()}</strong>
                   <p>{user.email}</p>
                 </div>
                 <span className="user-role">{getUserRole(user)}</span>

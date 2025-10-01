@@ -32,8 +32,66 @@ const UserList: React.FC<UserListProps> = ({ users, searchTerm, onSearch, onCrea
         <MdPersonAdd size={20} /> Criar Usuário
       </button>
     </div>
-
     <div className="table-container">
+  <table className="user-table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Usuário</th>
+        <th>Permissão</th>
+        <th>Última Sessão</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.length > 0 ? (
+        users.map((u) => (
+          <tr key={u.id}>
+            <td data-label="Status">
+              <span className={`status-badge ${u.status}`}>
+                {u.status === "online" ? <Wifi /> : <WifiOff />}
+                {u.status}
+              </span>
+            </td>
+            <td data-label="Usuário">
+              <p className="user-name">{u.name}</p>
+              <p className="user-email">{u.email}</p>
+            </td>
+            <td data-label="Permissão">
+              <span className={`role-tag ${u.role.toLowerCase().replace(" ", "-")}`}>
+                {u.role}
+              </span>
+            </td>
+            <td data-label="Última Sessão">{u.lastSeen}</td>
+            <td data-label="Ações" className="actions">
+              <button className="action-btn edit" onClick={() => onEdit(u)}>
+                <Edit size={16} /> Editar
+              </button>
+              <button className="action-btn reset" onClick={() => onResetPassword(u)}>
+                <MdPersonAdd size={16} /> Redefinir
+              </button>
+              <button
+                className={`action-btn ${u.is_active ? "deactivate" : "activate"}`}
+                onClick={() => onDeactivate(u)}
+              >
+                <Trash2 size={16} />
+                {u.is_active ? "Desativar" : "Ativar"}
+              </button>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={5} className="no-results">
+            No users found.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
+    {/* <div className="table-container">
       <table>
         <thead>
           <tr>
@@ -90,7 +148,7 @@ const UserList: React.FC<UserListProps> = ({ users, searchTerm, onSearch, onCrea
           )}
         </tbody>
       </table>
-    </div>
+    </div> */}
   </div>
 );
 
