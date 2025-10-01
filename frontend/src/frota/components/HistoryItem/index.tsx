@@ -25,8 +25,9 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ booking }) => {
       <div className="history-details">
         <h4>{booking.vehicle.name} <span>({booking.vehicle.license_plate})</span></h4>
        <p>
-      <strong>Utilizador:</strong> {booking.user?.email || `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}
-        </p>
+        <strong>Utilizador:</strong> {booking.user?.email ? booking.user.email.split('@')[0] : `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}
+      </p>
+
 
       </div>
 
