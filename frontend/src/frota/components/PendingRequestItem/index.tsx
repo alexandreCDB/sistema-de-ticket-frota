@@ -33,7 +33,9 @@ export const PendingRequestItem: React.FC<PendingRequestItemProps> = ({ booking,
 
         <div className="request-details-grid">
           {/* Alterado para mostrar email do usuário */}
-          <p><User size={14} /> Solicitante: {booking.user?.email || `ID ${booking.user_id}`}</p>
+          <p>
+  <User size={14} /> Solicitan­te:{" "} {booking.user?.email ? booking.user.email.split("@")[0]: `ID ${booking.user_id}`}</p>
+
           <p><Clock size={14} /> Horário: {formatTime(booking.start_time)}</p>
           <p><Info size={14} /> Finalidade: {booking.purpose}</p> 
           <p><Calendar size={14} /> Data: {formatDate(booking.start_time)}</p>

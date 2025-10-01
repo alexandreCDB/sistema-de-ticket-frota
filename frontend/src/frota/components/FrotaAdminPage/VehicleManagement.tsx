@@ -43,7 +43,7 @@ export const VehicleManagement = () => {
     <>
       <div className="management-header">
         <h3>Todos os Veículos ({vehicles?.length || 0})</h3>
-        <button className="btn-primary" onClick={() => handleOpenModal()}>Adicionar Veículo</button>
+        <button className="btn-primary adicionar-veiculo" onClick={() => handleOpenModal()}>Adicionar Veículo</button>
       </div>
       <div className="admin-list-container">
         {vehicles?.map(v => (

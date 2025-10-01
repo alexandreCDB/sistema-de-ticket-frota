@@ -1,13 +1,13 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
+import { setHours, setMinutes } from 'date-fns';
 //@ts-ignore
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays, getMonth, getYear } from 'date-fns';
 //@ts-ignore
 import './styles.css';
-import { Vehicle, Booking } from '../../types';
-import { X, Calendar as CalendarIcon, MessageSquare, Users } from 'lucide-react';
-import { createSchedule, listBookings } from '../../services/frota.services';
+import { Vehicle } from '../../types';
+import { X, Clock, MessageSquare, Users } from 'lucide-react'; // Ícone trocado para Clock
+import { createSchedule } from '../../services/frota.services';
 
 interface ScheduleModalProps {
   isOpen: boolean;
@@ -16,50 +16,25 @@ interface ScheduleModalProps {
   onConfirm: () => void;
 }
 
-const currentYear = getYear(new Date());
-const years = Array.from({ length: 10 }, (_, i) => currentYear + i);
-const months = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
-
 export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, vehicle, onConfirm }) => {
+  // O QUE MUDOU: Os estados continuam os mesmos, mas agora vão guardar data E hora
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [purpose, setPurpose] = useState('');
   const [observation, setObservation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [bookedDates, setBookedDates] = useState<Date[]>([]);
 
+  // O QUE MUDOU: Lógica de resetar o estado ao abrir o modal
   useEffect(() => {
-    if (isOpen && vehicle) {
-      const fetchBookedDates = async () => {
-        try {
-          const allBookings: Booking[] = await listBookings();
-          const vehicleBookings = allBookings.filter(b =>
-            b.vehicle_id === vehicle.id && (b.status === 'pending' || b.status === 'confirmed')
-          );
-          
-          const dates = vehicleBookings.flatMap(b => {
-            const bookedDays = [];
-            let currentDay = new Date(b.start_time);
-            const endDay = new Date(b.end_time || b.start_time);
-            
-            while (currentDay <= endDay) {
-              bookedDays.push(new Date(currentDay));
-              currentDay = addDays(currentDay, 1);
-            }
-            return bookedDays;
-          });
-          setBookedDates(dates);
-        } catch (err) {
-          console.error("Erro ao buscar datas reservadas:", err);
-        }
-      };
-      fetchBookedDates();
+    if (isOpen) {
+      setStartDate(null);
+      setEndDate(null);
+      setPurpose('');
+      setObservation('');
+      setError(null);
     }
-  }, [isOpen, vehicle]);
+  }, [isOpen]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -67,7 +42,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
     setError(null);
 
     if (!startDate || !endDate || !purpose) {
-      setError('Por favor, preencha todos os campos obrigatórios.');
+      setError('Por favor, preencha a data/hora de início, fim e a finalidade.');
       setIsLoading(false);
       return;
     }
@@ -85,7 +60,8 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
 
       onConfirm();
     } catch (err: any) {
-      setError(err.message);
+      const detail = err.response?.data?.detail || "Ocorreu um erro ao agendar. Tente novamente.";
+      setError(detail);
     } finally {
       setIsLoading(false);
     }
@@ -97,73 +73,51 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <div>
-            <h2 className="modal-title">Agendar Veículo</h2>
-            
-          </div>
-          
+          <h2 className="modal-title">Agendar Veículo: {vehicle.name}</h2>
         </div>
         
-        <form className="modal-body" onSubmit={handleSubmit}>
+        <form className="modal-body" onSubmit={handleSubmit} id="schedule-form">
           
-          <div className="calendar-wrapper">
-            <DatePicker
-              selected={startDate}
-              onChange={(dates: [Date | null, Date | null]) => {
-                const [start, end] = dates;
-                setStartDate(start);
-                setEndDate(end);
-              }}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              inline
-              monthsShown={1}
-              minDate={new Date()}
-              excludeDates={bookedDates}
-              highlightDates={bookedDates}
-              renderCustomHeader={({
-                date,
-                changeYear,
-                changeMonth,
-                decreaseMonth,
-                increaseMonth,
-                prevMonthButtonDisabled,
-                nextMonthButtonDisabled,
-              }) => (
-                <div className="react-datepicker-custom-header">
-                  <button type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-                    {"<"}
-                  </button>
-                  <select
-                    value={getYear(date)}
-                    onChange={({ target: { value } }) => changeYear(Number(value))}
-                  >
-                    {years.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={months[getMonth(date)]}
-                    onChange={({ target: { value } }) =>
-                      changeMonth(months.indexOf(value))
-                    }
-                  >
-                    {months.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <button type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                    {">"}
-                  </button>
-                </div>
-              )}
-            />
-          </div>
+          {/* O QUE MUDOU: Dois seletores de data/hora em vez de um calendário */}
+          <div className="schedule-picker-wrapper">
+            <div className="form-group">
+              <label className="form-label"><Clock size={16} /> Início do Agendamento</label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                minDate={new Date()}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="dd/MM/yyyy, HH:mm"
+                className="form-input"
+                placeholderText="Selecione a data e hora de início"
+                autoComplete='off'
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label"><Clock size={16} /> Fim do Agendamento</label>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate || new Date()} // O fim não pode ser antes do início
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="dd/MM/yyyy, HH:mm"
+                className="form-input"
+                placeholderText="Selecione a data e hora de fim"
+                autoComplete='off'
+              />
+            </div>
+          </div>
 
           <div className="form-group">
             <label className="form-label"><Users size={16} /> Finalidade da Viagem</label>
@@ -177,20 +131,18 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
 
           {error && <div className="error-box">{error}</div>}
           <div className="alert-box">
-            <strong>Atenção:</strong> A sua solicitação será enviada para aprovação.
-          </div>
-        
-          <div className="modal-footer">
-
-            <button type="submit" className="btn btn-primary" disabled={isLoading}>
-              {isLoading ? 'A Enviar...' : 'Solicitar Agendamento'}
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
-              Cancelar
-            </button>
-            
+            <strong>Atenção:</strong> O seu agendamento será enviado para aprovação. O sistema irá verificar a disponibilidade do horário.
           </div>
         </form>
+        
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
+            Cancelar
+          </button>
+          <button type="submit" className="btn btn-primary" form="schedule-form" disabled={isLoading || !startDate || !endDate || !purpose}>
+            {isLoading ? 'Enviando...' : 'Solicitar Agendamento'}
+          </button>
+        </div>
       </div>
     </div>
   );

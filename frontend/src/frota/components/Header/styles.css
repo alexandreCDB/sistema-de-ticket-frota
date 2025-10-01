@@ -66,3 +66,11 @@
 .admin-link.active {
   border-bottom-color: var(--frota-color-status-maintenance-text) !important;
 }
+
+/* Adicione este código ao final do seu arquivo CSS */
+
+@media (max-width: 768px) {
+  .logo-text {
+    display: none !important;
+  }
+}

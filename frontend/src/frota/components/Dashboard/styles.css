@@ -2,11 +2,6 @@
 
 .dashboard-grid {
   display: grid;
-  /* Esta linha é a mais importante:
-     - Cria colunas que tentam ter 250px de largura.
-     - 'auto-fill' diz para preencher o espaço com quantas colunas couberem.
-     - '1fr' permite que as colunas cresçam para ocupar o espaço extra.
-  */
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
@@ -82,4 +77,18 @@
 }
 .theme-maintenance .status-icon-wrapper {
   background-color: var(--frota-color-status-maintenance-icon-bg);
+}
+
+@media (max-width:640px) {
+  
+  .dashboard-grid{
+
+    grid-template-columns: 2fr 2fr;
+    
+  }
+
+  .status-card{
+    padding: 8px;
+  }
+
 }

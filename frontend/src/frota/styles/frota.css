@@ -164,3 +164,7 @@ body {
   background-color: var(--frota-color-primary-end) !important;
   border-radius: 50% !important;
 }
+
+.adicionar-veiculo{
+  cursor: pointer;
+}

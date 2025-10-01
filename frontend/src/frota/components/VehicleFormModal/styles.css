@@ -181,7 +181,7 @@
 
 .btn-save {
   background: linear-gradient(90deg, #F97316 0%, #8B5CF6 100%);
-  color: white;
+  color: white !important;
   box-shadow: 0 4px 12px -4px rgba(139, 92, 246, 0.5);
 }
 .btn-save:hover {
@@ -189,6 +189,14 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 16px -4px rgba(139, 92, 246, 0.6);
 }
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 /* RESPONSIVIDADE */
 @media (max-width: 600px) {
@@ -204,4 +212,85 @@
   .form-modal-footer button {
     width: 100%;
   }
+}
+/* meta do preview (texto pequeno) */
+.preview-meta {
+  font-size: 0.85rem;
+  color: var(--frota-color-text-secondary);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* preview pequeno já existia: .input-group .preview-img  - mantém */
+.preview-img {
+  max-height: 120px;
+  max-width: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--frota-color-border);
+  cursor: pointer;
+}
+
+/* overlay de imagem expandida */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.image-overlay-content {
+  position: relative;
+  padding: 0.5rem;
+  max-width: 95vw;
+  max-height: 95vh;
+}
+
+.expanded-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  display: block;
+}
+.image-close-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #fff !important;
+  stroke: #fff !important; /* força a cor da linha */
+}
+/* botão X da imagem (círculo branco) */
+.image-close-btn {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background-color: transparent !important; /* vermelho */
+  color: #fff !important;
+  border: none !important;
+  cursor: pointer !important;
+
+  /* Centralizar conteúdo */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* Estética */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+  transition: background-color 0.25s, transform 0.2s !important;
+}
+
+.image-close-btn:hover {
+  background-color: #000000 !important;
+  transform: scale(1.1) rotate(90deg) !important;
+}
+
+  
+
+  
 }

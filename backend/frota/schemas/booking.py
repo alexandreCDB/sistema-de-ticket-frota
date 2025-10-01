@@ -1,24 +1,25 @@
 # backend/frota/schemas/booking.py
-from pydantic import BaseModel
+
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 
-from .vehicle import VehicleRead  # 👈 importa o schema que você já tem
+from .vehicle import VehicleRead
 
 class UserRead(BaseModel):
     id: int
     email: str
 
-    class Config:
-        from_attributes = True
+    # ATUALIZADO para Pydantic v2
+    model_config = ConfigDict(from_attributes=True)
 
 class BookingBase(BaseModel):
     vehicle_id: int
-    purpose: Optional[str]
-    observation: Optional[str]
+    purpose: Optional[str] = None
+    observation: Optional[str] = None
 
 class BookingCheckout(BookingBase):
-    start_mileage: Optional[int]
+    start_mileage: Optional[int] = None
 
 class BookingSchedule(BookingBase):
     start_time: datetime
@@ -39,8 +40,8 @@ class BookingRead(BaseModel):
     parking_location: Optional[str]
     created_at: datetime
 
-    user: UserRead
-    vehicle: VehicleRead   # 👈 já traz o veículo completo
+    user: Optional[UserRead] = None # Tornamos opcional para o caso de um usuário ser deletado
+    vehicle: VehicleRead
 
-    class Config:
-        from_attributes = True
+    # ATUALIZADO para Pydantic v2
+    model_config = ConfigDict(from_attributes=True)

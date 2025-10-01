@@ -63,8 +63,10 @@
   border-radius: 5px;
   background-color: transparent;
   color: black;
-  cursor: pointer;
+  cursor: pointer !important;
 }
+
+
 .management-header h3 {
   margin: 0;
   font-size: 1.25rem;

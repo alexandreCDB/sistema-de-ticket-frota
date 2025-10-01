@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './styles.css';
 import { Vehicle } from '../../types';
 import { checkoutVehicle } from '../../services/frota.services';
-import { X, Clock, User, MessageSquare, Gauge } from 'lucide-react';
+import { Clock, User, MessageSquare, Gauge } from 'lucide-react';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -12,15 +12,53 @@ interface CheckoutModalProps {
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, vehicle, onConfirm }) => {
-  // Estados para os campos do formulário
   const [departureTime, setDepartureTime] = useState('');
   const [purpose, setPurpose] = useState('');
   const [observation, setObservation] = useState('');
   const [startMileage, setStartMileage] = useState('');
   
-  // Estados para o controlo do processo de submissão
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // O QUE MUDOU: A lógica agora FILTRA os horários em vez de desabilitá-los
+  const timeSlots = useMemo(() => {
+    const slots = [];
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    for (let hour = 6; hour <= 22; hour++) {
+      for (let minute = 0; minute < 60; minute += 5) {
+        const isPast = hour < currentHour || (hour === currentHour && minute < currentMinute);
+        
+        // Adiciona o horário na lista APENAS se ele NÃO tiver passado
+        if (!isPast) {
+          const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+          slots.push(time);
+        }
+      }
+    }
+    return slots;
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      // O QUE MUDOU: A lógica aqui ficou mais simples.
+      // Como a lista SÓ tem horários válidos, o primeiro item (índice 0) é o que queremos.
+      if (timeSlots.length > 0) {
+        setDepartureTime(timeSlots[0]);
+      } else {
+        // Caso não haja mais horários disponíveis no dia
+        setDepartureTime('');
+      }
+      
+      // Reseta outros campos ao abrir
+      setPurpose('');
+      setObservation('');
+      setStartMileage('');
+      setError(null);
+    }
+  }, [isOpen, timeSlots]);
 
   if (!isOpen || !vehicle) return null;
 
@@ -37,38 +75,36 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
         start_mileage: startMileage ? parseInt(startMileage, 10) : null
       });
       
-      onConfirm(); // Avisa a página principal que o checkout foi bem-sucedido
+      onConfirm();
     } catch (err: any) {
-      setError(err.message);
+      const detail = err.response?.data?.detail || "Ocorreu um erro. Tente novamente.";
+      setError(detail);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const timeSlots = [];
-  for (let hour = 6; hour <= 22; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      timeSlots.push(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`);
-    }
-  }
-
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <div>
-            <h2 className="modal-title">Retirar Veículo</h2>
-            
-          </div>
-          
+          <h2 className="modal-title">Retirar Veículo: {vehicle.name}</h2>
         </div>
         
         <form className="modal-body" onSubmit={handleSubmit} id="checkout-form">
           <div className="form-group">
             <label className="form-label"><Clock size={16} /> Horário de Saída</label>
             <select className="form-select" value={departureTime} onChange={(e) => setDepartureTime(e.target.value)} required>
-              <option value="">Selecione o horário</option>
-              {timeSlots.map(time => (<option key={time} value={time}>{time}</option>))}
+              {/* O QUE MUDOU: Renderização mais simples, sem 'disabled' */}
+              {timeSlots.length > 0 ? (
+                timeSlots.map(time => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>Não há horários disponíveis hoje</option>
+              )}
             </select>
           </div>
 
@@ -99,16 +135,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
             <strong>Atenção:</strong> A sua solicitação será enviada para aprovação.
           </div>
         </form>
-        
-        <div className="modal-footer">
-
-        <button type="submit" className="btn btn-primary" form="checkout-form" disabled={isLoading}>
-            {isLoading ? 'A Enviar...' : 'Solicitar Retirada'}
-          </button>
+        
+        <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
             Cancelar
           </button>
-         
+          <button type="submit" className="btn btn-primary" form="checkout-form" disabled={isLoading || !departureTime || !purpose}>
+            {isLoading ? 'Enviando...' : 'Solicitar Retirada'}
+          </button>
         </div>
       </div>
     </div>

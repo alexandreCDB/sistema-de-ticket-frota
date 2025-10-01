@@ -1,67 +1,138 @@
 from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
-# As 3 linhas abaixo foram corrigidas para usar o caminho relativo correto (..)
+from typing import List
+
+# --- Imports do Módulo Frota ---
 from ..crud.crud_booking import (
-    create_checkout, create_schedule, get_bookings, approve_booking,
-    deny_booking, complete_return, get_booking
+    create_checkout, create_schedule, approve_booking, deny_booking,
+    complete_return, get_booking, get_all_bookings, get_bookings_by_user
 )
 from ..schemas.booking import BookingCheckout, BookingSchedule, BookingRead
-from ..database import get_db
-# A linha abaixo foi corrigida para usar o caminho absoluto global
+from ..database import get_db as get_frota_db # Renomeado para clareza
+
+# --- Imports do Módulo Global/Ticket ---
 from backend.dependencies import get_current_user
+from backend.database.database import get_db as get_global_db
+from backend.crud.user import get_user, get_users_by_ids
+from backend.models.user import User as UserModel
 
 router = APIRouter()
 
-@router.get("/", response_model=list[BookingRead])
-def list_bookings(db: Session = Depends(get_db), user = Depends(get_current_user)):
-    # Usando user.is_admin para verificar se é um gerente/admin
-    if user.is_admin:
-        return get_bookings(db)
+@router.get("/", response_model=List[BookingRead])
+def list_bookings(
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    """
+    Lista as reservas. Admins veem todas, usuários comuns veem apenas as suas.
+    Os dados do usuário são buscados de forma otimizada.
+    """
+    # Passo 1: Busca as reservas de forma eficiente no banco da frota
+    if current_user.is_admin:
+        bookings = get_all_bookings(frota_db)
     else:
-        # devolve apenas do usuário
-        bookings = get_bookings(db)
-        return [b for b in bookings if b.user_id == user.id]
+        bookings = get_bookings_by_user(frota_db, user_id=current_user.id)
+
+    if not bookings:
+        return []
+
+    # Passo 2: Extrai todos os IDs de usuário únicos da lista de reservas
+    user_ids = list(set(b.user_id for b in bookings))
+
+    # Passo 3: Faz UMA ÚNICA consulta no banco global para buscar todos os usuários
+    users = get_users_by_ids(global_db, user_ids=user_ids)
+    
+    # Passo 4: Cria um dicionário para acesso rápido: {user_id: user_object}
+    user_map = {user.id: user for user in users}
+
+    # Passo 5: Anexa o objeto de usuário a cada reserva (em memória, super rápido)
+    for b in bookings:
+        b.user = user_map.get(b.user_id)
+
+    return bookings
 
 @router.post("/checkout", response_model=BookingRead)
-def checkout(payload: BookingCheckout, db: Session = Depends(get_db), user = Depends(get_current_user)):
+def checkout(
+    payload: BookingCheckout,
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
     try:
-        b = create_checkout(db, user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
+        booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
+        # Anexa o objeto do usuário antes de retornar para a resposta ser completa
+        booking.user = get_user(global_db, booking.user_id) 
+        return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    return b
 
 @router.post("/schedule", response_model=BookingRead)
-def schedule(payload: BookingSchedule, db: Session = Depends(get_db), user = Depends(get_current_user)):
+def schedule(
+    payload: BookingSchedule,
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
     try:
-        b = create_schedule(db, user.id, payload.vehicle_id, payload.start_time, payload.end_time, payload.purpose, payload.observation)
+        booking = create_schedule(frota_db, current_user.id, payload.vehicle_id, payload.start_time, payload.end_time, payload.purpose, payload.observation)
+        # Anexa o objeto do usuário antes de retornar
+        booking.user = get_user(global_db, booking.user_id)
+        return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    return b
 
 @router.patch("/{booking_id}/approve", response_model=BookingRead)
-def approve(booking_id: int = Path(...), db: Session = Depends(get_db), user = Depends(get_current_user)):
-    if not user.is_admin:
+def approve(
+    booking_id: int = Path(...),
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem aprovar")
-    b = approve_booking(db, booking_id, user.id)
-    if not b:
+    
+    booking = approve_booking(frota_db, booking_id, current_user.id)
+    if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-    return b
+    
+    # Anexa o objeto do usuário antes de retornar
+    booking.user = get_user(global_db, booking.user_id)
+    return booking
 
 @router.patch("/{booking_id}/deny", response_model=BookingRead)
-def deny(booking_id: int = Path(...), db: Session = Depends(get_db), user = Depends(get_current_user)):
-    if not user.is_admin:
+def deny(
+    booking_id: int = Path(...),
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem negar")
-    b = deny_booking(db, booking_id)
-    if not b:
+        
+    booking = deny_booking(frota_db, booking_id)
+    if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-    return b
+        
+    # Anexa o objeto do usuário antes de retornar
+    booking.user = get_user(global_db, booking.user_id)
+    return booking
 
 @router.post("/{booking_id}/return", response_model=BookingRead)
-def do_return(booking_id: int, payload: dict, db: Session = Depends(get_db), user = Depends(get_current_user)):
-    # payload esperado: {"end_mileage": 54400, "parking_location":"G2-15"}
+def do_return(
+    booking_id: int,
+    payload: dict,
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    user: UserModel = Depends(get_current_user) # 'user' não é usado, mas mantém a autenticação
+):
     end_mileage = payload.get("end_mileage")
     parking_location = payload.get("parking_location")
-    b = complete_return(db, booking_id, end_mileage, parking_location)
-    if not b:
+    
+    booking = complete_return(frota_db, booking_id, end_mileage, parking_location)
+    if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
-    return b
+        
+    # Anexa o objeto do usuário antes de retornar
+    booking.user = get_user(global_db, booking.user_id)
+    return booking
