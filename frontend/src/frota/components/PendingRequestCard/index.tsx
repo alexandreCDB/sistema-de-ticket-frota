@@ -29,7 +29,7 @@ export const PendingRequestCard: React.FC<PendingRequestCardProps> = ({ booking,
           </div>
         </div>
         <div className="request-details">
-          <p><User size={14} /> <strong>Solicitante:</strong> {booking.user?.email}</p>
+          <p><User size={14} /> <strong>Solicitante:</strong> {booking.user?.email }</p>
           <p><Info size={14} /> <strong>Finalidade:</strong> {booking.purpose}</p>
           <p><Clock size={14} /> <strong>Horário:</strong> {formatTime(booking.start_time)}</p>
           <p><Calendar size={14} /> <strong>Data:</strong> {formatDate(booking.start_time)}</p>

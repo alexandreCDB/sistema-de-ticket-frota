@@ -283,16 +283,9 @@ export function useMyBookings() {
       if (!response.ok) {
         throw new Error(`Erro na rede: ${response.statusText}`);
       }
-      const bookingData: Booking[] = await response.json();
+      const bookingData: BookingWithVehicle[] = await response.json();
+      setBookings(bookingData);
 
-      const bookingsWithDetails = await Promise.all(
-          bookingData.map(async (booking) => {
-              const vehicle = await getVehicle(booking.vehicle_id);
-              return { ...booking, vehicle };
-          })
-      );
-
-      setBookings(bookingsWithDetails);
     } catch (err: any) {
       setError(err.message || 'Falha ao buscar as suas reservas.');
     } finally {

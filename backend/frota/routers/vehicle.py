@@ -10,12 +10,12 @@ router = APIRouter(
     tags=["Vehicles"]
 )
 
-# --- LISTAR TODOS OS VEÍCULOS (existente) ---
+# --- LISTAR TODOS OS VEÍCULOS ---
 @router.get("/", response_model=list[vehicle_schema.VehicleRead])
 def list_vehicles(db: Session = Depends(get_db)):
     return crud_vehicle.get_vehicles(db)
 
-# --- OBTER UM VEÍCULO PELO ID (existente) ---
+# --- OBTER UM VEÍCULO PELO ID ---
 @router.get("/{vehicle_id}", response_model=vehicle_schema.VehicleRead)
 def get_one(vehicle_id: int, db: Session = Depends(get_db)):
     v = crud_vehicle.get_vehicle(db, vehicle_id)
@@ -23,7 +23,7 @@ def get_one(vehicle_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     return v
 
-# --- CRIAR VEÍCULO (existente) ---
+# --- CRIAR VEÍCULO ---
 @router.post("/", response_model=vehicle_schema.VehicleRead)
 def post_vehicle(
     data: vehicle_schema.VehicleCreate,
@@ -35,11 +35,11 @@ def post_vehicle(
     v = crud_vehicle.create_vehicle(db, data.dict())
     return v
 
-# --- ATUALIZAR VEÍCULO (NOVO ENDPOINT) ---
+# --- ATUALIZAR VEÍCULO ---
 @router.put("/{vehicle_id}", response_model=vehicle_schema.VehicleRead)
 def update_one_vehicle(
     vehicle_id: int,
-    data: vehicle_schema.VehicleCreate, # Reutiliza o schema de criação para a atualização
+    data: vehicle_schema.VehicleCreate,
     db: Session = Depends(get_db),
     user = Depends(get_current_user)
 ):
@@ -51,8 +51,8 @@ def update_one_vehicle(
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     return v
 
-# --- EXCLUIR VEÍCULO (NOVO ENDPOINT) ---
-@router.delete("/{vehicle_id}", status_code=204)
+# --- EXCLUIR VEÍCULO ---
+@router.delete("/{vehicle_id}", status_code=200)
 def delete_one_vehicle(
     vehicle_id: int,
     db: Session = Depends(get_db),
@@ -61,8 +61,13 @@ def delete_one_vehicle(
     if not user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem remover veículos")
     
-    success = crud_vehicle.delete_vehicle(db, vehicle_id)
-    if not success:
+    try:
+        success = crud_vehicle.delete_vehicle(db, vehicle_id)
+    except ValueError as e:
+        # Caso existam bookings ativas
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    if success is None:
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     
-    return {"ok": True} # O status 204 significa "No Content", mas podemos retornar uma confirmação
+    return {"detail": "Veículo excluído com sucesso"}

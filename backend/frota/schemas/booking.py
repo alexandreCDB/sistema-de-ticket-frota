@@ -3,30 +3,27 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-# --- Usuário que será retornado junto com o booking ---
+from .vehicle import VehicleRead  # 👈 importa o schema que você já tem
+
 class UserRead(BaseModel):
     id: int
     email: str
 
     class Config:
-        from_attributes = True  # Substitui orm_mode do Pydantic v1
+        from_attributes = True
 
-# --- Base do booking ---
 class BookingBase(BaseModel):
     vehicle_id: int
     purpose: Optional[str]
     observation: Optional[str]
 
-# --- Para criação de checkout ---
 class BookingCheckout(BookingBase):
     start_mileage: Optional[int]
 
-# --- Para criação de agendamento/schedule ---
 class BookingSchedule(BookingBase):
     start_time: datetime
     end_time: datetime
 
-# --- Schema de leitura do booking ---
 class BookingRead(BaseModel):
     id: int
     vehicle_id: int
@@ -41,7 +38,9 @@ class BookingRead(BaseModel):
     end_mileage: Optional[int]
     parking_location: Optional[str]
     created_at: datetime
-    user: UserRead  # Aqui o usuário completo vem junto
+
+    user: UserRead
+    vehicle: VehicleRead   # 👈 já traz o veículo completo
 
     class Config:
         from_attributes = True
