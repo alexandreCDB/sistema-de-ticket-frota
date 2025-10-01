@@ -10,6 +10,7 @@ import { ScheduleModal } from '../components/ScheduleModal';
 import { SuccessToast } from '../components/SucessToast';
 import { VehicleWithBookings } from '../types';
 import { FrotaHeader } from '../components/Header';
+import Loading from '../../components/Loads/Loading';
 
 export default function ListaVeiculosPage() {
   const { loadingUser } = useAuth();
@@ -46,7 +47,7 @@ export default function ListaVeiculosPage() {
     return (
       <div className="frota-module">
         <FrotaHeader />
-        <div className="page-status">A carregar...</div>
+        <div className="page-status"><Loading /></div>
       </div>
     );
   }

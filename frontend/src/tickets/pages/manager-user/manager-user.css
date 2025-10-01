@@ -1,4 +1,4 @@
-.user-manager-container {
+/* .user-manager-container {
   max-width: 900px;
   margin: 40px auto;
   padding: 20px 30px;
@@ -57,7 +57,7 @@ button.create-user-button {
 .user-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 10px; /* espaçamento vertical entre linhas */
+  border-spacing: 0 10px; 
   font-size: 1rem;
 }
 
@@ -126,23 +126,23 @@ button.deactivate-button {
   width: 100px !important;
 }
 
-/* Vermelho pastel */
+
 .deactivate-button.active {
-  background-color: #F3C5C5  !important; /* pastel red */
+  background-color: #F3C5C5  !important; 
 }
 .deactivate-button.active:hover {
-  background-color: #ee5b5b  !important; /* pastel red */
+  background-color: #ee5b5b  !important; 
 }
 
-/* Verde pastel */
+
 .deactivate-button.inactive {
-  background-color: #C9E4C5  !important; /* pastel green */
+  background-color: #C9E4C5  !important; 
 }
 .deactivate-button.inactive:hover {
-  background-color: #76e465  !important; /* pastel green */
+  background-color: #76e465  !important;
 }
 
-/* Responsividade básica */
+
 
 @media (max-width: 1257px) {
   .edit-button,
@@ -224,22 +224,20 @@ button.deactivate-button {
   font-size: 0.95rem;
 }
 
-/* Comum */
+
 .role-label.comum {
-  /* background-color: #e6f2ff; */
+
   color: #1a73e8;
 }
 
-/* Admin */
 .role-label.admin {
-  /* background-color: #fff4e6; */
+
   color: #fb8c00;
 }
 
-/* Super Admin */
+
 .role-label.super-admin {
-  /* background-color: #ffe6e9; */
-  color: #d32f2f;
+ color: #d32f2f;
 }
 
 
@@ -262,12 +260,11 @@ button.deactivate-button {
     justify-content: center;
   }
 
-  /* Esconde cabeçalho da tabela */
+
   .user-table thead {
     display: none;
   }
 
-  /* Transforma em cards */
   .user-table,
   .user-table tbody,
   .user-table tr,
@@ -297,14 +294,13 @@ button.deactivate-button {
     border-bottom: none;
   }
 
-  /* label da coluna */
+
   .user-table td::before {
     content: attr(data-label);
     font-weight: 600;
     color: #555;
   }
 
-  /* Área de botões dentro do card */
   .user-actions {
     display: flex;
     justify-content: space-between;
@@ -315,14 +311,12 @@ button.deactivate-button {
   }
 
   .user-actions button {
-    flex: 1;              /* divide o espaço igualmente */
-    /* min-width: 80px; */
-    /* padding: 8px; */
+    flex: 1;  
     font-size: 0.85rem;
     border-radius: 8px;
   }
 
-  /* Badges de papéis */
+
   .role-label {
     font-size: 0.9rem;
     padding: 5px 10px;
@@ -330,7 +324,7 @@ button.deactivate-button {
     margin-left: auto;
   }
 
-  /* Modal adaptado */
+
   .modal {
     width: 90% !important;
     max-width: 400px;
@@ -355,4 +349,4 @@ button.deactivate-button {
             margin: auto;
 }
 }
-
+ */

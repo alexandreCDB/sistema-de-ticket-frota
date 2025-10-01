@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 //@ts-ignore
 import './PasswordResetModal.css'
-import { IUser } from '../../../../components/AUTH/interfaces/user';
+import { IUser } from '../../../components/AUTH/interfaces/user';
 //@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -35,7 +35,7 @@ const PasswordResetModal = ({ user, onClose }: Props) => {
   };
 
   return (
-    <div className="modal">
+    <div className="pmodal">
       <h3>Redefinir senha de {user.email}</h3>
       <form onSubmit={handleReset}>
         <label>Nova senha:</label>

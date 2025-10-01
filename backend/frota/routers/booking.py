@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
+
+from backend.frota.events.notification import notify_frota_checkout_async
 # As 3 linhas abaixo foram corrigidas para usar o caminho relativo correto (..)
 from ..crud.crud_booking import (
     create_checkout, create_schedule, get_bookings, approve_booking,
@@ -23,11 +25,14 @@ def list_bookings(db: Session = Depends(get_db), user = Depends(get_current_user
         return [b for b in bookings if b.user_id == user.id]
 
 @router.post("/checkout", response_model=BookingRead)
-def checkout(payload: BookingCheckout, db: Session = Depends(get_db), user = Depends(get_current_user)):
+def checkout(payload: BookingCheckout, background_tasks: BackgroundTasks, db: Session = Depends(get_db), user = Depends(get_current_user)):
     try:
         b = create_checkout(db, user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    background_tasks.add_task(notify_frota_checkout_async, b.vehicle_id)
+    
     return b
 
 @router.post("/schedule", response_model=BookingRead)

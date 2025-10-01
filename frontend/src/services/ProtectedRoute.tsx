@@ -1,13 +1,14 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../components/AUTH/AuthContext";
+import Loading from "../components/Loads/Loading";
 
 const ProtectedRoute: React.FC = () => {
   const { user, isLoading } = useAuth();
   
   // Enquanto verifica o utilizador, mostra uma mensagem
   if (isLoading) {
-    return <p>A carregar...</p>;
+    return <Loading />;
   }
 
   // Se a verificação terminou e não há utilizador, redireciona para o login

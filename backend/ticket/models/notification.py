@@ -15,13 +15,17 @@ from backend.models.user import User
 class NotificationType(str, enum.Enum):
     ticket_created = "ticket_created"
     message_sent = "message_sent" 
+    frota_checkout = "frota_checkout"
+    frota_return = "frota_return"
+    frota_solicitation = "frota_solicitation"
 
 class Notification(Base):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    ticket_id = Column(Integer, ForeignKey("tickets.id"), nullable=False)
+    ticket_id = Column(Integer, ForeignKey("tickets.id"), nullable=True)
+    vehicle_id = Column(Integer, nullable=True)
     message = Column(String, nullable=True)
     notification_type = Column(Enum(NotificationType), nullable=False)
     is_read = Column(Boolean, default=False)

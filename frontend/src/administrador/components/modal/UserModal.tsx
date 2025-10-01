@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 //@ts-ignore
 import './UserModal.css'
-
+// @ts-ignore
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Props {
   user: any | null;
@@ -37,9 +38,12 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
     };
 
     if (user) {
-      await fetch(`/api/users/${user.id}`, {
+      await fetch(`${API_URL}/ticket/users/${user.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${token}` 
+        },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
     }
@@ -53,12 +57,13 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
         payload.password = password;
       }
       try {
-        await fetch('/api/users', {
+        await fetch(`${API_URL}/ticket/users`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            // 'Authorization': `Bearer ${token}`
           },
+          credentials: 'include',
           body: JSON.stringify({ ...payload }),
         });
       } catch (error) {
@@ -75,8 +80,8 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
+    <div className="umodal-overlay">
+      <div className="umodal">
         <h3>{user ? 'Editar Usuário' : 'Criar Usuário'}</h3>
         <form onSubmit={handleSubmit}>
           <label>Email:</label>
@@ -114,7 +119,7 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
             <option value="is_super_admin">Super Admin</option>
           </select>
 
-          <div className="modal-actions">
+          <div className="umodal-actions">
             <button type="submit">Salvar</button>
             <button type="button" onClick={onClose}>Cancelar</button>
           </div>

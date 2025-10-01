@@ -76,6 +76,10 @@
   background-color: #f7fafc !important;
 }
 
+.suser-info{
+  /* text-align: left; */
+
+}
 .user-info {
   text-align: right !important;
 }

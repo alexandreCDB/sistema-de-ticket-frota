@@ -1,4 +1,5 @@
 import React from 'react';
+//@ts-ignore
 import './ConfirmModal.css'
 interface Props {
   user: any;
@@ -8,7 +9,7 @@ interface Props {
 
 const ConfirmModal = ({ user, onClose, onConfirm }: Props) => {
   return (
-    <div className="modal">
+    <div className="cmodal">
       <h3> {user?.is_active ? 'Desativar' : 'Ativar' } Usuário</h3>
       <p>Tem certeza que deseja desativar {user.email}?</p>
       <div>

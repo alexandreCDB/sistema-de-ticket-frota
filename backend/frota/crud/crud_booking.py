@@ -1,6 +1,9 @@
 # backend/frota/crud/crud_booking.py
+import asyncio
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone, timedelta
+
+from backend.frota.events.notification import notify_frota_checkout_async
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
 
@@ -41,6 +44,7 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
     global_db = next(get_global_db())
     b.user = get_user(global_db, user_id)
     
+    # asyncio.create_task(notify_frota_checkout_async(vehicle_id=b.vehicle_id))
     return b
 
 def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time, end_time, purpose=None, observation=None):

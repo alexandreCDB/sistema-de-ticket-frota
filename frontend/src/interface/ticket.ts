@@ -2,7 +2,10 @@ export type WsNotificationType =
   | "ticket_created"
   | "ticket_message"
   | "ticket_started"
-  | "ticket_finish";
+  | "ticket_finish"
+  | "frota_checkout"
+  | "frota_return"
+  | "frota_solicitation";
 
 
 
@@ -31,11 +34,32 @@ export interface TicketFinishNotificationWS {
   reason: string;
 }
 
+export interface FrotaCheckoutNotificationWS {
+  id: number
+  vehicle_id: number
+  vehicle: string
+  message: string
+}
+export interface FrotaReturntNotificationWS {
+  id: number
+  vehicle_id: number
+  vehicle: string
+  message: string
+}
+export interface FrotaSolicitationNotificationWS {
+  id: number
+  vehicle_id: number
+  vehicle: string
+  message: string
+}
 // Notificação genérica
 export type WsNotificationPayload =
   | { type: "ticket_created"; message: TicketCreatedNotificationWS }
   | { type: "ticket_message"; message: TicketMessageNotificationWS }
-  | { type: "ticket_finish"; message: TicketFinishNotificationWS };
+  | { type: "ticket_finish"; message: TicketFinishNotificationWS }
+  | { type: "frota_checkout"; message: TicketCreatedNotificationWS }
+  | { type: "frota_return"; message: FrotaReturntNotificationWS }
+  | { type: "frota_solicitation"; message: FrotaSolicitationNotificationWS };
 
 
 
