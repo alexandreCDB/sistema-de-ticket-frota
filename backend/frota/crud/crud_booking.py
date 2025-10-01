@@ -3,7 +3,6 @@ import asyncio
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone, timedelta
 
-from backend.frota.events.notification import notify_frota_checkout_async
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
 

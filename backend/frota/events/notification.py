@@ -2,6 +2,8 @@ import asyncio
 import json
 from sqlalchemy.orm import Session
 from backend.frota.crud.crud_vehicle import get_vehicle
+from backend.frota.models.booking import Booking
+from backend.frota.models.vehicle import Vehicle
 from backend.models.user import User
 from backend.ticket.crud import notification as notification_crud
 from backend.ticket.crud import ticket as ticket_crud
@@ -10,117 +12,178 @@ from backend.ticket.models.message import Message
 from backend.ticket.models.notification import Notification, NotificationType
 from backend.ticket.models.ticket import Ticket
 from backend.websocket.service.ws_instance import manager
+from backend.frota.database import get_db , SessionLocal as FleetSessionLocal 
 
-# async def notify_frota_checkout_async(user_id: int, vehicle_id: int):
-#     # from db.session import SessionLocal
-#     db = SessionLocal()
-#     user_super = db.query(User).filter(User.is_super_admin == True,User.is_active == True).all()
-#     vehicle = get_vehicle(db, vehicle_id)
-#     if not vehicle:
-#         db.close()
-#         return
-#     try:
-#         for admin in user_super:            
-#             notification = notification_crud.create_notification(
-#                 db=db,
-#                 user_id=admin.id,
-#                 vehicle_id=vehicle_id,
-#                 message="Solicitação de retirada de veículo"+ vehicle.model + vehicle.license_plate,
-#                 notif_type=NotificationType.frota_checkout
-#             )
-#             db.commit()
-        
-#             await manager.send_to_user(
-#                 notification.user_id,
-#                 "frota_checkout",
-#                 {
-#                     "id": notification.id,
-#                     "vehicle_id": vehicle_id,
-#                     "message": notification.message,
-#                 }
-#             )
-#     except Exception as e:
-#         db.rollback()
-#         print(f"Erro ao criar notificação (async): {e}")
-#     finally:
-#         db.close()
 
-async def notify_frota_checkout_async( vehicle_id: int):
-    db = SessionLocal()
+async def notify_frota_checkout_async(vehicle_id: int):
+    # sessão para banco da frota
+    db_frota = FleetSessionLocal()
     try:
-        user_super = db.query(User).filter(
-            User.is_super_admin == True,
-            User.is_active == True
-        ).all()
-
-        vehicle = get_vehicle(db, vehicle_id)
+        vehicle = get_vehicle(db_frota, vehicle_id)
+        
         if not vehicle:
             return
 
-        notifications = []
-        for admin in user_super:
-            notification = notification_crud.create_notification(
-                db=db,
-                user_id=admin.id,
-                vehicle_id=vehicle_id,
-                message=f"Solicitação de retirada de veículo {vehicle.model} - {vehicle.license_plate}",
-                notif_type=NotificationType.frota_checkout
-            )
-            notifications.append(notification)
+        # Agora você ainda precisa de db de notifications
+        db_pm = SessionLocal()  
+        try:
+            user_super = db_pm.query(User).filter(
+                User.is_super_admin == True,
+                User.is_active == True
+            ).all()
 
-        db.commit() 
-        # só envia após persistir
-        for notification in notifications:
-            await manager.send_to_user(
-                notification.user_id,
-                "frota_checkout",
-                {
-                    "id": notification.id,
-                    "vehicle_id": vehicle_id,
-                    "message": notification.message,
-                }
-            )
+            notifications = []
+            for admin in user_super:
+                notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=admin.id,
+                    vehicle_id=vehicle_id,
+                    message=f"Solicitação de retirada de veículo :  {vehicle.name} - {vehicle.license_plate}",
+                    notif_type=NotificationType.frota_checkout
+                )
+                notifications.append(notification)
 
-    except Exception as e:
-        db.rollback()
-        print(f"Erro ao criar notificação (async): {e}")
+            db_pm.commit()
+            for notification in notifications:
+                await manager.send_to_user(
+                    notification.user_id,
+                    "frota_checkout",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+        finally:
+            db_pm.close()
     finally:
-        db.close()
+        db_frota.close()
 
+async def notify_frota_approve_async(booking: Booking):           
+        db_pm = SessionLocal()  
+        try:
+            notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=booking.user_id,
+                    vehicle_id=booking.vehicle_id,
+                    message=f"Solicitação aceita para :  {booking.vehicle.name} - {booking.vehicle.license_plate}",
+                    notif_type=NotificationType.frota_solicitation
+                )
+            db_pm.commit()
+            
+            await manager.send_to_user(
+                    notification.user_id,
+                    "frota_solicitation",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": booking.vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+            
+            
+        finally:
+            db_pm.close()
 
-def notify_message_sent(db: Session, user_id: int, ticket_id: int,message_id: int):
-    result = ticket_crud.get_ticket(db, ticket_id)
+async def notify_frota_deny_async(booking: Booking):           
+        db_pm = SessionLocal()  
+        try:
+            notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=booking.user_id,
+                    vehicle_id=booking.vehicle_id,
+                    message=f"Solicitação recusada para :  {booking.vehicle.name} - {booking.vehicle.license_plate}",
+                    notif_type=NotificationType.frota_solicitation
+                )
+            db_pm.commit()
+            
+            await manager.send_to_user(
+                    notification.user_id,
+                    "frota_solicitation",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": booking.vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+            
+            
+        finally:
+            db_pm.close()
 
-    if result and result.assignee_id:
-        note: Notification
-        if user_id == result.assignee_id:
-            note=  notification_crud.create_notification(
-                db=db,
-                user_id=result.requester_id,  
-                ticket_id=ticket_id,
-                message="Nova mensagem do tecnico. Tk:"+ str(ticket_id),
-                notif_type=NotificationType.message_sent
-            )
-        else:
-            note = notification_crud.create_notification(
-                db=db,
-                user_id=result.assignee_id,  
-                ticket_id=ticket_id,
-                message="Nova mensagem. Tk:"+ str(ticket_id),
-                notif_type=NotificationType.message_sent
-            )
+async def notify_frota_deny_async(booking: Booking):           
+        db_pm = SessionLocal()  
+        try:
+            notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=booking.user_id,
+                    vehicle_id=booking.vehicle_id,
+                    message=f"Solicitação recusada para :  {booking.vehicle.name} - {booking.vehicle.license_plate}",
+                    notif_type=NotificationType.frota_solicitation
+                )
+            db_pm.commit()
+            
+            await manager.send_to_user(
+                    notification.user_id,
+                    "frota_solicitation",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": booking.vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+            
+            
+        finally:
+            db_pm.close()
+
+async def notify_frota_return_async(vehicle_id: int):
+    # sessão para banco da frota
+    db_frota = FleetSessionLocal()
+    try:
+        vehicle = get_vehicle(db_frota, vehicle_id)
         
-        asyncio.create_task(notify_ticket_ws_message_not_async(user_id=note.user_id,id_msg=note.id, ticket=note.ticket,notif_type="ticket_message",msg=note.message))
-        asyncio.create_task(notify_ticket_ws_message_async(db=db,user_id=note.user_id,id_msg=message_id,ticket=note.ticket,notif_type="ticket_message_page"))
+        if not vehicle:
+            return
 
-    else:
-        notification_crud.create_notification(
-            db=db,
-            user_id=user_id,
-            ticket_id=ticket_id,
-            message="Ninguém iniciou o chamado",
-            notif_type=NotificationType.message_sent
-        )
+        # Agora você ainda precisa de db de notifications
+        db_pm = SessionLocal()  
+        try:
+            user_super = db_pm.query(User).filter(
+                User.is_super_admin == True,
+                User.is_active == True
+            ).all()
+
+            notifications = []
+            for admin in user_super:
+                notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=admin.id,
+                    vehicle_id=vehicle_id,
+                    message=f"Solicitação de retirada de veículo :  {vehicle.name} - {vehicle.license_plate}",
+                    notif_type=NotificationType.frota_checkout
+                )
+                notifications.append(notification)
+
+            db_pm.commit()
+            for notification in notifications:
+                await manager.send_to_user(
+                    notification.user_id,
+                    "frota_checkout",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+        finally:
+            db_pm.close()
+    finally:
+        db_frota.close()
+
+
+
+
 
 def notify_ticket_accept(db: Session, user_id: int, ticket_id: int):
 

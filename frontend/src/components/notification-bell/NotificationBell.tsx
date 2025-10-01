@@ -51,7 +51,7 @@ const NotificationBell: React.FC = () => {
                 <span>🔔</span>
                 {"ticket_id" in msg ? (
                   <Link
-                    to={`/tickets/tickets/${msg.ticket_id}`}
+                    to={`${msg.routerLink}`}
                     className="notification-link"
                     onClick={() => markAsRead(msg.id)}
                   >
@@ -59,7 +59,7 @@ const NotificationBell: React.FC = () => {
                   </Link>
                 ) : (
                   <Link
-                    to={`/frotas/admin`}
+                    to={`${msg.routerLink}`}
                     className="notification-link"
                     onClick={() => markAsRead(msg.id)}
                   >

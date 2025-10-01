@@ -17,12 +17,14 @@ export interface NotificationItemTicket {
   ticket_id: number;
   message: string;   // 🔔 sempre presente aqui
   read?: boolean;
+  routerLink: string; // opcional, para links customizados
 }
 export interface NotificationItemFrota {
   id: number;
   vehicle_id: number;
   message: string;   // 🔔 sempre presente aqui
   read?: boolean;
+  routerLink: string; // opcional, para links customizados
 }
 
 interface UseNotificationsProps {
@@ -37,7 +39,7 @@ export async function markAsReadRemote(notificationId: number): Promise<void> {
   if (!response.ok) throw new Error("Erro ao marcar notificação como lida");
 }
 
-export async function markAllAsReadRemote(notifications: NotificationItemTicket[]|NotificationItemFrota[]): Promise<void> {
+export async function markAllAsReadRemote(notifications: NotificationItemTicket[] | NotificationItemFrota[]): Promise<void> {
   await Promise.all(
     //@ts-ignore
     notifications.map((msg) =>
@@ -48,7 +50,7 @@ export async function markAllAsReadRemote(notifications: NotificationItemTicket[
   );
 }
 
-export async function fetchNotifications(userId: number): Promise<NotificationItemTicket[]|NotificationItemFrota[]> {
+export async function fetchNotifications(userId: number): Promise<NotificationItemTicket[] | NotificationItemFrota[]> {
   const response = await fetch(`${API_URL}/ticket/notifications/unread/${userId}`);
   if (!response.ok) throw new Error("Erro ao buscar notificações");
   return response.json();
@@ -56,7 +58,7 @@ export async function fetchNotifications(userId: number): Promise<NotificationIt
 
 // ------------------ Hook ------------------
 export default function useNotifications({ userId }: UseNotificationsProps) {
-  const [notifications, setNotifications] = useState<NotificationItemTicket[]|NotificationItemFrota[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItemTicket[] | NotificationItemFrota[]>([]);
   const [count, setCount] = useState(0);
   const [animate, setAnimate] = useState(false);
   const notifiedIdsRef = useState<Set<number>>(new Set())[0];
@@ -85,22 +87,24 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
       try {
         const data: WsNotification<any> = JSON.parse(event.data);
 
-        let normalized: NotificationItemTicket| NotificationItemFrota | null = null;
+        let normalized: NotificationItemTicket | NotificationItemFrota | null = null;
 
         switch (data.type) {
           case "ticket_created":
             normalized = {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
-              message: data.message.message, 
+              message: data.message.message,
+              routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
             break;
 
-          case "ticket_message":          
+          case "ticket_message":
             normalized = {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
-              message: data.message.message, 
+              message: data.message.message,
+              routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
             break;
 
@@ -109,6 +113,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               id: data.message.id,
               ticket_id: data.message.ticket_id,
               message: `Ticket encerrado: ${data.message.ticket_id}`,
+              routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
             break;
 
@@ -116,7 +121,25 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
             normalized = {
               id: data.message.id,
               vehicle_id: data.message.ticket_id,
-              message: data.message.message, 
+              message: data.message.message,
+              routerLink: `/frotas/admin`,
+            };
+            break;
+          case "frota_return":
+            normalized = {
+              id: data.message.id,
+              vehicle_id: data.message.vehicle_id,
+              message: data.message.message,
+              routerLink: `/frotas/admin`,
+            };
+            break;
+
+          case "frota_solicitation":
+            normalized = {
+              id: data.message.id,
+              vehicle_id: data.message.vehicle_id,
+              message: data.message.message,
+              routerLink: `/frotas/admin`,
             };
             break;
 
