@@ -1,7 +1,16 @@
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP
+import enum
+from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, Enum as SQLAlchemyEnum
 from sqlalchemy.sql import func
 from ..database import Base
 from sqlalchemy.orm import relationship
+
+# CORRIGIDO: Nomes dos membros do Enum agora estão em minúsculo
+class VehicleStatus(str, enum.Enum):
+    available = "available"
+    in_use = "in-use"
+    reserved = "reserved"
+    maintenance = "maintenance"
+    unavailable = "unavailable"
 
 class Vehicle(Base):
     __tablename__ = "vehicles"
@@ -10,10 +19,12 @@ class Vehicle(Base):
     model = Column(String(255), nullable=True)
     license_plate = Column(String(50), unique=True, nullable=False, index=True)
     image_url = Column(String(500), nullable=True)
-    status = Column(String(30), nullable=False, default="available")
+    
+    # O default também precisa ser atualizado para o nome em minúsculo
+    status = Column(SQLAlchemyEnum(VehicleStatus), nullable=False, default=VehicleStatus.available)
+    
     passengers = Column(Integer, nullable=True)
     features = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
-    # relacionamento inverso
     bookings = relationship("Booking", back_populates="vehicle")

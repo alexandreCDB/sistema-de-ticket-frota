@@ -4,9 +4,8 @@ import { Vehicle, Booking } from '../../types';
 import defaultVehicleImage from '../../../assets/onix.png';
 import { Users, GitBranch, XCircle, Undo2, CalendarCheck2 } from 'lucide-react';
 
-// --- ADICIONADO: Pega a base do URL da sua API ---
 // @ts-ignore
-const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', ''); // ex: http://localhost:8000
+const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', '');
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -24,6 +23,7 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
     'in-use': { text: 'Em Uso', className: 'status-in-use' },
     reserved: { text: 'Reservado', className: 'status-reserved' },
     maintenance: { text: 'Manutenção', className: 'status-maintenance' },
+    unavailable: { text: 'Indisponível', className: 'status-maintenance' }, // <-- ADICIONADO AQUI
     pending: { text: 'Pendente', className: 'status-reserved' },
     confirmed: { text: 'Confirmado', className: 'status-available' },
   };
@@ -31,12 +31,10 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
   const displayStatus = booking?.status || vehicle.status;
   const currentStatus = statusMap[displayStatus] || { text: displayStatus, className: 'status-unknown' };
 
-  // --- CORREÇÃO: Monta a URL completa da imagem ---
   const imageUrl = vehicle.image_url 
-    ? `${API_URL_BASE}${vehicle.image_url}` // Junta a base do servidor com o caminho da imagem
-    : defaultVehicleImage; // Usa a imagem padrão se não houver URL
+    ? `${API_URL_BASE}${vehicle.image_url}`
+    : defaultVehicleImage;
 
-  // --- LÓGICA DE RENDERIZAÇÃO DOS BOTÕES (inalterada) ---
   const renderActions = () => {
     if (booking) {
       if (booking.status === 'in-use') {
@@ -67,6 +65,7 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
       );
     }
     
+    // O botão de Indisponível já funciona corretamente com a sua lógica
     return <button className="btn-disabled" disabled>Indisponível</button>;
   };
 
@@ -74,6 +73,7 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
     <div className="vehicle-card">
       <div className="vehicle-header">
         <h3 className="vehicle-name">{vehicle.name}</h3>
+        {/* Agora, quando o status for "unavailable", ele mostrará "Indisponível" */}
         <span className={`vehicle-status-badge ${currentStatus.className}`}>
           {currentStatus.text}
         </span>
