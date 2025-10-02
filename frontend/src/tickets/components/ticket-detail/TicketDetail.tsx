@@ -92,9 +92,9 @@ const TicketDetail: React.FC = () => {
         setSelectedAssigneeId(data.assignee?.id?.toString() || '');
 
         // if (TicketService.canExchangeMessages(data.status)) {
-          const msgs = await TicketService.fetchMessages(data.id);
-          setMessages(msgs);
-          setTotalMsg(msgs.length);
+        const msgs = await TicketService.fetchMessages(data.id);
+        setMessages(msgs);
+        setTotalMsg(msgs.length);
         // }
 
         const users = await TicketService.fetchAssignableUsers();
@@ -256,38 +256,40 @@ const TicketDetail: React.FC = () => {
         )}
 
 
-        <hr className="divider" />
-        <h4>Mensagens</h4>
+        {messages.length > 0 && (
+          <>
+            <hr className="divider" />
+            <h4>Mensagens</h4>
+          </>
+        )}
 
         <div className="messages-wrapper">
-          <div className="messages-section">
-            {messages.map(msg => (
-              <div
-                key={msg.id}
-                className={`message-row ${msg.sender_id === user.id ? "my-message" : "other-message"
-                  }`}
-              >
-                <div className="message-bubble">
-                  <div className="message-header">
-                    <strong>
-                      {msg.sender_id === user.id
-                        ? "Você"
-                        : TicketService.getUsernameFromEmail(msg.sender_email)}
-                    </strong>
+          {messages.length > 0 && (
+            <div className="messages-section">
+              {messages.map(msg => (
+                <div
+                  key={msg.id}
+                  className={`message-row ${msg.sender_id === user.id ? "my-message" : "other-message"
+                    }`}
+                >
+                  <div className="message-bubble">
+                    <div className="message-header">
+                      <strong>
+                        {msg.sender_id === user.id
+                          ? "Você"
+                          : TicketService.getUsernameFromEmail(msg.sender_email)}
+                      </strong>
+                    </div>
+                    <div className="message-content">{msg.content}</div>
+                    <span className="message-time">
+                      {new Date(msg.sent_at).toLocaleString()}
+                    </span>
                   </div>
-                  <div className="message-content">{msg.content}</div>
-                  <span className="message-time">
-                    <span className="message-time">{new Date(msg.sent_at).toLocaleString()}</span>
-                    {/* {new Date(msg.sent_at).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })} */}
-                  </span>
                 </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
         </div>
 
         {/* 

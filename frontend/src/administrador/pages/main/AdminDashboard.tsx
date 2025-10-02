@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LayoutDashboard, Users, Settings, RefreshCw } from "lucide-react";
+import { LayoutDashboard, Users, Settings, RefreshCw, ArrowLeft } from "lucide-react";
 import { useSystemStats } from "../../hooks/useSystemStats";
 // import { useUsers } from "../../hooks/useUsers";
 import DashboardTab from "./../../components/DashboardTab/DashboardTab";
@@ -27,6 +27,11 @@ const AdminDashboard: React.FC = () => {
 
         <nav className="la-side-nav">
 
+
+       <NavLink to="/" end>
+          <button onClick={() => setActiveTab("back")} className={`la-nav-item ${activeTab === "back" ? "active" : "back"}`}>
+            <ArrowLeft  className="la-icon" style={{color:"blue"}} /> <span>Voltar</span>
+          </button> </NavLink>
           <button onClick={() => setActiveTab("dashboard")} className={`la-nav-item ${activeTab === "dashboard" ? "active" : ""}`}>
             <LayoutDashboard className="la-icon" /> <span>Dashboard</span>
           </button>
@@ -34,13 +39,13 @@ const AdminDashboard: React.FC = () => {
             <Users className="la-icon" /> <span>Users</span>
             <span className="la-badge">{onlineUsersCount}</span>
           </button>
-          <button onClick={() => setActiveTab("settings")} className={`la-nav-item ${activeTab === "settings" ? "active" : ""}`}>
+          {/* <button onClick={() => setActiveTab("settings")} className={`la-nav-item ${activeTab === "settings" ? "active" : ""}`}>
             <Settings className="la-icon" /> <span>Settings</span>
-          </button>
-        </nav>
+          </button> */}
         <NavLink to="/" end>
           <button className="la-logout-button">VOLTAR</button>
         </NavLink>
+        </nav>
 
         <main className="la-content">
           <div className="la-content-header">
@@ -61,7 +66,7 @@ const AdminDashboard: React.FC = () => {
 
           {activeTab === "dashboard" && <DashboardTab stats={stats} user={users} />}
           {activeTab === "users" && <UsersTab />}
-          {activeTab === "settings" && <SettingsTab />}
+          {/* {activeTab === "settings" && <SettingsTab />} */}
         </main>
       </div>
     </div>

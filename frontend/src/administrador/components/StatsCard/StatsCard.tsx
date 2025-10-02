@@ -21,6 +21,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ label, value, icon, progress, sub
     {progress !== undefined && (
       <div className="card-progress">
         <div style={{ width: `${progress}%` }}></div>
+        
       </div>
     )}
     {subtitle && <span className="card-subtitle">{subtitle}</span>}

@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from typing import List
-
+from backend.frota.events.notification import notify_frota_approve_async, notify_frota_checkout_async, notify_frota_deny_async, notify_frota_return_async
 # --- Imports do Módulo Frota ---
 from ..crud.crud_booking import (
     create_checkout, create_schedule, approve_booking, deny_booking,
@@ -46,6 +46,7 @@ def list_bookings(
 @router.post("/checkout", response_model=BookingRead)
 def checkout(
     payload: BookingCheckout, 
+    background_tasks: BackgroundTasks,
     # PARÂMETROS CORRIGIDOS
     frota_db: Session = Depends(get_frota_db), 
     global_db: Session = Depends(get_global_db),
@@ -55,9 +56,13 @@ def checkout(
         # VARIÁVEL CORRIGIDA
         booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
         booking.user = get_user(global_db, booking.user_id) 
+        background_tasks.add_task(notify_frota_checkout_async, payload.vehicle_id)
         return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    
+
 
 @router.post("/schedule", response_model=BookingRead)
 def schedule(
@@ -76,7 +81,7 @@ def schedule(
 @router.patch("/{booking_id}/approve", response_model=BookingRead)
 def approve(
     booking_id: int,
-    # PARÂMETROS CORRIGIDOS
+    background_tasks: BackgroundTasks,
     frota_db: Session = Depends(get_frota_db),
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
@@ -92,12 +97,13 @@ def approve(
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
+    background_tasks.add_task(notify_frota_approve_async, booking)
     return booking
 
 @router.patch("/{booking_id}/deny", response_model=BookingRead)
 def deny(
     booking_id: int,
-    # PARÂMETROS CORRIGIDOS
+    background_tasks: BackgroundTasks, 
     frota_db: Session = Depends(get_frota_db),
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
@@ -113,12 +119,14 @@ def deny(
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
+    background_tasks.add_task(notify_frota_deny_async, booking)
     return booking
 
 @router.post("/{booking_id}/return", response_model=BookingRead)
 def do_return(
     booking_id: int, 
     payload: dict,
+    background_tasks: BackgroundTasks,
     # PARÂMETROS CORRIGIDOS
     frota_db: Session = Depends(get_frota_db),
     global_db: Session = Depends(get_global_db),
@@ -135,4 +143,5 @@ def do_return(
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
+    background_tasks.add_task(notify_frota_return_async, booking)
     return booking
