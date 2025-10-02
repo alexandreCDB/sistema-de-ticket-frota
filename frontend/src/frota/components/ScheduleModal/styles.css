@@ -362,3 +362,15 @@
   z-index: 10000 !important;
 }
 
+/* ===== NOVA REGRA PARA DIAS AGENDADOS ===== */
+
+.react-datepicker__day.booked-day {
+  background-color: #fecaca !important; /* Vermelho claro */
+  color: #b91c1c !important; /* Vermelho escuro */
+  font-weight: bold !important;
+  cursor: not-allowed !important; /* Mostra que o dia não é clicável */
+}
+
+.react-datepicker__day.booked-day:hover {
+  background-color: #fee2e2 !important; /* Efeito hover um pouco mais claro */
+}

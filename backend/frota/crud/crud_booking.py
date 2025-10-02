@@ -1,12 +1,8 @@
-# backend/frota/crud/crud_booking.py
 from sqlalchemy.orm import Session, joinedload
 from datetime import datetime, timezone, timedelta
 
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
-
-# --- CRUD da frota (Otimizado) ---
-# REMOVEMOS TODAS AS IMPORTAÇÕES E CHAMADAS AO BANCO GLOBAL DAQUI
 
 def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, observation:str=None, start_mileage:int=None):
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).with_for_update().first()
@@ -34,10 +30,8 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
     db.commit()
     db.refresh(b)
     
-    # Injeta user do banco global
-    global_db = next(get_global_db())
-    b.user = get_user(global_db, user_id)
-    
+    # CORRIGIDO: Removidas as linhas que acessavam o banco de dados global.
+    # A função agora retorna o objeto puro, como as outras funções neste arquivo.
     return b
 
 def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time: datetime, end_time: datetime, purpose:str=None, observation:str=None):
@@ -64,7 +58,7 @@ def create_schedule(db: Session, user_id:int, vehicle_id:int, start_time: dateti
     db.add(b)
     db.commit()
     db.refresh(b)
-    return b # Retorna o objeto puro, sem o usuário
+    return b
 
 def get_booking(db: Session, booking_id:int):
     return db.query(Booking).options(joinedload(Booking.vehicle)).filter(Booking.id == booking_id).first()
@@ -83,7 +77,6 @@ def approve_booking(db: Session, booking_id:int, approver_id:int):
     b.status = "confirmed"
     b.handled_by = approver_id
     
-    # Esta lógica está correta, pois b.vehicle já vem do joinedload
     if b.vehicle:
         now_utc = datetime.now(timezone.utc)
         two_hours_from_now = now_utc + timedelta(hours=2)
