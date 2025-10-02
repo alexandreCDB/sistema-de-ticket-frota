@@ -7,6 +7,7 @@ import { MdPersonAdd } from 'react-icons/md';
 import { useAuth } from '../../services/App.services';
 import { IUser } from '../../../components/AUTH/interfaces/user';
 import { fetchUsers, toggleUserActive } from './manager-user.service';
+import Loading from '../../../components/Loads/Loading';
 
 const ManagerUser = () => {
   const { user, loadingUser, userError } = useAuth();
@@ -60,7 +61,7 @@ const ManagerUser = () => {
     setShowConfirmModal(false);
   };
 
-  if (loadingUser) return <p>Carregando usuário...</p>;
+  if (loadingUser) return <Loading />;
   if (userError) return <p>Erro ao carregar usuário</p>;
 
   return (
@@ -73,7 +74,7 @@ const ManagerUser = () => {
       </div>
 
       {loading ? (
-        <p>Carregando usuários...</p>
+        <Loading />
       ) : (
         <table className="user-table">
           <thead>

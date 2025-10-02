@@ -59,7 +59,7 @@ const DashboardPanels = ({ user }) => {
   }, []);
 
   if (loading) {
-    return <p>Carregando estatísticas...</p>;
+    return <Loading />;
   }
 
   if (error) {

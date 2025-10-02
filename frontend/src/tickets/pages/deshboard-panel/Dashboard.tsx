@@ -5,6 +5,7 @@ import AnimatedPageWrapper from "../../../components/Animated/AnimatedPageWrappe
 import { getPanelsForUser, PanelConfig } from "./dashboardPanelsLogic";
 import { useDashboardStats } from "./DashboardPanels.service";
 import { useAuth } from "../../services/App.services";
+import Loading from "../../../components/Loads/Loading";
 
 interface PanelProps extends PanelConfig {}
 
@@ -29,7 +30,7 @@ const Dashboard = () => {
   
 
   if (loading) {
-    return <p>Carregando estatísticas...</p>;
+    return <Loading />;
   }
 
   if (error) {
