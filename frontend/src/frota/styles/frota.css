@@ -168,3 +168,11 @@ body {
 .adicionar-veiculo{
   cursor: pointer;
 }
+
+.admin-grid {
+    /* background-color: red; */
+    display: flex
+;
+    flex-direction: column;
+    gap: 10px;
+}

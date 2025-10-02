@@ -103,6 +103,12 @@
   margin-left: auto !important; /* Empurra os botões para a direita */
 }
 
+.admin-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .item-actions button {
   padding: 0.65rem 1.25rem !important;
   border-radius: 8px !important;
