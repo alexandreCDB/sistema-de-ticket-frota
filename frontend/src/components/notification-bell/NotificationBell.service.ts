@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 import { getWebSocket } from "../../services/websocket";
 //@ts-ignore
-import notificationSound from "../../assets/audio/notification.mp3";;
+import notificationSoundTicket from "../../assets/audio/notification.mp3";;
+//@ts-ignore
+import notificationSoundCar from "../../assets/audio/car.mp3";;
 import {
   WsNotification,
   TicketCreatedNotificationWS,
@@ -88,7 +90,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
         const data: WsNotification<any> = JSON.parse(event.data);
 
         let normalized: NotificationItemTicket | NotificationItemFrota | null = null;
-
+        let song = notificationSoundTicket;
         switch (data.type) {
           case "ticket_created":
             normalized = {
@@ -97,6 +99,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: data.message.message,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
+            song = notificationSoundTicket;
             break;
 
           case "ticket_message":
@@ -106,6 +109,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: data.message.message,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
+            song = notificationSoundTicket;
             break;
 
           case "ticket_finish":
@@ -115,6 +119,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: `Ticket encerrado: ${data.message.ticket_id}`,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
             };
+            song = notificationSoundTicket;
             break;
 
           case "frota_checkout":
@@ -124,6 +129,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: data.message.message,
               routerLink: `/frotas/admin`,
             };
+            song = notificationSoundCar;
             break;
           case "frota_return":
             normalized = {
@@ -132,6 +138,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: data.message.message,
               routerLink: `/frotas/admin`,
             };
+            song = notificationSoundCar;
             break;
 
           case "frota_solicitation":
@@ -141,6 +148,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               message: data.message.message,
               routerLink: `/frotas/meus-veiculos`,
             };
+            song = notificationSoundCar;
             break;
 
           default:
@@ -158,7 +166,12 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
 
         if (!notifiedIdsRef.has(normalized.id)) {
           notifiedIdsRef.add(normalized.id);
-          new Audio(notificationSound).play();
+          new Audio(song).play();
+          showBrowserNotification("Nova Notificação 🚨", {
+            body: normalized.message,
+            icon: "/favicon.ico", // pode ser seu ícone custom
+            data: { url: normalized.routerLink }, // link para abrir
+          });
         }
       } catch (err) {
         console.error("Erro ao processar mensagem WS:", err);
@@ -194,6 +207,23 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
 
   return { notifications, count, animate, markAsRead, markAllAsRead };
 }
+
+
+function showBrowserNotification(title: string, options?: NotificationOptions) {
+  if (!("Notification" in window)) return;
+
+  if (Notification.permission === "granted") {
+    const notif = new Notification(title, options);
+
+    // Se quiser abrir a tela do ticket ao clicar
+    notif.onclick = () => {
+      if (options?.data?.url) {
+        window.open(options.data.url, "_blank");
+      }
+    };
+  }
+}
+
 
 // import { useEffect, useState } from "react";
 // import { getWebSocket } from "../../services/websocket";
