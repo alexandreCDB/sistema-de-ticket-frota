@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ClipboardList, ShieldCheck, Truck } from 'lucide-react';
 //@ts-ignore
@@ -8,6 +8,8 @@ import { useAuth } from '../../components/AUTH/AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
+
+
 
   const goToTickets = () => {
     navigate('/tickets');
@@ -21,7 +23,11 @@ const Home = () => {
     navigate('/master');
   };
 
-
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
 
   const { user } = useAuth();
   return (

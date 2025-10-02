@@ -13,6 +13,11 @@ const NotificationBell: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
+  useEffect(() => {
     if (user) {
       connectWebSocket(user.token); // conecta/reconecta WS com token do usuário
     }

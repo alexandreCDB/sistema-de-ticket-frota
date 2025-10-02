@@ -56,14 +56,12 @@ def checkout(
         # VARIÁVEL CORRIGIDA
         booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
         booking.user = get_user(global_db, booking.user_id) 
+        
         background_tasks.add_task(notify_frota_checkout_async, payload.vehicle_id)
         return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
-    
-
-
+  
 @router.post("/schedule", response_model=BookingRead)
 def schedule(
     payload: BookingSchedule,
@@ -81,6 +79,7 @@ def schedule(
 @router.patch("/{booking_id}/approve", response_model=BookingRead)
 def approve(
     booking_id: int,
+    
     background_tasks: BackgroundTasks,
     frota_db: Session = Depends(get_frota_db),
     global_db: Session = Depends(get_global_db),
@@ -97,6 +96,7 @@ def approve(
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
+     
     background_tasks.add_task(notify_frota_approve_async, booking)
     return booking
 
