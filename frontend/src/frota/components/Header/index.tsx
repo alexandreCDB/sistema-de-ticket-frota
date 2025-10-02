@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+//@ts-ignore
 import './styles.css';
 import { Car, User, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../../../components/AUTH/AuthContext';
 // Importa o hook de autenticação que já usamos
-import { useAuth } from '../../../tickets/services/App.services';
 
 export const FrotaHeader = () => {
   const location = useLocation();

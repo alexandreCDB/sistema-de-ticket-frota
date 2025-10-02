@@ -1,11 +1,13 @@
 // frontend/src/components/TicketsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+//@ts-ignore
 import './TicketsPage.css';
 import AnimatedPageWrapper from '../../../components/Animated/AnimatedPageWrapper'
-import { useAuth } from '../../services/App.services';
+
 import { useDashboardStats } from '../deshboard-panel/DashboardPanels.service';
 import TicketList from '../../components/ticket-list/TicketList';
+import { useAuth } from '../../../components/AUTH/AuthContext';
 
 // ADICIONE ESTE MAPA DE STATUS AQUI (se não estiver já)
 const STATUS_MAP = {

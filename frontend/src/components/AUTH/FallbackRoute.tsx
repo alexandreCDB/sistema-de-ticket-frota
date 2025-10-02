@@ -1,10 +1,10 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import useAuthService from "./AuthForm.service";
 import Loading from "../Loads/Loading";
+import { useAuth } from "./AuthContext";
 
 const FallbackRoute: React.FC = () => {
-  const { user, loadingUser } = useAuthService();
+  const { user, loadingUser } = useAuth();
 
   if (loadingUser) return <Loading />;
 

@@ -86,11 +86,11 @@ origins = [
   "http://192.168.13.136:8000",
   "http://192.168.13.159:8000",
   "http://192.168.13.159:5173",
-  "http://192.168.13.159:300",
+  "http://192.168.13.159:5173",
 ]
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=["*"], # Permitir todas as origens
+  allow_origins=origins, # Permitir todas as origens
   allow_credentials=True,
   allow_methods=["*"],
   allow_headers=["*"],

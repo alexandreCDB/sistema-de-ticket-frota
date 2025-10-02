@@ -9,33 +9,29 @@ import Dashboard from "./tickets/pages/deshboard-panel/Dashboard";
 import CreateTicketForm from "./tickets/pages/create-ticket-form/CreateTicketForm";
 import TicketsPage from "./tickets/pages/ticket-page/TicketsPage";
 import TicketDetail from "./tickets/components/ticket-detail/TicketDetail";
-import ConfigsPage from "./tickets/pages/configs/ConfigsPage";
-import ManagerUser from "./tickets/pages/manager-user/manager-user";
 import FrotaAdminPage from './frota/components/FrotaAdminPage/index';
 import ListaVeiculosPage from './frota/pages/ListaVeiculosPage';
 import MeusVeiculosPage from './frota/pages/MeusVeiculosPage/index';
-import { useAuth } from './tickets/services/App.services';
 import AdminDashboard from "./administrador/pages/main/AdminDashboard";
 import NotificationBell from "./components/notification-bell/NotificationBell";
 import AdminRoute from "./components/AUTH/AdminRoute";
 import Home from "./Pages/home/home";
 import Loading from "./components/Loads/Loading";
+import { useAuth } from "./components/AUTH/AuthContext";
 
 function AppContent() {
-  const { loadingUser, user } = useAuth();
+  // const { loadingUser, user } = useAuth();
   const location = useLocation();
 
-  if (loadingUser) {
-    return <Loading />;
-  }
+  // if (loadingUser) {
+  //   return <Loading />;
+  // }
 
   return (
     <>
-      {/* Sino aparece em todas as rotas, menos no login */}
       {location.pathname !== "/login" && <NotificationBell />}
 
       <Routes>
-        {/* Rotas públicas */}
         <Route
           path="/login"
           element={
@@ -45,7 +41,6 @@ function AppContent() {
           }
         />
 
-        {/* Home protegida */}
         <Route
           path="/"
           element={
@@ -55,7 +50,6 @@ function AppContent() {
           }
         />
 
-        {/* Tickets */}
         <Route
           path="/tickets/*"
           element={
@@ -69,12 +63,9 @@ function AppContent() {
           <Route path="create-ticket" element={<CreateTicketForm />} />
           <Route path="tickets" element={<TicketsPage />} />
           <Route path="assigned" element={<TicketsPage />} />
-          <Route path="manage-users" element={<ManagerUser />} />
-          <Route path="settings" element={<ConfigsPage />} />
           <Route path="tickets/:ticketId" element={<TicketDetail />} />
         </Route>
 
-        {/* Frota */}
         <Route path="/frotas">
           <Route
             index
@@ -104,7 +95,6 @@ function AppContent() {
           />
         </Route>
 
-        {/* Super Admin */}
         <Route path="/master/*">
           <Route index element={<AdminRoute>
             <AdminDashboard />
@@ -112,7 +102,6 @@ function AppContent() {
           } />
         </Route>
 
-        {/* Fallback */}
         <Route path="*" element={<FallbackRoute />} />
       </Routes>
     </>

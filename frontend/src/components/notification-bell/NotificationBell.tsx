@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 import bellIcon from "../../assets/images/notificacao.png";
 //@ts-ignore
 import "./NotificationBell.css";
-import useAuthService from "../AUTH/AuthForm.service";
 import { connectWebSocket } from "../../services/websocket";
+import { useAuth } from "../AUTH/AuthContext";
 
 const NotificationBell: React.FC = () => {
-  const { user } = useAuthService();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

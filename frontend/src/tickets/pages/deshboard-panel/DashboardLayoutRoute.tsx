@@ -1,11 +1,12 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import useAuthService from "../../../components/AUTH/AuthForm.service";
 import Layout from "../../components/ticket-layout/Layout";
+//@ts-ignore
 import "./DashboardPanels.css";
+import { useAuth } from "../../../components/AUTH/AuthContext";
 
 const DashboardLayoutRoute: React.FC = () => {
-  const { user, handleLogout } = useAuthService();
+  const { user, handleLogout } = useAuth();
 
   if (!user) return null; 
 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+//@ts-ignore
 import '../styles/frota.css';
+//@ts-ignore
 import './ListaVeiculosPage.css';
-import { useAuth } from '../../tickets/services/App.services'; 
 import { useVehiclesWithBookings } from '../services/frota.services'; 
 import { Dashboard } from '../components/Dashboard';
 import { VehicleCard } from '../components/VehicleCard';
@@ -11,6 +12,7 @@ import { SuccessToast } from '../components/SucessToast';
 import { VehicleWithBookings } from '../types';
 import { FrotaHeader } from '../components/Header';
 import Loading from '../../components/Loads/Loading';
+import { useAuth } from '../../components/AUTH/AuthContext';
 
 export default function ListaVeiculosPage() {
   const { loadingUser } = useAuth();
@@ -79,6 +81,7 @@ export default function ListaVeiculosPage() {
                   vehicle={vehicle} 
                   onRetirar={() => handleOpenCheckoutModal(vehicle)}
                   onAgendar={() => handleOpenScheduleModal(vehicle)}
+                  //@ts-ignore
                   bookings={vehicle.bookings}
                 />
               ))

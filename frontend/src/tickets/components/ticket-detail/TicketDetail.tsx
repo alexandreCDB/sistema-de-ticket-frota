@@ -8,9 +8,9 @@ import './TicketDetail.css';
 //@ts-ignore
 import './Forms.css';
 import { IUser } from '../../../components/AUTH/interfaces/user';
-import { useAuth } from '../../services/App.services';
 import { connectWebSocket, getWebSocket } from '../../../services/websocket';
 import Loading from '../../../components/Loads/Loading';
+import { useAuth } from '../../../components/AUTH/AuthContext';
 
 const TicketDetail: React.FC = () => {
   const { user, loadingUser, userError } = useAuth();
