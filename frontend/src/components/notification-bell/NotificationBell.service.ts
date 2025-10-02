@@ -166,7 +166,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
 
         if (!notifiedIdsRef.has(normalized.id)) {
           notifiedIdsRef.add(normalized.id);
-          new Audio(notificationSound).play();
+          new Audio(song).play();
           showBrowserNotification("Nova Notificação 🚨", {
             body: normalized.message,
             icon: "/favicon.ico", // pode ser seu ícone custom
