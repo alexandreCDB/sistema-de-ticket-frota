@@ -15,15 +15,22 @@ export const VehicleManagement = () => {
     setVehicleToEdit(vehicle);
     setIsModalOpen(true);
   };
-  const handleCloseModal = () => { setIsModalOpen(false); setVehicleToEdit(null); };
+
+  // MUDANÇA AQUI: Agora o refetch é chamado ao fechar a modal
+  const handleCloseModal = () => { 
+    setIsModalOpen(false); 
+    setVehicleToEdit(null);
+    refetchVehicles(); // Garante que a lista esteja sempre atualizada ao fechar
+  };
 
   const handleSave = async (vehicleData: any, vehicleId?: number) => {
     setIsSaving(true);
     try {
       if (vehicleId) await updateVehicle(vehicleId, vehicleData);
       else await createVehicle(vehicleData);
-      refetchVehicles();
-      handleCloseModal();
+      
+      // A atualização agora acontece no handleCloseModal
+      handleCloseModal(); 
     } catch (err: any) {
       console.error('Erro ao guardar veículo:', err);
       alert(err.message || 'Erro ao guardar veículo.');
@@ -32,8 +39,13 @@ export const VehicleManagement = () => {
 
   const handleDelete = async (vehicle: Vehicle) => {
     if (!window.confirm(`Tem a certeza que quer remover o veículo ${vehicle.name}?`)) return;
-    try { await deleteVehicle(vehicle.id); refetchVehicles(); } 
-    catch (err: any) { console.error(err); alert(err.message || 'Erro ao remover veículo.'); }
+    try { 
+      await deleteVehicle(vehicle.id); 
+      refetchVehicles(); 
+    } catch (err: any) { 
+      console.error(err); 
+      alert(err.message || 'Erro ao remover veículo.'); 
+    }
   };
 
   if (isLoading) return <div className="page-status">A carregar veículos...</div>;

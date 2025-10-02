@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models.vehicle import Vehicle
+from ..models.vehicle import Vehicle, VehicleStatus # ADICIONADO VehicleStatus
 from ..models.booking import Booking
 
 def get_vehicle(db: Session, vehicle_id: int):
@@ -25,15 +25,22 @@ def update_vehicle(db: Session, vehicle_id: int, vehicle_data: dict):
     db.refresh(v)
     return v
 
+# ADICIONADO: Nova função para alterar apenas o status
+def update_vehicle_status(db: Session, vehicle_id: int, status: VehicleStatus):
+    vehicle = get_vehicle(db, vehicle_id)
+    if vehicle:
+        vehicle.status = status
+        db.commit()
+        db.refresh(vehicle)
+    return vehicle
+
 def delete_vehicle(db: Session, vehicle_id: int):
     v = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not v:
         return None
-
-    # Opção 1: Deletar todas as bookings associadas
+    
     db.query(Booking).filter(Booking.vehicle_id == vehicle_id).delete(synchronize_session=False)
 
-    # Depois deletar o veículo
     db.delete(v)
     db.commit()
     return True

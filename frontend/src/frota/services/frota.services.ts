@@ -362,3 +362,37 @@ export function useVehiclesWithBookings() {
     
 }
 
+/// src/services/frota.services.ts
+
+// ... (todo o seu código existente, sem alterações) ...
+// ... (useVehiclesWithBookings, uploadVehicleImage, etc) ...
+
+// --- ADICIONE ESTA NOVA FUNÇÃO AO FINAL DO ARQUIVO ---
+
+// A lista completa de status que podem ser enviados para o backend
+export type VehicleStatus = 'available' | 'in-use' | 'reserved' | 'maintenance' | 'unavailable';
+
+// Interface para o corpo da requisição PATCH
+interface VehicleStatusUpdateData {
+  status: VehicleStatus;
+}
+
+/**
+ * Atualiza o status de um veículo específico.
+ * @param id O ID do veículo a ser atualizado.
+ * @param data O novo status a ser definido.
+ */
+export async function updateVehicleStatus(id: number, data: VehicleStatusUpdateData) {
+  const response = await fetch(`${API_URL}/frotas/vehicles/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha ao atualizar o status do veículo.');
+  }
+  return response.json();
+}
