@@ -10,6 +10,7 @@ import './Forms.css';
 import { IUser } from '../../../components/AUTH/interfaces/user';
 import { useAuth } from '../../services/App.services';
 import { connectWebSocket, getWebSocket } from '../../../services/websocket';
+import Loading from '../../../components/Loads/Loading';
 
 const TicketDetail: React.FC = () => {
   const { user, loadingUser, userError } = useAuth();
@@ -196,7 +197,7 @@ const TicketDetail: React.FC = () => {
   };
 
   // ---------------- Render ----------------
-  if (loading || loadingUser) return <div>Carregando...</div>;
+  if (loading || loadingUser) return <Loading />;
   if (error || userError) return <div style={{ color: 'red' }}>Erro: {error || userError}</div>;
   if (!ticket || !user) return <div>Ticket não encontrado</div>;
 

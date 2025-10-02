@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import Loading from "../Loads/Loading";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (loadingUser) {
     return (
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <p>Carregando usuário...</p>
+       <Loading />
       </div>
     );
   }
