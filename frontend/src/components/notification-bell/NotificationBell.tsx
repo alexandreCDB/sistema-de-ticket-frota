@@ -40,8 +40,9 @@ const NotificationBell: React.FC = () => {
       let toggle = false;
       blinkInterval = setInterval(() => {
         document.title = toggle
-          ? `(${count}) Nova${count > 1 ? "s" : ""} notificação${count > 1 ? "es" : ""}`
-          : "🔔 Você tem novas notificações!";
+          ? `(${count}) Nova${count > 1 ? "s" : ""} notificação${count > 1 ? "es": ""}`
+          : `(${count}) Nova${count > 1 ? "s" : ""} notificação${count > 1 ? "es" + "🔔🔔" : "🔔🔔"}`
+          // "🔔 Você tem novas notificações!";
         toggle = !toggle;
       }, 10);
     } else {
