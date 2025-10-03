@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css'; 
 import { Vehicle, Booking } from '../../types';
 import defaultVehicleImage from '../../../assets/onix.png';
-import { Users, GitBranch, XCircle, Undo2, CalendarCheck2 } from 'lucide-react';
+import { Users, GitBranch, XCircle, Undo2, CalendarCheck2, MapPin } from 'lucide-react';
 
 // @ts-ignore
 const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', '');
@@ -10,20 +10,21 @@ const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', '');
 interface VehicleCardProps {
   vehicle: Vehicle;
   booking?: Booking;
+  lastParkingLocation?: string | null;
   onRetirar?: (vehicle: Vehicle) => void;
   onAgendar?: (vehicle: Vehicle) => void;
   onDevolver?: () => void;
   onCancelar?: () => void;
 }
 
-export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver, onCancelar }: VehicleCardProps) {
+export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, onAgendar, onDevolver, onCancelar }: VehicleCardProps) {
   
   const statusMap = {
     available: { text: 'Disponível', className: 'status-available' },
     'in-use': { text: 'Em Uso', className: 'status-in-use' },
     reserved: { text: 'Reservado', className: 'status-reserved' },
     maintenance: { text: 'Manutenção', className: 'status-maintenance' },
-    unavailable: { text: 'Indisponível', className: 'status-maintenance' }, // <-- ADICIONADO AQUI
+    unavailable: { text: 'Indisponível', className: 'status-maintenance' },
     pending: { text: 'Pendente', className: 'status-reserved' },
     confirmed: { text: 'Confirmado', className: 'status-available' },
   };
@@ -36,11 +37,11 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
     : defaultVehicleImage;
 
   const renderActions = () => {
+    // ... (sua função renderActions continua igual)
     if (booking) {
       if (booking.status === 'in-use') {
         return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
       }
-      
       if (booking.status === 'confirmed') {
         if (booking.type === 'checkout') {
           return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
@@ -55,7 +56,6 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
         }
       }
     }
-
     if (onRetirar && onAgendar && vehicle.status === 'available') {
       return (
         <>
@@ -64,8 +64,6 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
         </>
       );
     }
-    
-    // O botão de Indisponível já funciona corretamente com a sua lógica
     return <button className="btn-disabled" disabled>Indisponível</button>;
   };
 
@@ -73,7 +71,6 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
     <div className="vehicle-card">
       <div className="vehicle-header">
         <h3 className="vehicle-name">{vehicle.name}</h3>
-        {/* Agora, quando o status for "unavailable", ele mostrará "Indisponível" */}
         <span className={`vehicle-status-badge ${currentStatus.className}`}>
           {currentStatus.text}
         </span>
@@ -98,6 +95,13 @@ export function VehicleCard({ vehicle, booking, onRetirar, onAgendar, onDevolver
             <span className="detail-value">{vehicle.passengers}</span>
           </div>
         )}
+        
+        {/* --- ALTERAÇÃO APLICADA AQUI --- */}
+        <div className="detail-item">
+          <span className="detail-label">Local:</span>
+          {/* Se 'lastParkingLocation' existir, usa ele. Senão, usa 'Pátio'. */}
+          <span className="detail-value">{lastParkingLocation || 'Garagem Padrão'}</span>
+        </div>
       </div>
 
       <div className="vehicle-actions">

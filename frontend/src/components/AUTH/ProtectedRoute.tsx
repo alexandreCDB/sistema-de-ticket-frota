@@ -10,19 +10,18 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loadingUser } = useAuth();
 
+  // 1. Primeiro, espera o carregamento terminar
   if (loadingUser) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-       <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
+  // 2. Depois do carregamento, verifica se existe um usuário
   if (!user) {
-    console.log("Usuário não autenticado, redirecionando para /login");
+    // Se não houver, redireciona para o login
     return <Navigate to="/login" replace />;
   }
 
+  // 3. Se houver usuário, renderiza a página protegida
   return <>{children}</>;
 };
 

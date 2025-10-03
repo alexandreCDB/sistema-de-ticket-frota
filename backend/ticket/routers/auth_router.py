@@ -30,7 +30,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     if not user or not user.is_active:
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos/inativo")
 
-    user.lastSeen = datetime.utcnow()
+    user.lastSeen = datetime.now()
     db.commit()  # salva no banco
     db.refresh(user) 
     access_token_expires = timedelta(hours=12)
