@@ -132,7 +132,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
           
         </div>
 
-        <main className="main-content">{children}</main>
+        <main className="lmain-content">{children}</main>
       </div>
     </AnimatedPageWrapper>
   );

@@ -62,6 +62,7 @@ export default function MeusVeiculosPage() {
     }
 
     // O filtro correto: mostra apenas reservas APROVADAS ('confirmed') ou JÁ EM USO ('in-use')
+    //@ts-ignore
     const approvedBookings = bookings?.filter(b => b.status === 'in-use' || b.status === 'confirmed') || [];
 
     if (approvedBookings.length === 0) {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 //@ts-ignore
 import './styles.css';
-import { Car, User, ShieldCheck } from 'lucide-react';
+import { Car, User, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../../components/AUTH/AuthContext';
 // Importa o hook de autenticação que já usamos
 
@@ -16,6 +16,10 @@ export const FrotaHeader = () => {
   return (
     <header className="frota-header">
       <div className="frota-container header-content">
+        <NavLink to="/" end className="back-button">
+          <ArrowLeft className="la-icon" style={{ color: "blue" }} />
+        </NavLink>
+
         <div className="logo-area">
           <Car size={32} />
           <div className="logo-text">
@@ -40,7 +44,7 @@ export const FrotaHeader = () => {
             </Link>
           )}
         </nav>
-        
+
       </div>
     </header>
   );

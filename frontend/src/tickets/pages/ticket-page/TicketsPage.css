@@ -58,7 +58,7 @@
 
 @media (max-width: 768px) {
 
-.tabs-container {
+.tabs-container0 {
   display: flex;
   flex-wrap: wrap; /* permite quebrar em telas menores */
   gap: 10px;
