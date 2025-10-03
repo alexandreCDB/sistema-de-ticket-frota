@@ -99,17 +99,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, handleLogout }) => {
                       <span>Chamados Recebidos</span>
                     </NavLink>
                   </li>
-                  {user?.is_super_admin && (
-                    <li>
-                      <NavLink
-                        to="/tickets/manage-users"
-                        className={({ isActive }) => (isActive ? 'active' : '')}
-                      >
-                        <FaUsers className="icon" />
-                        <span>Gerenciar Usuários</span>
-                      </NavLink>
-                    </li>
-                  )}
+                 
                 </>
               )}
 

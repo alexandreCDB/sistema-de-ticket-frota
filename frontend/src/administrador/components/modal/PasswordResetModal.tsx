@@ -35,23 +35,24 @@ const PasswordResetModal = ({ user, onClose }: Props) => {
   };
 
   return (
-    <div className="pmodal">
-      <h3>Redefinir senha de {user.email}</h3>
-      <form onSubmit={handleReset}>
-        <label>Nova senha:</label>
-        <input
-          type="password"
-          value={newPassword}
-          onChange={e => setNewPassword(e.target.value)}
-          required
-        />
+    <div className="umodal-overlay">
+      <div className="umodal">
+        <h3>Redefinir senha de {user.email}</h3>
+        <form onSubmit={handleReset}>
+          <label>Nova senha:</label>
+          <input
+            type="password"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            required
+          />
 
-        <div>
-          <button type="submit">Redefinir</button>
-          <button type="button" onClick={onClose}>Cancelar</button>
-        </div>
-      </form>
-    </div>
+           <div className="umodal-actions">
+            <button type="submit">Redefinir</button>
+            <button type="button" onClick={onClose}>Cancelar</button>
+          </div>
+        </form>
+      </div></div>
   );
 };
 

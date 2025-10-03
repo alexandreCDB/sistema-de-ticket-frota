@@ -10,7 +10,6 @@ import "./AdminDashboard.css";
 import { User } from "../../types";
 import { useDashboardStats } from "./AdminDashboard.service";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../../tickets/services/App.services";
 
 const AdminDashboard: React.FC = () => {
 

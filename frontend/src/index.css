@@ -65,3 +65,10 @@
 * {
   -webkit-overflow-scrolling: touch;
 }
+
+input:disabled {
+  background-color: #f0f0f0; /* fundo cinza claro */
+  color: #888;              /* texto mais apagado */
+  border: 1px solid #ccc;   /* borda suavizada */
+  cursor: not-allowed;      /* cursor bloqueado */
+}

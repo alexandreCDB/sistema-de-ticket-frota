@@ -1,5 +1,5 @@
 // Hook: useNotifications.ts
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getWebSocket } from "../../services/websocket";
 //@ts-ignore
 import notificationSoundTicket from "../../assets/audio/notification.mp3";;
@@ -13,6 +13,7 @@ import {
 } from "../../interface/ticket";
 //@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL as string;
+import { Ticket, Car, CheckCircle } from "lucide-react";
 
 export interface NotificationItemTicket {
   id: number;
@@ -20,6 +21,7 @@ export interface NotificationItemTicket {
   message: string;   // 🔔 sempre presente aqui
   read?: boolean;
   routerLink: string; // opcional, para links customizados
+  icon: JSX.Element
 }
 export interface NotificationItemFrota {
   id: number;
@@ -27,6 +29,7 @@ export interface NotificationItemFrota {
   message: string;   // 🔔 sempre presente aqui
   read?: boolean;
   routerLink: string; // opcional, para links customizados
+  icon: JSX.Element
 }
 
 interface UseNotificationsProps {
@@ -71,10 +74,21 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
     (async () => {
       try {
         const unread = await fetchNotifications(userId);
-        setNotifications(unread);
-        setCount(unread.length);
+        const normalizedUnread = unread
+          .map((n: any) => normalizeNotification(n))
+          .filter(Boolean) as (NotificationItemTicket | NotificationItemFrota)[];
+         console.log();
+         //@ts-ignore
+        setNotifications(normalizedUnread);
+        setCount(normalizedUnread.length);
 
-        unread.forEach((n) => notifiedIdsRef.add(n.id));
+        normalizedUnread.forEach((n) => notifiedIdsRef.add(n.id));
+        // const unread = await fetchNotifications(userId);
+
+        // setNotifications(unread);
+        // setCount(unread.length);
+
+        // unread.forEach((n) => notifiedIdsRef.add(n.id));
       } catch (err) {
         console.error("Erro ao carregar notificações iniciais:", err);
       }
@@ -98,6 +112,8 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               ticket_id: data.message.ticket_id,
               message: data.message.message,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
+
             };
             song = notificationSoundTicket;
             break;
@@ -108,6 +124,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               ticket_id: data.message.ticket_id,
               message: data.message.message,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
             };
             song = notificationSoundTicket;
             break;
@@ -118,6 +135,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               ticket_id: data.message.ticket_id,
               message: `Ticket encerrado: ${data.message.ticket_id}`,
               routerLink: `/tickets/tickets/${data.message.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
             };
             song = notificationSoundTicket;
             break;
@@ -128,6 +146,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               vehicle_id: data.message.ticket_id,
               message: data.message.message,
               routerLink: `/frotas/admin`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
             };
             song = notificationSoundCar;
             break;
@@ -136,7 +155,8 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               id: data.message.id,
               vehicle_id: data.message.vehicle_id,
               message: data.message.message,
-              routerLink: `/frotas/admin`,
+              routerLink: `/frotas`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
             };
             song = notificationSoundCar;
             break;
@@ -147,6 +167,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
               vehicle_id: data.message.vehicle_id,
               message: data.message.message,
               routerLink: `/frotas/meus-veiculos`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
             };
             song = notificationSoundCar;
             break;
@@ -181,6 +202,76 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
     ws.addEventListener("message", handleMessage);
     return () => ws.removeEventListener("message", handleMessage);
   }, [userId]);
+
+
+  function normalizeNotification(data: any): NotificationItemTicket | NotificationItemFrota | null {
+    let normalized: NotificationItemTicket | NotificationItemFrota | null = null;
+
+    switch (data.notification_type) {
+          case "ticket_created":
+            normalized = {
+              id: data.id,
+              ticket_id: data.ticket_id,
+              message: data.message,
+              routerLink: `/tickets/tickets/${data.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
+
+            };
+            break;
+
+          case "ticket_message":
+            normalized = {
+              id: data.id,
+              ticket_id: data.ticket_id,
+              message: data.message,
+              routerLink: `/tickets/tickets/${data.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
+            };
+            break;
+
+          case "ticket_finish":
+            normalized = {
+              id: data.id,
+              ticket_id: data.ticket_id,
+              message: `Ticket encerrado: ${data.ticket_id}`,
+              routerLink: `/tickets/tickets/${data.ticket_id}`,
+              icon: <Ticket size={18} className="inline-block text-blue-500" />
+            };
+            break;
+
+          case "frota_checkout":
+            normalized = {
+              id: data.id,
+              vehicle_id: data.ticket_id,
+              message: data.message,
+              routerLink: `/frotas/admin`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
+            };
+            break;
+          case "frota_return":
+            normalized = {
+              id: data.id,
+              vehicle_id: data.vehicle_id,
+              message: data.message,
+              routerLink: `/frotas`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
+            };
+            break;
+
+          case "frota_solicitation":
+            normalized = {
+              id: data.id,
+              vehicle_id: data.vehicle_id,
+              message: data.message,
+              routerLink: `/frotas/meus-veiculos`,
+              icon: <Car size={18} className="inline-block text-blue-500" />
+            };
+            break;
+        }
+
+
+    return normalized;
+  }
 
   const markAsRead = async (id: number) => {
     try {

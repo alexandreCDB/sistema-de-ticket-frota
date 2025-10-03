@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useNotifications from "./NotificationBell.service";
+import useNotifications, { NotificationItemFrota, NotificationItemTicket } from "./NotificationBell.service";
 import { Link } from "react-router-dom";
 //@ts-ignore
 import bellIcon from "../../assets/images/notificacao.png";
@@ -7,6 +7,7 @@ import bellIcon from "../../assets/images/notificacao.png";
 import "./NotificationBell.css";
 import { connectWebSocket } from "../../services/websocket";
 import { useAuth } from "../AUTH/AuthContext";
+
 
 const NotificationBell: React.FC = () => {
   const { user } = useAuth();
@@ -23,6 +24,8 @@ const NotificationBell: React.FC = () => {
     }
   }, [user]);
 
+
+
   // agora vem os dois do hook
   const { notifications, count, animate, markAsRead, markAllAsRead } =
     useNotifications({
@@ -31,6 +34,23 @@ const NotificationBell: React.FC = () => {
 
   const toggleDropdown = () => setOpen(!open);
 
+  useEffect(() => {
+    let blinkInterval: ReturnType<typeof setInterval> | null = null;
+    if (count > 0) {
+      let toggle = false;
+      blinkInterval = setInterval(() => {
+        document.title = toggle
+          ? `(${count}) Nova${count > 1 ? "s" : ""} notificação${count > 1 ? "es" : ""}`
+          : "🔔 Você tem novas notificações!";
+        toggle = !toggle;
+      }, 10);
+    } else {
+      document.title = "Tickets Doce Brinquedo";
+    }
+    return () => {
+      if (blinkInterval) clearInterval(blinkInterval);
+    };
+  }, [count]);
   if (!user || count === 0) return null;
 
   return (
@@ -53,7 +73,16 @@ const NotificationBell: React.FC = () => {
 
             {notifications.map((msg, idx) => (
               <li key={idx}>
-                <span>🔔</span>
+
+
+                {msg.ticket_id ? (
+                  <span style={{ fontSize: "25px" }}>🔖</span> // Ticket
+                ) : (
+                  <span style={{ fontSize: "25px" }}>🚗</span> // Frota
+                )}
+                {/* <span style={{background:"black"}}>{msg.icon}</span> */}
+
+
                 {"ticket_id" in msg ? (
                   <Link
                     to={`${msg.routerLink}`}
@@ -71,15 +100,6 @@ const NotificationBell: React.FC = () => {
                     {msg.message ?? "Mensagem indisponível"}
                   </Link>
                 )}
-                {/* <Link
-                  to={`/tickets/tickets/${msg.ticket_id}`}
-                  className="notification-link"
-                  onClick={() => markAsRead(msg.id)} // agora usa o hook
-                >
-
-                  {msg.message  ?? "Mensagem indisponível"}
-
-                </Link> */}
               </li>
             ))}
 

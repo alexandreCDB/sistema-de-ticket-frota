@@ -4,7 +4,6 @@ import ChangePasswordModal from './ChangePasswordModal';
 import EditProfileModal from './EditProfileModal';
 //@ts-ignore
 import './../styles/dropdown.css';
-import PasswordResetModal from '../../../tickets/pages/manager-user/modal/PasswordResetModal';
 import { useAuth } from '../../../components/AUTH/AuthContext';
 // import { useAuth } from '../../../tickets/services/App.services';
 //@ts-ignore
@@ -87,13 +86,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen, onClose, userName, 
           </button>
         </div>
       </div>
-
-      {/* Modals */}
-      {/* {showPasswordModal && <PasswordResetModal
-        //@ts-ignore
-        user={user!}
-        onClose={() => setShowPasswordModal(false)}
-      />} */}
       <ChangePasswordModal
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
