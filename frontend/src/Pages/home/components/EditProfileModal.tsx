@@ -50,7 +50,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             <X size={20} />
           </button>
         </div>
-
+        <label htmlFor="" style={{color:"red", textAlign:"center"}}>        Apenas os administradores podem mudar.</label>
         {/* Form */}
         <form onSubmit={handleSubmit} className="epm-modal-body">
           {/* Nome */}
@@ -62,6 +62,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
               onChange={(e) => setName(e.target.value)}
               className="epm-form-input"
               required
+              disabled
             />
           </div>
 
@@ -74,6 +75,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
               onChange={(e) => setEmail(e.target.value)}
               className="epm-form-input"
               required
+              disabled
             />
           </div>
 

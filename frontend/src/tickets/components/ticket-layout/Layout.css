@@ -115,7 +115,7 @@
   background-color: rgb(0, 47, 255);
 }
 
-.main-content {
+.lmain-content {
   width: 100%;
   flex-grow: 1;
   background-color: var(--color-background);

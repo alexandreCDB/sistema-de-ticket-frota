@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../tickets/services/App.services";
 import { JSX } from "react";
+import { useAuth } from "./AuthContext";
 
 export default function AdminRoute({ children }: { children: JSX.Element }) {
   const { user, loadingUser } = useAuth();

@@ -23,7 +23,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Animação de balanço */
 .shake {
   animation: shake 0.6s ease-in-out;
 }
@@ -48,7 +47,122 @@
   font-size: 12px;
   font-weight: bold;
   animation: pop 0.3s ease;
-  /* border: 2px solid white; */
+  box-shadow: 0 0 0 2px white;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  80% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  width: 320px;
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  padding: 10px;
+  z-index: 1001;
+}
+
+.dropdown p {
+  margin: 0 0 10px;
+  font-weight: bold;
+}
+
+.listmsg {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.listmsg li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notification-link {
+  color: #007bff;
+  text-decoration: none;
+  flex: 1;
+}
+
+.notification-link:hover {
+  text-decoration: underline;
+}
+
+.mark-read {
+  margin-top: 10px;
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mark-read:hover {
+  background: #0056b3;
+} 
+
+
+/* .bell-container {
+  position: fixed;
+  top: 10px;
+  right: 25px;
+  z-index: 99999;
+}
+
+.bell-button {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  color: #333;
+  transition: transform 0.3s ease;
+}
+
+.bell-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-20deg); }
+  40% { transform: rotate(15deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.notification-badge {
+   position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  padding: 4px 7px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  animation: pop 0.3s ease;
   box-shadow: 0 0 0 2px white;
 }
 
@@ -113,4 +227,4 @@
 
 .mark-read:hover {
   background: #0056b3;
-}
+} */

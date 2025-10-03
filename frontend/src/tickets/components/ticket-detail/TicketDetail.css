@@ -1,4 +1,5 @@
 @import url(./styles.css);
+
 .ticket-detail-container {
     background-color: hsl(210, 20%, 100%);
     ;
@@ -29,13 +30,14 @@
 
 
 }
+
 .delegation-section.detail-card {
-    display: flex
-;
+    display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: center;
 }
+
 .detail-card p {
     margin-bottom: 10px;
     line-height: 1.6;
@@ -103,96 +105,109 @@ h4 {
 
 
 .messages-wrapper {
-  border-radius: 20px;
-  overflow: hidden; /* garante que o scroll fique dentro */
-  background: #ece5dd;
+    border-radius: 20px;
+    overflow: hidden;
+    /* garante que o scroll fique dentro */
+    background: #ece5dd;
 }
+
 .messages-section {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 15px;
-  max-height: 500px;
-  overflow-y: auto;
-  background: #ece5dd; /* fundo padrão do WhatsApp */
-  border-radius: 8px;
-  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-  border-radius: 20px;
-  scrollbar-width: thin;
-  scrollbar-color: #bbb #ece5dd;
-  min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: #ece5dd;
+    /* fundo padrão do WhatsApp */
+    border-radius: 8px;
+    font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    border-radius: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb #ece5dd;
+    min-height: 500px;
+    background-image: url('../../../assets/images/chat.jpg');
+    background-size: cover; /* cobre toda a área */
+  background-position: center; /* centraliza */
+  background-repeat: no-repeat;
+  padding: 1rem;
 }
 
 .message-row {
-  display: flex;
-  align-items: flex-end;
+    display: flex;
+    align-items: flex-end;
 }
 
 .message-row.my-message {
-  justify-content: flex-end;
+    justify-content: flex-end;
 }
 
 .message-row.other-message {
-  justify-content: flex-start;
+    justify-content: flex-start;
 }
 
 .message-bubble {
-  max-width: 70%;
-      min-width: 40%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.4;
-  position: relative;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+    max-width: 70%;
+    min-width: 40%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    box-shadow:  0px 0px 7px 0px #a5aed7;
 }
 
 /* Balão enviado (verde claro WhatsApp) */
 .my-message .message-bubble {
-  background: #dcf8c6;
-  border-bottom-right-radius: 0;
+    background: #dcf8c6;
+    border-bottom-right-radius: 0;
 }
 
 /* Balão recebido (branco WhatsApp) */
 .other-message .message-bubble {
-  background: #fff;
-  border-bottom-left-radius: 0;
+    background: #fff;
+    border-bottom-left-radius: 0;
 }
 
 /* Nome do remetente */
 .message-header {
-  font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 4px;
-  color: #075e54; /* verde escuro WhatsApp */
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #075e54;
+    /* verde escuro WhatsApp */
 }
 
 /* Hora da mensagem */
 .message-time {
-  font-size: 11px;
-  color: #666;
-  text-align: right;
-  margin-top: 2px;
-  display: block;
+    font-size: 11px;
+    color: #666;
+    text-align: right;
+    margin-top: 2px;
+    display: block;
 }
+
 /* Scrollbar estilizado (Chrome, Edge, Safari) */
 .messages-section::-webkit-scrollbar {
-  width: 6px;
+    width: 6px;
 }
 
 .messages-section::-webkit-scrollbar-track {
-  background: #ece5dd; /* fundo igual ao chat */
+    background: #ece5dd;
+    /* fundo igual ao chat */
 }
 
 .messages-section::-webkit-scrollbar-thumb {
-  background-color: #bbb;
-  border-radius: 10px;
-  border: 2px solid #ece5dd; /* espaço entre barra e fundo */
+    background-color: #bbb;
+    border-radius: 10px;
+    border: 2px solid #ece5dd;
+    /* espaço entre barra e fundo */
 }
 
 .messages-section::-webkit-scrollbar-thumb:hover {
-  background-color: #999;
+    background-color: #999;
 }
 
 .message-sender {
@@ -282,21 +297,23 @@ h4 {
     padding: 0 30px;
     margin-bottom: 50px;
 }
+
 .emoji-btn {
-  position: absolute;
-  right: 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 .emoji-picker {
-  position: absolute;
-  bottom: 5px;
-  right: 15px;
-  z-index: 10;
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    z-index: 10;
 }
+
 .button-danger {
     color: white !important;
     background-color: rgb(197, 30, 30) !important;
@@ -316,6 +333,7 @@ h4 {
     background: rgb(0, 123, 255) !important;
     color: white !important;
 }
+
 .send-msg:hover {
     background: rgba(0, 123, 255, 0.671) !important;
     color: white !important;
@@ -341,10 +359,12 @@ h4 {
 }
 
 .btn-voltar {
-    background-color: #1a73e8 !important; /* azul Google */
+    background-color: #1a73e8 !important;
+    /* azul Google */
     color: #fff !important;
     padding: 0.5rem 1.2rem !important;
-    border-radius: 4px !important; /* leve arredondado, padrão Google */
+    border-radius: 4px !important;
+    /* leve arredondado, padrão Google */
     border: none !important;
     font-weight: 500 !important;
     font-size: 0.9rem !important;
@@ -353,13 +373,102 @@ h4 {
 }
 
 .btn-voltar:hover {
-    background-color: #1669c1 !important; /* azul hover */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important; /* leve sombra ao passar */
-    transform: translateY(-1px) !important; /* leve “flutuação” */
+    background-color: #1669c1 !important;
+    /* azul hover */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    /* leve sombra ao passar */
+    transform: translateY(-1px) !important;
+    /* leve “flutuação” */
 }
 
 .btn-voltar:active {
-    background-color: #145ab3 !important; /* azul ativo */
-    transform: translateY(1px) !important; /* efeito clique */
+    background-color: #145ab3 !important;
+    /* azul ativo */
+    transform: translateY(1px) !important;
+    /* efeito clique */
     box-shadow: none !important;
 }
+
+.section-image {
+    width: 100%;
+    margin-bottom: 1rem;
+    /* espaçamento entre a imagem e as mensagens */
+    border-radius: 8px;
+    /* opcional */
+}
+
+
+/* Container do formulário */
+.chat-message-form {
+  display: flex;
+  align-items: flex-end;
+  padding: 10px;
+  background-color: #f0f0f0; /* fundo cinza claro */
+  border-top: 1px solid #ddd;
+  gap: 8px;
+}
+
+/* Textarea estilo WhatsApp */
+.chat-message-form textarea {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 20px; /* arredondado */
+  border: 1px solid #ccc;
+  resize: none; /* não permite redimensionar */
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  background-color: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  height: 50px
+}
+
+/* Foco do textarea */
+.chat-message-form textarea:focus {
+  border-color: #25d366; /* verde WhatsApp */
+  box-shadow: 0 0 2px #25d366;
+}
+
+/* Quando desabilitado */
+.chat-message-form textarea:disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+/* Botão de envio */
+.chat-message-form .chat-send-msg {
+  background-color: #25d36500; 
+  border: none;
+  color: #092de9c2;;
+  font-weight: bold;
+  padding: 10px 16px;
+  /* border-radius: 50%; botão circular */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Hover no botão */
+.chat-message-form .chat-send-msg:hover:not(:disabled) {
+  color: #1ebe5d;
+}
+
+/* Botão desabilitado */
+.chat-message-form .chat-send-msg:disabled {
+  /* background-color: #a5d6a7; */
+  cursor: not-allowed;
+}
+/* ============================================================================================= */
+.chat-emoji-btn {
+  font-size: 22px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 85px;
+    top: 20px;}

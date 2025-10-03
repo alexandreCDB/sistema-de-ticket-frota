@@ -4,8 +4,8 @@ import teste from "../../assets/logo.png";
 // import useAuthService from "./AuthForm.service.tsx _old";
 //@ts-ignore
 import "./AuthForm.css";
-import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth_old } from "./AuthContext";
 
 interface AuthFormProps {
   onLoginSuccess?: () => void;
@@ -17,7 +17,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { message, error, login, register, setMessage } = useAuth();
+  const { message, error, login, register, setMessage } = useAuth_old();
   const navigate = useNavigate(); // 🔹 cria o navigate
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

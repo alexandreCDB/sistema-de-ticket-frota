@@ -8,9 +8,13 @@ import './TicketDetail.css';
 //@ts-ignore
 import './Forms.css';
 import { IUser } from '../../../components/AUTH/interfaces/user';
-import { useAuth } from '../../services/App.services';
 import { connectWebSocket, getWebSocket } from '../../../services/websocket';
 import Loading from '../../../components/Loads/Loading';
+import { useAuth } from '../../../components/AUTH/AuthContext';
+//@ts-ignore
+import chat from "../../../assets/images/chat.jpg";
+import { Send } from 'lucide-react';
+import Picker from "emoji-picker-react";
 
 const TicketDetail: React.FC = () => {
   const { user, loadingUser, userError } = useAuth();
@@ -264,8 +268,10 @@ const TicketDetail: React.FC = () => {
         )}
 
         <div className="messages-wrapper">
+
           {messages.length > 0 && (
             <div className="messages-section">
+
               {messages.map(msg => (
                 <div
                   key={msg.id}
@@ -290,64 +296,60 @@ const TicketDetail: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
           )}
-        </div>
+          {enableMessageForm && (
+            <>
+              <form onSubmit={handleSendMessage} className="chat-message-form" style={{ position: 'relative', display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
 
-        {/* 
-            
-            IMPLEMENTAÇÃO DO PICKER DE EMOJI - COMENTADO POR ENQUANTO
-            FUNCIONAL
-            <form onSubmit={handleSendMessage} className="message-form">
-              <div className="textarea-wrapper">
+                {/* Textarea */}
                 <textarea
                   value={newMessageContent}
                   onChange={e => setNewMessageContent(e.target.value)}
-                  rows={4}
+                  rows={1}
                   placeholder="Digite sua mensagem..."
                   disabled={sendingMessage}
+                  style={{
+                    flex: 1,
+                    padding: '10px 12px',
+                    borderRadius: '20px',
+                    border: '1px solid #ccc',
+                    resize: 'none',
+                    fontSize: '14px',
+                    lineHeight: 1.4,
+                    outline: 'none'
+                  }}
                 />
 
+                {/* Botão emoji */}
                 <button
                   type="button"
                   onClick={() => setShowPicker(prev => !prev)}
-                  style={{
-                    position: "absolute",
-                    right: "8px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "20px",
-                    zIndex: 5
-                  }}
+                  className='chat-emoji-btn'
                 >
                   😊
                 </button>
 
+                {/* Emoji Picker */}
                 {showPicker && (
-          <div style={{
-            position: "absolute",
-            bottom: "50px",
-            right: "0",
-            zIndex: 10
-          }}>
-            <Picker onEmojiClick={onEmojiClick} />
-          </div>
-        )}
-      </div>
+                  <div style={{ position: 'absolute', bottom: '50px', right: '0', zIndex: 10 }}>
+                    <Picker onEmojiClick={onEmojiClick} />
+                  </div>
+                )}
 
-              <button className="send-msg" type="submit" disabled={sendingMessage}>
-                {sendingMessage ? "Enviando..." : "Enviar Mensagem"}
-              </button>
-            </form> */}
-        {enableMessageForm && (
-          <>
-            <form onSubmit={handleSendMessage} className="message-form">
-              <textarea value={newMessageContent} onChange={e => setNewMessageContent(e.target.value)} rows={4} placeholder="Digite sua mensagem..." disabled={sendingMessage} />
-              <button className="send-msg" type="submit" disabled={sendingMessage}>{sendingMessage ? 'Enviando...' : 'Enviar Mensagem'}</button>
-            </form>
-          </>
-        )}
+                {/* Botão enviar */}
+                <button
+                  className="chat-send-msg"
+                  type="submit"
+                  disabled={sendingMessage}                 
+                >
+                  {sendingMessage ? '...' : <Send size={30} />}
+                </button>
+              </form>
+
+            </>
+          )}
+        </div>
+
+        
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'em progresso' && (
           <div className="close-ticket-action ">

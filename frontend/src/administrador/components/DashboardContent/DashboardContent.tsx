@@ -72,7 +72,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ stats, users }) => 
       <div className="system-activity-card">
         <h3>
           <Activity className="icon" />
-          Atividade do Sistema
+          Atividade do Sistema (beta)
         </h3>
         <div className="space-y-3">
           <div className="activity-item activity-blue">

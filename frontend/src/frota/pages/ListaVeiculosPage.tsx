@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+//@ts-ignore
 import '../styles/frota.css';
+//@ts-ignore
 import './ListaVeiculosPage.css';
-// A importação do useAuth foi movida para o AuthContext, que é o correto.
-import { useAuth } from '../../components/AUTH/AuthContext' 
+import { useAuth } from '../../tickets/services/App.services'; 
 import { useVehiclesWithBookings } from '../services/frota.services'; 
 import { Dashboard } from '../components/Dashboard';
 import { VehicleCard } from '../components/VehicleCard';
@@ -12,6 +13,7 @@ import { SuccessToast } from '../components/SucessToast';
 import { VehicleWithBookings } from '../types';
 import { FrotaHeader } from '../components/Header';
 import Loading from '../../components/Loads/Loading';
+import { useAuth } from '../../components/AUTH/AuthContext';
 
 export default function ListaVeiculosPage() {
   const { user, loadingUser } = useAuth(); // Usando o 'user' para encontrar a reserva ativa do usuário
@@ -74,34 +76,15 @@ export default function ListaVeiculosPage() {
           <p className="section-subtitle">Visão geral de todos os veículos cadastrados</p>
           <div className="vehicle-grid">
             {vehicles && vehicles.length > 0 ? (
-              vehicles.map((vehicle) => {
-                // --- NOVA LÓGICA ADICIONADA AQUI ---
-
-                // 1. Encontra a última reserva concluída para este veículo
-                const lastCompletedBooking = vehicle.bookings
-                  .filter(b => b.status === 'completed' && b.parking_location)
-                  .sort((a, b) => new Date(b.end_time!).getTime() - new Date(a.end_time!).getTime())[0];
-                
-                const lastParkingLocation = lastCompletedBooking ? lastCompletedBooking.parking_location : null;
-
-                // 2. (Bônus) Encontra a reserva ativa do usuário atual para este veículo
-                const activeBookingForUser = vehicle.bookings.find(b => 
-                  b.user_id === user?.id && ['in-use', 'reserved', 'pending', 'confirmed'].includes(b.status)
-                );
-
-                return (
-                  <VehicleCard 
-                    key={vehicle.id} 
-                    vehicle={vehicle}
-                    // Passa a reserva ativa do usuário para o card
-                    booking={activeBookingForUser}
-                    // Passa a última localização encontrada para o card
-                    lastParkingLocation={lastParkingLocation}
-                    onRetirar={() => handleOpenCheckoutModal(vehicle)}
-                    onAgendar={() => handleOpenScheduleModal(vehicle)}
-                  />
-                );
-              })
+              vehicles.map((vehicle) => (
+                <VehicleCard 
+                  key={vehicle.id} 
+                  vehicle={vehicle} 
+                  onRetirar={() => handleOpenCheckoutModal(vehicle)}
+                  onAgendar={() => handleOpenScheduleModal(vehicle)}
+                  bookings={vehicle.bookings}
+                />
+              ))
             ) : (
               <p>Nenhum veículo cadastrado no sistema.</p>
             )}

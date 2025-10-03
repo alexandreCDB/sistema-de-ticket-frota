@@ -4,8 +4,9 @@ import "./DashboardPanels.css";
 import AnimatedPageWrapper from "../../../components/Animated/AnimatedPageWrapper";
 import { getPanelsForUser, PanelConfig } from "./dashboardPanelsLogic";
 import { useDashboardStats } from "./DashboardPanels.service";
-import { useAuth } from "../../services/App.services";
+
 import Loading from "../../../components/Loads/Loading";
+import { useAuth } from "../../../components/AUTH/AuthContext";
 
 interface PanelProps extends PanelConfig {}
 
