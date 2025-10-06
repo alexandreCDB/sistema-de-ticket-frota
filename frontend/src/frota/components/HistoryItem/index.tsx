@@ -2,13 +2,15 @@ import React from 'react';
 import './styles.css';
 import { BookingWithVehicle } from '../../types';
 import { Car, User, CheckCircle, XCircle, Calendar, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+// Adicionado 'isSameDay' para comparar se as datas são no mesmo dia
+import { format, isSameDay } from 'date-fns';
 
 interface HistoryItemProps {
   booking: BookingWithVehicle;
 }
 
 export const HistoryItem: React.FC<HistoryItemProps> = ({ booking }) => {
+  // A função formatDate não muda
   const formatDate = (dateString: string) => format(new Date(dateString), 'dd/MM/yyyy');
   const formatTime = (dateString: string) => format(new Date(dateString), 'HH:mm');
 
@@ -24,17 +26,23 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ booking }) => {
 
       <div className="history-details">
         <h4>{booking.vehicle.name} <span>({booking.vehicle.license_plate})</span></h4>
-       <p>
-        <strong>Utilizador:</strong> {booking.user?.email ? booking.user.email.split('@')[0] : `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}
-      </p>
-
-
+        <p>
+          <strong>Utilizador:</strong> {booking.user?.email ? booking.user.email.split('@')[0] : `ID ${booking.user_id}`} • <strong>Finalidade:</strong> {booking.purpose}
+        </p>
       </div>
 
       <div className="history-time">
+        {/* --- CORREÇÃO APLICADA AQUI --- */}
         <p>
           <Calendar size={14} /> 
-          {formatDate(booking.start_time)}
+          {
+            // Se existir uma data de fim E ela for em um dia diferente da data de início...
+            booking.end_time && !isSameDay(new Date(booking.start_time), new Date(booking.end_time))
+              // ...mostra o intervalo "dd/mm/yyyy - dd/mm/yyyy"
+              ? `${formatDate(booking.start_time)} - ${formatDate(booking.end_time)}`
+              // ...senão, mostra apenas a data de início.
+              : formatDate(booking.start_time)
+          }
         </p>
         <p>
           <Clock size={14} /> 

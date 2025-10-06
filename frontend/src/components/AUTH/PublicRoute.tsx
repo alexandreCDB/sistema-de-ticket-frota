@@ -1,15 +1,16 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import useAuthService from "./AuthForm.service";
+// CORREÇÃO: Importando o hook correto do Contexto de Autenticação
+import { useAuth } from "./AuthContext"; 
 import Loading from "../Loads/Loading";
-import { useAuth } from "./AuthContext";
 
 interface PublicRouteProps {
   children: React.ReactNode;
 }
 
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const { user, loadingUser } = useAuthService();
+  // CORREÇÃO: Usando o hook correto que tem o estado global do usuário
+  const { user, loadingUser } = useAuth();
 
   if (loadingUser) {
     return <Loading />;

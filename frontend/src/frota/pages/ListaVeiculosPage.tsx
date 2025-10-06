@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-//@ts-ignore
 import '../styles/frota.css';
-//@ts-ignore
 import './ListaVeiculosPage.css';
-import { useAuth } from '../../tickets/services/App.services'; 
+import { useAuth } from '../../components/AUTH/AuthContext'; 
 import { useVehiclesWithBookings } from '../services/frota.services'; 
 import { Dashboard } from '../components/Dashboard';
 import { VehicleCard } from '../components/VehicleCard';
@@ -13,10 +11,9 @@ import { SuccessToast } from '../components/SucessToast';
 import { VehicleWithBookings } from '../types';
 import { FrotaHeader } from '../components/Header';
 import Loading from '../../components/Loads/Loading';
-import { useAuth } from '../../components/AUTH/AuthContext';
 
 export default function ListaVeiculosPage() {
-  const { user, loadingUser } = useAuth(); // Usando o 'user' para encontrar a reserva ativa do usuário
+  const { user, loadingUser } = useAuth();
   const { vehicles, isLoading, error, refetchVehicles } = useVehiclesWithBookings();
   
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
@@ -76,15 +73,38 @@ export default function ListaVeiculosPage() {
           <p className="section-subtitle">Visão geral de todos os veículos cadastrados</p>
           <div className="vehicle-grid">
             {vehicles && vehicles.length > 0 ? (
-              vehicles.map((vehicle) => (
-                <VehicleCard 
-                  key={vehicle.id} 
-                  vehicle={vehicle} 
-                  onRetirar={() => handleOpenCheckoutModal(vehicle)}
-                  onAgendar={() => handleOpenScheduleModal(vehicle)}
-                  bookings={vehicle.bookings}
-                />
-              ))
+              vehicles
+                // --- LÓGICA DE ORDENAÇÃO ADICIONADA ---
+                .sort((a, b) => {
+                  // Se 'a' está disponível e 'b' não, 'a' vem primeiro (-1).
+                  if (a.status === 'available' && b.status !== 'available') return -1;
+                  // Se 'b' está disponível e 'a' não, 'b' vem primeiro (1).
+                  if (a.status !== 'available' && b.status === 'available') return 1;
+                  // Em todos os outros casos, a ordem original é mantida.
+                  return 0;
+                })
+                .map((vehicle) => {
+                  const lastCompletedBooking = vehicle.bookings
+                    .filter(b => b.status === 'completed' && b.parking_location)
+                    .sort((a, b) => new Date(b.end_time!).getTime() - new Date(a.end_time!).getTime())[0];
+                  
+                  const lastParkingLocation = lastCompletedBooking ? lastCompletedBooking.parking_location : null;
+
+                  const activeBookingForUser = vehicle.bookings.find(b => 
+                    b.user_id === user?.id && ['in-use', 'reserved', 'pending', 'confirmed'].includes(b.status)
+                  );
+
+                  return (
+                    <VehicleCard 
+                      key={vehicle.id} 
+                      vehicle={vehicle}
+                      booking={activeBookingForUser}
+                      lastParkingLocation={lastParkingLocation}
+                      onRetirar={() => handleOpenCheckoutModal(vehicle)}
+                      onAgendar={() => handleOpenScheduleModal(vehicle)}
+                    />
+                  );
+                })
             ) : (
               <p>Nenhum veículo cadastrado no sistema.</p>
             )}
