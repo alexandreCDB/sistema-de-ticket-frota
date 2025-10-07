@@ -1,8 +1,9 @@
 import React from 'react';
 import './styles.css';
 import { BookingWithVehicle } from '../../types';
-import defaultVehicleImage from '../../../assets/onix.png';
-import { Clock, User, Calendar, Tag, GitBranch } from 'lucide-react';
+// 1. REMOVIDO: A importação da imagem padrão foi deletada
+// import defaultVehicleImage from '../../../assets/images/kwid.png';
+import { Clock, User, Calendar, Tag, GitBranch, Car } from 'lucide-react'; // Adicionado ícone 'Car'
 import { format } from 'date-fns';
 
 // @ts-ignore
@@ -16,9 +17,10 @@ interface BookingCardProps {
 
 export const BookingCard: React.FC<BookingCardProps> = ({ booking, onApprove, onDeny }) => {
   
+  // 2. ALTERADO: A lógica agora retorna a URL completa ou null se não houver imagem
   const imageUrl = booking.vehicle.image_url
     ? `${API_URL_BASE}${booking.vehicle.image_url}`
-    : defaultVehicleImage;
+    : null;
 
   const formatDate = (dateString: string) => {
     if (!dateString) return 'Data não informada';
@@ -37,11 +39,19 @@ export const BookingCard: React.FC<BookingCardProps> = ({ booking, onApprove, on
     <div className="booking-card">
       <div className="booking-card-image">
         <h3 className="booking-vehicle-name">{booking.vehicle.name}</h3>
-        <img src={imageUrl} alt={booking.vehicle.name} />
+        
+        {/* 3. ALTERADO: Renderização condicional da imagem */}
+        {imageUrl ? (
+          <img src={imageUrl} alt={booking.vehicle.name} />
+        ) : (
+          <div className="image-placeholder">
+            <Car size={48} />
+            <span>Sem imagem</span>
+          </div>
+        )}
       </div>
       <div className="booking-card-content">
         <div className="booking-card-header">
-
           <span className="booking-status-badge">{booking.status || 'Status não informado'}</span>
         </div>
         <div className="booking-card-details">

@@ -85,7 +85,7 @@ textarea {
     width: 100%;
     /* Ocupa 100% da largura do form-group */
     padding: 12px;
-    border: 1px solid rgba(255, 0, 0, 0.096);
+    border: 1px solid rgba(0, 0, 0, 0.096);
     border-radius: 10px;
     font-size: 1.05em;
     background-color: rgb(255, 255, 255);

@@ -17,7 +17,8 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--frota-color-text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .section-subtitle {
@@ -43,4 +44,49 @@
 
 .page-status.error {
   color: #B91C1C;
+}
+
+/* Adicione este código ao seu arquivo ListaVeiculosPage.css */
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* Permite que a busca quebre para a linha de baixo em telas pequenas */
+  gap: 1rem;
+}
+
+.search-wrapper {
+  position: relative;
+
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: #9ca3af; /* Cinza claro */
+  pointer-events: none; /* Permite clicar através do ícone */
+}
+.search-input {
+  /* Adicionado !important para garantir que o espaçamento seja aplicado */
+  padding: 0.6rem 0.75rem 0.6rem 2.5rem !important; 
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-width: 150px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8B5CF6; /* Cor primária roxa */
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+/* Ajuste para o subtítulo não ter mais margem inferior */
+.list-header .section-subtitle {
+    margin-bottom: 0;
 }

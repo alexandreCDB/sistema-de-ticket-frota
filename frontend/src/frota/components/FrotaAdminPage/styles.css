@@ -77,6 +77,48 @@
     font-weight: 600;
 }
 
+
+/* Estiliza o container do cabeçalho */
+.datepicker-custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Estilo para o texto "Outubro de 2025" */
+.month-year-display {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1e293b;
+  text-transform: capitalize;
+}
+
+/* Estilo dos botões de seta (< >) */
+.nav-button {
+  background: none !important;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  color: #334155;
+  margin: 5px;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .management-header {
     flex-direction: column; /* Empilha o título e o botão */

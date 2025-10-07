@@ -5,10 +5,31 @@ import { Vehicle } from '../../types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; 
 import './styles.css'; 
-import { FileSpreadsheet } from 'lucide-react'; 
-
-// 1. IMPORTAR A BIBLIOTECA XLSX
 import * as XLSX from 'xlsx';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight, FileSpreadsheet } from 'lucide-react';
+
+const CustomHeader = ({
+  date,
+  decreaseMonth,
+  increaseMonth,
+  prevMonthButtonDisabled,
+  nextMonthButtonDisabled,
+}: any) => (
+  <div className="datepicker-custom-header">
+    <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled} className="nav-button">
+      <ChevronLeft size={18} />
+    </button>
+    <span className="month-year-display">
+      {format(date, "MMMM 'de' yyyy", { locale: ptBR })}
+    </span>
+    <button onClick={increaseMonth} disabled={nextMonthButtonDisabled} className="nav-button">
+      <ChevronRight size={18} />
+    </button>
+  </div>
+);
+
 
 export const History = () => {
   const { bookings, isLoading: isLoadingBookings, error: errorBookings } = useMyBookings();
@@ -17,29 +38,34 @@ export const History = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
+  // --- LÓGICA DE FILTRO RESTAURADA ---
   const filteredBookings = useMemo(() => {
-    // ... (sua lógica de filtro continua exatamente a mesma)
     if (!bookings) return [];
+
     const historyItems = bookings.filter((booking) => {
       const isHistoryItem = booking.status === 'completed' || booking.status === 'denied';
       if (!isHistoryItem) return false;
+
       const bookingDate = new Date(booking.start_time);
       const start = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
       const end = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+
       if (start && end && (bookingDate < start || bookingDate > end)) return false;
       if (start && bookingDate < start) return false;
       if (end && bookingDate > end) return false;
+      
       if (selectedVehicleId && booking.vehicle.id !== parseInt(selectedVehicleId)) {
         return false;
       }
+      
       return true;
     });
+
     return historyItems.sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime());
   }, [bookings, startDate, endDate, selectedVehicleId]);
 
-  // 2. ADICIONAR A FUNÇÃO DE EXPORTAÇÃO
+  // --- LÓGICA DE EXPORTAÇÃO RESTAURADA ---
   const handleExportExcel = () => {
-    // a. Prepara os dados: seleciona e renomeia as colunas que queremos no Excel
     const dataToExport = filteredBookings.map(booking => ({
       'Veículo': booking.vehicle.name,
       'Placa': booking.vehicle.license_plate,
@@ -51,15 +77,9 @@ export const History = () => {
       'Status': booking.status === 'completed' ? 'Concluída' : 'Negada',
       'Finalidade': booking.purpose,
     }));
-
-    // b. Cria a planilha a partir dos dados formatados
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    
-    // c. Cria o "livro" do Excel
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Histórico da Frota");
-
-    // d. Força o download do arquivo no navegador
     XLSX.writeFile(workbook, "historico_frota.xlsx");
   };
 
@@ -71,11 +91,32 @@ export const History = () => {
       <div className="history-filters">
         <div className="filter-group">
           <label>Data de Início</label>
-          <DatePicker selected={startDate} onChange={date => setStartDate(date)} /*...outras props...*/ />
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            className="date-picker-input"
+            dateFormat="dd/MM/yyyy"
+            placeholderText="DD/MM/AAAA"
+            renderCustomHeader={CustomHeader}
+          />
         </div>
         <div className="filter-group">
           <label>Data de Fim</label>
-          <DatePicker selected={endDate} onChange={date => setEndDate(date)} /*...outras props...*/ />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            className="date-picker-input"
+            dateFormat="dd/MM/yyyy"
+            placeholderText="DD/MM/AAAA"
+            renderCustomHeader={CustomHeader}
+          />
         </div>
         <div className="filter-group">
           <label>Filtrar por Veículo</label>
@@ -86,7 +127,9 @@ export const History = () => {
           >
             <option value="">Todos os Veículos</option>
             {vehicles?.map((vehicle: Vehicle) => (
-              <option key={vehicle.id} value={vehicle.id}>{vehicle.name} ({vehicle.license_plate})</option>
+              <option key={vehicle.id} value={vehicle.id}>
+                {vehicle.name} ({vehicle.license_plate})
+              </option>
             ))}
           </select>
         </div>
@@ -100,12 +143,10 @@ export const History = () => {
         >
           Limpar Filtros
         </button>
-        
-        {/* 3. ADICIONAR O BOTÃO DE EXPORTAR NO JSX */}
         <button 
           className="export-button" 
           onClick={handleExportExcel}
-          title="Exportar para Excel"  // <-- Dica: Isso cria um tooltip ao passar o mouse
+          title="Exportar para Excel"
         >
           <FileSpreadsheet size={20} />
         </button>

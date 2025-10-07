@@ -1,8 +1,7 @@
 import React from 'react';
-import './styles.css'; 
+import './styles.css';
 import { Vehicle, Booking } from '../../types';
-import defaultVehicleImage from '../../../assets/onix.png';
-import { Users, GitBranch, XCircle, Undo2, CalendarCheck2, MapPin } from 'lucide-react';
+import { Users, GitBranch, XCircle, Undo2, CalendarCheck2, MapPin, Car } from 'lucide-react'; // Adicionado ícone 'Car'
 
 // @ts-ignore
 const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', '');
@@ -32,12 +31,12 @@ export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, 
   const displayStatus = booking?.status || vehicle.status;
   const currentStatus = statusMap[displayStatus] || { text: displayStatus, className: 'status-unknown' };
 
+  // 2. ALTERADO: A lógica agora retorna a URL completa ou null se não houver imagem
   const imageUrl = vehicle.image_url 
     ? `${API_URL_BASE}${vehicle.image_url}`
-    : defaultVehicleImage;
+    : null;
 
   const renderActions = () => {
-    // ... (sua função renderActions continua igual)
     if (booking) {
       if (booking.status === 'in-use') {
         return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
@@ -77,7 +76,15 @@ export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, 
       </div>
       
       <div className="vehicle-image-wrapper">
-        <img src={imageUrl} alt={vehicle.name} className="vehicle-main-image" />
+        {/* 3. ALTERADO: Renderização condicional da imagem */}
+        {imageUrl ? (
+          <img src={imageUrl} alt={vehicle.name} className="vehicle-main-image" />
+        ) : (
+          <div className="image-placeholder">
+            <Car size={48} />
+            <span>Sem imagem</span>
+          </div>
+        )}
       </div>
 
       <div className="vehicle-details-grid">
@@ -96,11 +103,9 @@ export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, 
           </div>
         )}
         
-        {/* --- ALTERAÇÃO APLICADA AQUI --- */}
         <div className="detail-item">
-          <span className="detail-label">Local:</span>
-          {/* Se 'lastParkingLocation' existir, usa ele. Senão, usa 'Pátio'. */}
-          <span className="detail-value">{lastParkingLocation || 'Garagem Padrão'}</span>
+          <span className="detail-label"><MapPin size={14} /> Última Posição:</span>
+          <span className="detail-value">{lastParkingLocation || 'Pátio'}</span>
         </div>
       </div>
 
