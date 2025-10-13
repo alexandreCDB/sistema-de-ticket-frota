@@ -46,7 +46,7 @@ const NotificationBell: React.FC = () => {
         toggle = !toggle;
       }, 10);
     } else {
-      document.title = "Tickets Doce Brinquedo";
+      document.title = "Doce Brinquedo";
     }
     return () => {
       if (blinkInterval) clearInterval(blinkInterval);
