@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
     print("Configuração do banco de dados completa.")
 
     broadcast_task = asyncio.create_task(broadcast_system_stats())
-    print("✅ Lifespan iniciado: broadcast ativo")
+    print(" Lifespan iniciado: broadcast ativo")
 
     yield
 
@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
     try:
         await broadcast_task
     except asyncio.CancelledError:
-        print("✅ Lifespan finalizado: broadcast cancelado")
+        print(" Lifespan finalizado: broadcast cancelado")
     print("Application shutdown event triggered.")
 
 

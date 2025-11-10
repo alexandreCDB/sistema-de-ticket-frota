@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
+//@ts-ignore
 import 'react-datepicker/dist/react-datepicker.css';
 import { BookingWithVehicle } from '../../types';
 

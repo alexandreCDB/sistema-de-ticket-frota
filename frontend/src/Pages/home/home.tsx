@@ -63,7 +63,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Sistema de Frotas */}
           <div className="module-card" onClick={goToFrotas}>
             <div className="module-icon frotas">
               <Truck size={32} />
@@ -78,7 +77,7 @@ const Home = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-          </div>
+          </div> 
 
           {/* Sistema Administrador */}
           {user && (user.is_admin || user.is_super_admin) && (

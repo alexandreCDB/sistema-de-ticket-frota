@@ -3,7 +3,9 @@ import { HistoryList } from '../HistoryList';
 import { useMyBookings, useVehicles } from '../../services/frota.services';
 import { Vehicle } from '../../types';
 import DatePicker from 'react-datepicker';
+//@ts-ignore
 import 'react-datepicker/dist/react-datepicker.css'; 
+//@ts-ignore
 import './styles.css'; 
 import * as XLSX from 'xlsx';
 import { format } from 'date-fns';

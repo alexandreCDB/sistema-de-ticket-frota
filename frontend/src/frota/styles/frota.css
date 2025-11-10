@@ -89,7 +89,7 @@ body {
 /* Adicionar ao final de src/frota/styles/frota.css */
 
 /* Importação obrigatória para o estilo do calendário */
-@import "react-datepicker/dist/react-datepicker.css";
+/* @import "react-datepicker/dist/react-datepicker.css"; */
 
 /* Container para os filtros na página de histórico */
 .history-filters {

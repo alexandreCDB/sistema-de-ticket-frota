@@ -162,7 +162,7 @@ def send_ticket_closed_email_background(background_tasks: BackgroundTasks, ticke
         
         recipients = [
             "wallacevidoto.docebrinquedo@gmail.com",
-            # "paulo.henrique@docebrinquedo.com.br",
+            "paulo.henrique@docebrinquedo.com.br",
         ]
 
         if ticket.requester and ticket.requester.email:

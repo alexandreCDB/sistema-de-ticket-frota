@@ -15,6 +15,7 @@ import { useAuth } from '../../../components/AUTH/AuthContext';
 import chat from "../../../assets/images/chat.jpg";
 import { Send } from 'lucide-react';
 import Picker from "emoji-picker-react";
+import TicketAttachmentModal from '../TicketAttachmentModal/TicketAttachmentModal';
 
 const TicketDetail: React.FC = () => {
   const { user, loadingUser, userError } = useAuth();
@@ -232,6 +233,7 @@ const TicketDetail: React.FC = () => {
           <p><strong>Aberto em:</strong> {new Date(ticket.created_at).toLocaleString()}</p>
           <p><strong>Última atualização:</strong> {new Date(ticket.updated_at).toLocaleString()}</p>
           {isTicketClosed && <p><strong>Observação:</strong> {ticket.observation}</p>}
+           <TicketAttachmentModal ticket={ticket} />
         </div>
 
         {(isUserAdmin || isUserSuperAdmin) && ticket.status.toLowerCase() === 'aberto' && (
