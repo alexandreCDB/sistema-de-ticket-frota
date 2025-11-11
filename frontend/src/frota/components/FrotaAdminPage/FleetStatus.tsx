@@ -12,6 +12,7 @@ export const FleetStatus = () => {
   if (error) return <div className="page-status error">{error}</div>;
 
   return (
+    
     <>
       {activeBookings.length === 0 ? (
         <p className="empty-message">Nenhum veículo em uso ou reservado no momento.</p>
@@ -21,11 +22,13 @@ export const FleetStatus = () => {
             <BookingCard  
               key={booking.id}  
               booking={booking}
-              // Não passamos ações para este cartão, pois é apenas para visualização
+              showScheduleDates={true} // ✅ AGORA MOSTRA AS DATAS DO AGENDAMENTO
             />
           ))}
         </div>
       )}
+
+      
     </>
   );
 };

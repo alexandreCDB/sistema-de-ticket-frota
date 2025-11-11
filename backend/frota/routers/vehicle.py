@@ -1,25 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel # ADICIONADO
+from pydantic import BaseModel
 from ..crud import crud_vehicle
 from ..schemas import vehicle as vehicle_schema
 from ..database import get_db
 from backend.dependencies import get_current_user
-from ..models.vehicle import VehicleStatus # ADICIONADO
+from ..models.vehicle import VehicleStatus
 
 router = APIRouter(
-    prefix="",
+    prefix="", # 🚨 CORREÇÃO CRÍTICA: AGORA ESTÁ VAZIO ("")
     tags=["Vehicles"]
 )
 
 # ADICIONADO: Schema para o corpo da requisição de mudança de status
-# (Idealmente, isso ficaria no seu arquivo de schemas, mas aqui funciona também)
 class VehicleStatusUpdate(BaseModel):
     status: VehicleStatus
 
-# --- LISTAR, OBTER, CRIAR, ATUALIZAR, EXCLUIR (sem alterações) ---
-# ... (suas rotas GET, POST, PUT, DELETE continuam aqui) ...
-@router.get("/", response_model=list[vehicle_schema.VehicleRead])
+# --- LISTAR, OBTER, CRIAR, ATUALIZAR, EXCLUIR ---
+
+# 🚨 CORREÇÃO: O endpoint de listagem agora é "" (vazio).
+# Rota final: /api/frota/vehicles
+@router.get("", response_model=list[vehicle_schema.VehicleRead])
 def list_vehicles(db: Session = Depends(get_db)):
     return crud_vehicle.get_vehicles(db)
 
@@ -30,7 +31,9 @@ def get_one(vehicle_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
     return v
 
-@router.post("/", response_model=vehicle_schema.VehicleRead)
+# 🚨 CORREÇÃO: O endpoint de criação agora é "" (vazio).
+# Rota final: /api/frota/vehicles
+@router.post("", response_model=vehicle_schema.VehicleRead)
 def post_vehicle(data: vehicle_schema.VehicleCreate, db: Session = Depends(get_db), user = Depends(get_current_user)):
     if not user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem criar veículos")

@@ -36,7 +36,8 @@ interface VehicleFormData {
 // --- FUNÇÕES DE API ---
 
 export async function checkoutVehicle(data: CheckoutData) {
-  const response = await fetch(`${API_URL}/frotas/bookings/checkout`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/bookings/checkout`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -54,7 +55,8 @@ export async function checkoutVehicle(data: CheckoutData) {
 
 export async function getVehicle(vehicleId: number): Promise<Vehicle> {
   try {
-    const response = await fetch(`${API_URL}/frotas/vehicles/${vehicleId}`, {
+    // 🚨 CORREÇÃO: frotas -> frota
+    const response = await fetch(`${API_URL}/frota/vehicles/${vehicleId}`, {
       credentials: 'include',
     });
     if (!response.ok) {
@@ -70,7 +72,8 @@ export async function getVehicle(vehicleId: number): Promise<Vehicle> {
 
 export async function listBookings(): Promise<Booking[]> {
   try {
-    const response = await fetch(`${API_URL}/frotas/bookings/`, {
+    // 🚨 CORREÇÃO: frotas -> frota
+    const response = await fetch(`${API_URL}/frota/bookings/`, {
       credentials: 'include',
     });
     if (!response.ok) {
@@ -86,7 +89,8 @@ export async function listBookings(): Promise<Booking[]> {
 
 export async function approveBooking(bookingId: number) {
   try {
-    const response = await fetch(`${API_URL}/frotas/bookings/${bookingId}/approve`, {
+    // 🚨 CORREÇÃO: frotas -> frota
+    const response = await fetch(`${API_URL}/frota/bookings/${bookingId}/approve`, {
       method: 'PATCH',
       credentials: 'include',
     });
@@ -103,7 +107,8 @@ export async function approveBooking(bookingId: number) {
 
 export async function denyBooking(bookingId: number) {
   try {
-    const response = await fetch(`${API_URL}/frotas/bookings/${bookingId}/deny`, {
+    // 🚨 CORREÇÃO: frotas -> frota
+    const response = await fetch(`${API_URL}/frota/bookings/${bookingId}/deny`, {
       method: 'PATCH',
       credentials: 'include',
     });
@@ -120,7 +125,8 @@ export async function denyBooking(bookingId: number) {
 
 export async function completeReturn(bookingId: number, data: { end_mileage: number; parking_location: string }) {
   try {
-    const response = await fetch(`${API_URL}/frotas/bookings/${bookingId}/return`, {
+    // 🚨 CORREÇÃO: frotas -> frota
+    const response = await fetch(`${API_URL}/frota/bookings/${bookingId}/return`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,7 +146,8 @@ export async function completeReturn(bookingId: number, data: { end_mileage: num
 }
 
 export async function createSchedule(data: ScheduleData) {
-  const response = await fetch(`${API_URL}/frotas/bookings/schedule`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/bookings/schedule`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,7 +166,8 @@ export async function createSchedule(data: ScheduleData) {
 
 export async function cancelBooking(bookingId: number) {
     try {
-        const response = await fetch(`${API_URL}/frotas/bookings/${bookingId}/deny`, {
+        // 🚨 CORREÇÃO: frotas -> frota
+        const response = await fetch(`${API_URL}/frota/bookings/${bookingId}/deny`, {
             method: 'PATCH',
             credentials: 'include',
         });
@@ -179,10 +187,9 @@ export async function cancelBooking(bookingId: number) {
 /**
  * Cria um novo veículo.
  */
-// Em src/frota/services/frota.service.ts
-
 export async function createVehicle(data: VehicleFormData) {
-  const response = await fetch(`${API_URL}/frotas/vehicles/`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/vehicles/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -204,7 +211,8 @@ export async function createVehicle(data: VehicleFormData) {
  * O seu backend ainda não tem um endpoint para editar veículos.
  */
 export async function updateVehicle(id: number, data: VehicleFormData) {
-  const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/vehicles/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -221,7 +229,8 @@ export async function updateVehicle(id: number, data: VehicleFormData) {
  * O seu backend ainda não tem um endpoint para remover veículos.
  */
 export async function deleteVehicle(id: number) {
-  const response = await fetch(`${API_URL}/frotas/vehicles/${id}`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/vehicles/${id}`, {
     method: 'DELETE',
     credentials: 'include',
   });
@@ -244,7 +253,8 @@ export function useVehicles() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/frotas/vehicles`, { 
+      // 🚨 CORREÇÃO: frotas -> frota
+      const response = await fetch(`${API_URL}/frota/vehicles`, { 
         credentials: 'include',
       });
       if (!response.ok) {
@@ -267,7 +277,6 @@ export function useVehicles() {
 }
 
 
-
 export function useMyBookings() {
   const [bookings, setBookings] = useState<BookingWithVehicle[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -277,7 +286,8 @@ export function useMyBookings() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/frotas/bookings/`, { 
+      // 🚨 CORREÇÃO: frotas -> frota
+      const response = await fetch(`${API_URL}/frota/bookings/`, { 
         credentials: 'include',
       });
       if (!response.ok) {
@@ -304,8 +314,8 @@ export async function uploadVehicleImage(file: File): Promise<{ file_url: string
   const formData = new FormData();
   formData.append('file', file);
 
-  // O URL foi corrigido para /frotas/upload/image
-  const response = await fetch(`${API_URL}/frotas/upload/image`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/upload/image`, {
     method: 'POST',
     credentials: 'include',
     body: formData,
@@ -327,8 +337,10 @@ export function useVehiclesWithBookings() {
         setError(null);
         try {
             const [vehiclesResponse, bookingsResponse] = await Promise.all([
-                fetch(`${API_URL}/frotas/vehicles`, { credentials: 'include' }),
-                fetch(`${API_URL}/frotas/bookings/`, { credentials: 'include' })
+                // 🚨 CORREÇÃO: frotas -> frota
+                fetch(`${API_URL}/frota/vehicles`, { credentials: 'include' }),
+                // 🚨 CORREÇÃO: frotas -> frota
+                fetch(`${API_URL}/frota/bookings/`, { credentials: 'include' })
             ]);
 
             if (!vehiclesResponse.ok || !bookingsResponse.ok) {
@@ -362,13 +374,6 @@ export function useVehiclesWithBookings() {
     
 }
 
-/// src/services/frota.services.ts
-
-// ... (todo o seu código existente, sem alterações) ...
-// ... (useVehiclesWithBookings, uploadVehicleImage, etc) ...
-
-// --- ADICIONE ESTA NOVA FUNÇÃO AO FINAL DO ARQUIVO ---
-
 // A lista completa de status que podem ser enviados para o backend
 export type VehicleStatus = 'available' | 'in-use' | 'reserved' | 'maintenance' | 'unavailable';
 
@@ -383,7 +388,8 @@ interface VehicleStatusUpdateData {
  * @param data O novo status a ser definido.
  */
 export async function updateVehicleStatus(id: number, data: VehicleStatusUpdateData) {
-  const response = await fetch(`${API_URL}/frotas/vehicles/${id}/status`, {
+  // 🚨 CORREÇÃO: frotas -> frota
+  const response = await fetch(`${API_URL}/frota/vehicles/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',

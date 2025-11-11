@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import { addDays, isSameDay } from 'date-fns';
 
 // Ícones para os botões de navegação
-import { ChevronLeft, ChevronRight } from 'lucide-react'; 
+import { ChevronLeft, ChevronRight, AlertTriangle, Check, ChevronDown, ChevronUp, FileText } from 'lucide-react'; 
 
 //@ts-ignore
 import 'react-datepicker/dist/react-datepicker.css';
@@ -28,7 +28,6 @@ interface ScheduleModalProps {
 }
 
 // --- COMPONENTE DO CABEÇALHO CUSTOMIZADO ---
-// Foi movido para fora do componente principal para melhor organização
 const CustomHeader = ({
   date,
   changeYear,
@@ -80,7 +79,6 @@ const CustomHeader = ({
   );
 };
 
-
 export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, vehicle, onConfirm }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -89,6 +87,10 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookedDates, setBookedDates] = useState<Date[]>([]);
+  
+  // ✅ NOVOS ESTADOS PARA O TERMO
+  const [aceitouTermo, setAceitouTermo] = useState(false);
+  const [termoExpandido, setTermoExpandido] = useState(false);
 
   useEffect(() => {
     if (isOpen && vehicle) {
@@ -97,6 +99,8 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
       setPurpose('');
       setObservation('');
       setError(null);
+      setAceitouTermo(false);
+      setTermoExpandido(false);
 
       const fetchBookedDates = async () => {
         try {
@@ -126,8 +130,45 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
     }
   }, [isOpen, vehicle]);
 
+  // ✅ TERMO DE RESPONSABILIDADE (MESMO DO CHECKOUT)
+  const termoResponsabilidade = `
+    TERMO DE RESPONSABILIDADE E COMPROMISSO
+
+    Eu, abaixo identificado, declaro estar ciente e concordo integralmente com as seguintes condições para a retirada e utilização do veículo:
+
+    1. O veículo deverá ser utilizado exclusivamente para fins profissionais relacionados às atividades da empresa;
+
+    2. Comprometo-me a dirigir com atenção, responsabilidade e em conformidade com as leis de trânsito;
+
+    3. O veículo não poderá ser utilizado por terceiros não autorizados;
+
+    4. Em caso de acidente, devo comunicar imediatamente à administração e registrar ocorrência policial quando necessário;
+
+    5. Sou responsável por quaisquer multas de trânsito aplicadas durante o período de uso;
+
+    6. Comprometo-me a devolver o veículo no prazo estipulado, em perfeitas condições de uso;
+
+    7. O veículo deverá ser abastecido quando o nível do combustível estiver abaixo de 1/4 do tanque;
+
+    8. Qualquer avaria ou problema técnico deve ser comunicado imediatamente;
+
+    9. É proibido o transporte de carga excessiva ou materiais perigosos;
+
+    10. Em caso de descumprimento destas normas, estou sujeito às penalidades previstas no regulamento interno.
+
+    Declaro estar ciente de que sou integralmente responsável pelo veículo durante todo o período de uso.
+  `;
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    // ✅ VALIDAÇÃO DO TERMO
+    if (!aceitouTermo) {
+      setError('Você deve aceitar o termo de responsabilidade para continuar.');
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -149,9 +190,11 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
       });
 
       onConfirm();
-    } catch (err: any) {
-      const detail = err.response?.data?.detail || "Ocorreu um erro ao agendar. Tente novamente.";
-      setError(detail);
+    } catch (err) {
+      const errorMessage = err instanceof Error
+          ? err.message 
+          : "Ocorreu um erro desconhecido ao agendar. Tente novamente.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -223,15 +266,71 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
 
           <div className="form-group">
             <label className="form-label"><Users size={16} /> Finalidade da Viagem</label>
-            <input type="text" className="form-input" placeholder="Ex: Reunião com cliente..." value={purpose} onChange={(e) => setPurpose(e.target.value)} required />
+            <input 
+              type="text" 
+              className="form-input" 
+              placeholder="Ex: Reunião com cliente..." 
+              value={purpose} 
+              onChange={(e) => setPurpose(e.target.value)} 
+              required 
+            />
           </div>
           
           <div className="form-group">
             <label className="form-label"><MessageSquare size={16} /> Observações (Opcional)</label>
-            <textarea className="form-textarea" placeholder="Informações adicionais..." value={observation} onChange={(e) => setObservation(e.target.value)} rows={3}/>
+            <textarea 
+              className="form-textarea" 
+              placeholder="Informações adicionais..." 
+              value={observation} 
+              onChange={(e) => setObservation(e.target.value)} 
+              rows={3}
+            />
           </div>
 
-          {error && <div className="error-box">{error}</div>}
+          {/* ✅ SEÇÃO DO TERMO DE RESPONSABILIDADE (IGUAL AO CHECKOUT) */}
+          <div className="termo-section">
+            <div className="termo-header">
+              <FileText size={18} />
+              <span>Termo de Responsabilidade</span>
+              <button 
+                type="button"
+                className="termo-expand-button"
+                onClick={() => setTermoExpandido(!termoExpandido)}
+              >
+                {termoExpandido ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                {termoExpandido ? 'Ver menos' : 'Ver mais'}
+              </button>
+            </div>
+            
+            {termoExpandido && (
+              <div className="termo-content">
+                <pre>{termoResponsabilidade}</pre>
+              </div>
+            )}
+            
+            <label className="termo-checkbox-label">
+              <input
+                type="checkbox"
+                checked={aceitouTermo}
+                onChange={(e) => setAceitouTermo(e.target.checked)}
+                className="termo-checkbox"
+              />
+              <span className="checkmark">
+                {aceitouTermo && <Check size={14} />}
+              </span>
+              <span className="termo-text">
+                Li e concordo com o termo de responsabilidade
+              </span>
+            </label>
+          </div>
+
+          {error && (
+            <div className="error-box error-alert">
+              <AlertTriangle size={18} style={{ marginRight: '8px', minWidth: '18px' }} />
+              {error}
+            </div>
+          )}
+
           <div className="alert-box">
             <strong>Atenção:</strong> O seu agendamento será enviado para aprovação.
           </div>
@@ -241,7 +340,12 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({ isOpen, onClose, v
           <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
             Cancelar
           </button>
-          <button type="submit" className="btn btn-primary" form="schedule-form" disabled={isLoading || !startDate || !endDate || !purpose}>
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            form="schedule-form" 
+            disabled={isLoading || !startDate || !endDate || !purpose || !aceitouTermo}
+          >
             {isLoading ? 'Enviando...' : 'Solicitar Agendamento'}
           </button>
         </div>

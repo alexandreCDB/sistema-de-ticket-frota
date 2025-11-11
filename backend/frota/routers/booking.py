@@ -16,9 +16,12 @@ from backend.dependencies import get_current_user
 from backend.database.database import get_db as get_global_db
 from backend.crud.user import get_user, get_users_by_ids
 from backend.models.user import User as UserModel
+from ..crud import cnh as cnh_crud
 
-
-router = APIRouter()
+router = APIRouter(
+    prefix="", # 💡 CORREÇÃO: Mude de "/" para "" (string vazia)
+    # tags=... (outras configurações)
+)
 
 @router.get("/", response_model=List[BookingRead])
 def list_bookings(
@@ -47,13 +50,15 @@ def list_bookings(
 def checkout(
     payload: BookingCheckout, 
     background_tasks: BackgroundTasks,
-    # PARÂMETROS CORRIGIDOS
     frota_db: Session = Depends(get_frota_db), 
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    apto, motivo = cnh_crud.is_cnh_valid(frota_db, current_user.id)
+    if not apto:
+        raise HTTPException(status_code=403, detail=motivo)
+    
     try:
-        # VARIÁVEL CORRIGIDA
         booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
         booking.user = get_user(global_db, booking.user_id) 
         
@@ -61,7 +66,8 @@ def checkout(
         return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-  
+
+# --- Alteração no /schedule ---
 @router.post("/schedule", response_model=BookingRead)
 def schedule(
     payload: BookingSchedule,
@@ -69,6 +75,10 @@ def schedule(
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
 ):
+    apto, motivo = cnh_crud.is_cnh_valid(frota_db, current_user.id)
+    if not apto:
+        raise HTTPException(status_code=403, detail=motivo)
+
     try:
         booking = create_schedule(frota_db, current_user.id, payload.vehicle_id, payload.start_time, payload.end_time, payload.purpose, payload.observation)
         booking.user = get_user(global_db, booking.user_id)
