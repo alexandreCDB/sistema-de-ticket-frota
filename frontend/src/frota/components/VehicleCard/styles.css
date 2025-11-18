@@ -227,3 +227,144 @@
   gap: 0.5rem;
   margin-top: 0.25rem;
 }
+.booking-info {
+  grid-column: 1 / -1;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-left: 3px solid #8b5cf6;
+}
+
+.detail-item-full {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.booking-info .detail-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.booking-info .detail-value {
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* Adicione ao seu VehicleCard/styles.css */
+.btn-info {
+  background-color: #06b6d4;
+  color: white;
+}
+
+.btn-info:hover:not(:disabled) {
+  background-color: #0891b2;
+}
+
+.status-confirmed {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Mantenha todo o CSS anterior e ADICIONE/ATUALIZE estas partes: */
+
+.vehicle-actions {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column; /* ✅ MUDANÇA: Coluna em vez de linha */
+  gap: 0.75rem; /* ✅ Espaçamento entre botões */
+  justify-content: stretch;
+}
+
+/* Estilo base para todos os botões */
+.btn {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* ✅ Espaço entre ícone e texto */
+}
+
+/* Botão Primário (Roxo) */
+.btn-primary {
+  background: linear-gradient(90deg, #F97316 0%, #8B5CF6 100%) !important;
+  color: white !important;
+}
+.btn-primary:hover {
+  background-color: var(--primary-color-hover);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Secundário (Branco com borda roxa) */
+.btn-secondary {
+  background-color: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+.btn-secondary:hover {
+  background-color: var(--secondary-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Botão de Sucesso (Verde) */
+.btn-success {
+  background-color: var(--success-color-text);
+  color: white;
+}
+.btn-success:hover {
+  background-color: hsl(140, 70%, 35%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão de Perigo (Vermelho) */
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+.btn-danger:hover {
+  background-color: hsl(0, 84%, 45%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ NOVO: Botão de Info (Azul) */
+.btn-info {
+  background-color: #06b6d4;
+  color: white;
+}
+.btn-info:hover:not(:disabled) {
+  background-color: #0891b2;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Desabilitado */
+.btn-disabled {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Status confirmed */
+.status-confirmed {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+/* Restante do CSS permanece igual... */

@@ -12,6 +12,7 @@ export interface Vehicle {
   status: VehicleStatus; // O tipo agora é mais específico
   passengers: number | null;
   features: string | null;
+  monitor_fuel: boolean; // ✅ CAMPO ADICIONADO
   created_at: string;
 }
 

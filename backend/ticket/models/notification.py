@@ -18,6 +18,7 @@ class NotificationType(str, enum.Enum):
     frota_checkout = "frota_checkout"
     frota_return = "frota_return"
     frota_solicitation = "frota_solicitation"
+    fuel_reminder = "fuel_reminder"
 
 class Notification(Base):
     __tablename__ = "notifications"

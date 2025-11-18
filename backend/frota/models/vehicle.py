@@ -1,5 +1,6 @@
+# backend/frota/models/vehicle.py
 import enum
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, Enum as SQLAlchemyEnum
+from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, Enum as SQLAlchemyEnum, Boolean
 from sqlalchemy.sql import func
 from ..database import Base
 from sqlalchemy.orm import relationship
@@ -25,6 +26,13 @@ class Vehicle(Base):
     
     passengers = Column(Integer, nullable=True)
     features = Column(Text, nullable=True)
+    
+    # ✅ NOVO CAMPO: Monitorar Abastecimento
+    monitor_fuel = Column(Boolean, nullable=False, default=False)
+    
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     bookings = relationship("Booking", back_populates="vehicle")
+    
+    # ✅ NOVO RELACIONAMENTO: Abastecimentos
+    fuel_supplies = relationship("FuelSupply", back_populates="vehicle")

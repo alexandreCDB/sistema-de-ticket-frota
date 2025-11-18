@@ -12,6 +12,7 @@ class VehicleCreate(VehicleBase):
     image_url: Optional[str]
     passengers: Optional[int]
     features: Optional[str]
+    monitor_fuel: Optional[bool] = False  # ✅ JÁ ADICIONADO
 
 class VehicleRead(VehicleBase):
     id: int
@@ -19,6 +20,7 @@ class VehicleRead(VehicleBase):
     status: Optional[str]         # 👈 pode vir nulo em registros antigos ou novos
     passengers: Optional[int]
     features: Optional[str]
+    monitor_fuel: Optional[bool]  # ✅ ADICIONAR ESTE CAMPO
     created_at: Optional[datetime]  # 👈 evita erro se banco não preencher antes do refresh
 
     class Config:

@@ -6,6 +6,8 @@ import { FleetStatus } from './FleetStatus';
 import { History } from './History';
 // --- MUDANÇA 1: Importar o novo componente de Gestão de Veículos ---
 import { VehicleManagement } from './VehicleManagement';
+// ✅ NOVO: Importar o componente de Histórico de Abastecimento
+import { FuelSupplyHistory } from '../FuelSupplyHistory';
 import './styles.css'; 
 
 export default function FrotaAdminPage() { 
@@ -20,8 +22,12 @@ export default function FrotaAdminPage() {
       content: <FleetStatus />
     },
     {
-      label: 'Histórico',
+      label: 'Histórico de Reservas',
       content: <History />
+    },
+    {
+      label: 'Histórico de Abastecimento', // ✅ NOVA ABA
+      content: <FuelSupplyHistory />
     },
     {
       label: 'Gestão de Veículos',

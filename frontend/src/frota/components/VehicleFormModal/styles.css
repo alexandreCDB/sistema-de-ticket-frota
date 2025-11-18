@@ -292,5 +292,47 @@ input::-webkit-inner-spin-button {
 
   
 
-  
+  /* Adicione ao seu VehicleFormModal/styles.css */
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-input {
+  display: none;
+}
+
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  margin-right: 10px;
+  background: white;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.checkbox-input:checked + .checkmark {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.checkbox-label:hover .checkmark {
+  border-color: #9ca3af;
+}
+
+.checkbox-input:checked + .checkmark:hover {
+  background-color: #059669;
+  border-color: #059669;
 }

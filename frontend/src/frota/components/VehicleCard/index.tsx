@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css';
 import { Vehicle, Booking } from '../../types';
-import { Users, GitBranch, XCircle, Undo2, CalendarCheck2, MapPin, Car } from 'lucide-react'; // Adicionado ícone 'Car'
+import { Users, CalendarCheck2, MapPin, Car, Undo2, XCircle, Fuel } from 'lucide-react';
 
 // @ts-ignore
 const API_URL_BASE = import.meta.env.VITE_API_URL.replace('/api', '');
@@ -14,9 +14,21 @@ interface VehicleCardProps {
   onAgendar?: (vehicle: Vehicle) => void;
   onDevolver?: () => void;
   onCancelar?: () => void;
+  onAbastecimento?: (vehicle: Vehicle) => void;
+  isMyVehiclesPage?: boolean;
 }
 
-export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, onAgendar, onDevolver, onCancelar }: VehicleCardProps) {
+export function VehicleCard({ 
+  vehicle, 
+  booking, 
+  lastParkingLocation, 
+  onRetirar, 
+  onAgendar, 
+  onDevolver, 
+  onCancelar,
+  onAbastecimento,
+  isMyVehiclesPage = false 
+}: VehicleCardProps) {
   
   const statusMap = {
     available: { text: 'Disponível', className: 'status-available' },
@@ -25,44 +37,95 @@ export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, 
     maintenance: { text: 'Manutenção', className: 'status-maintenance' },
     unavailable: { text: 'Indisponível', className: 'status-maintenance' },
     pending: { text: 'Pendente', className: 'status-reserved' },
-    confirmed: { text: 'Confirmado', className: 'status-available' },
+    confirmed: { text: 'Confirmado', className: 'status-confirmed' },
   };
 
-  const displayStatus = booking?.status || vehicle.status;
+  // Na página "Meus Veículos", o status deve vir do BOOKING
+  const displayStatus = isMyVehiclesPage && booking ? booking.status : (booking?.status || vehicle.status);
   const currentStatus = statusMap[displayStatus] || { text: displayStatus, className: 'status-unknown' };
 
-  // 2. ALTERADO: A lógica agora retorna a URL completa ou null se não houver imagem
   const imageUrl = vehicle.image_url 
     ? `${API_URL_BASE}${vehicle.image_url}`
     : null;
 
   const renderActions = () => {
-    if (booking) {
+    // 🔹 PÁGINA "MEUS VEÍCULOS" - Mostra Cancelar/Devolver/Abastecimento
+    if (isMyVehiclesPage && booking) {
+      
       if (booking.status === 'in-use') {
-        return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
+        return (
+          <>
+            <button className="btn btn-success" onClick={onDevolver}>
+              <Undo2 size={16}/> Devolver Veículo
+            </button>
+            {/* ✅ BOTÃO ABASTECIMENTO - aparece apenas se monitor_fuel = true */}
+            {vehicle.monitor_fuel && onAbastecimento && (
+              <button className="btn btn-info" onClick={() => onAbastecimento(vehicle)}>
+                <Fuel size={16}/> Lançar Abastecimento
+              </button>
+            )}
+          </>
+        );
       }
+      
       if (booking.status === 'confirmed') {
         if (booking.type === 'checkout') {
-          return <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver Veículo</button>;
+          return (
+            <>
+              <button className="btn btn-success" onClick={onDevolver}>
+                <Undo2 size={16}/> Devolver Veículo
+              </button>
+              {/* ✅ BOTÃO ABASTECIMENTO - aparece apenas se monitor_fuel = true */}
+              {vehicle.monitor_fuel && onAbastecimento && (
+                <button className="btn btn-info" onClick={() => onAbastecimento(vehicle)}>
+                  <Fuel size={16}/> Lançar Abastecimento
+                </button>
+              )}
+            </>
+          );
         }
+        
         if (booking.type === 'schedule') {
           return (
             <>
-              <button className="btn btn-danger" onClick={onCancelar}><XCircle size={16}/> Cancelar</button>
-              <button className="btn btn-success" onClick={onDevolver}><Undo2 size={16}/> Devolver</button>
+              <button className="btn btn-danger" onClick={onCancelar}>
+                <XCircle size={16}/> Cancelar Reserva
+              </button>
+              <button className="btn btn-success" onClick={onDevolver}>
+                <Undo2 size={16}/> Devolver Veículo
+              </button>
+              {/* ✅ BOTÃO ABASTECIMENTO - aparece apenas se monitor_fuel = true */}
+              {vehicle.monitor_fuel && onAbastecimento && (
+                <button className="btn btn-info" onClick={() => onAbastecimento(vehicle)}>
+                  <Fuel size={16}/> Lançar Abastecimento
+                </button>
+              )}
             </>
           );
         }
       }
     }
-    if (onRetirar && onAgendar && vehicle.status === 'available') {
-      return (
-        <>
-          <button className="btn btn-primary" onClick={() => onRetirar(vehicle)}>Retirar Veículo</button>
-          <button className="btn btn-secondary" onClick={() => onAgendar(vehicle)}><CalendarCheck2 size={16}/> Agendar</button>
-        </>
-      );
+    
+    // 🔹 PÁGINA PRINCIPAL - Mostra Retirar/Agendar
+    if (!isMyVehiclesPage) {
+      // SEMPRE mostra "Retirar" quando o veículo está disponível
+      if (vehicle.status === 'available' && onRetirar) {
+        return (
+          <>
+            <button className="btn btn-primary" onClick={() => onRetirar(vehicle)}>
+              Retirar Veículo
+            </button>
+            
+            {onAgendar && (
+              <button className="btn btn-secondary" onClick={() => onAgendar(vehicle)}>
+                <CalendarCheck2 size={16}/> Agendar
+              </button>
+            )}
+          </>
+        );
+      }
     }
+    
     return <button className="btn-disabled" disabled>Indisponível</button>;
   };
 
@@ -76,7 +139,6 @@ export function VehicleCard({ vehicle, booking, lastParkingLocation, onRetirar, 
       </div>
       
       <div className="vehicle-image-wrapper">
-        {/* 3. ALTERADO: Renderização condicional da imagem */}
         {imageUrl ? (
           <img src={imageUrl} alt={vehicle.name} className="vehicle-main-image" />
         ) : (

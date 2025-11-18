@@ -5,9 +5,8 @@ export type WsNotificationType =
   | "ticket_finish"
   | "frota_checkout"
   | "frota_return"
-  | "frota_solicitation";
-
-
+  | "frota_solicitation"
+  | "fuel_reminder"; // ✅ ADICIONAR AQUI
 
 export interface WsNotification<T> {
   type: WsNotificationType;
@@ -40,26 +39,35 @@ export interface FrotaCheckoutNotificationWS {
   vehicle: string
   message: string
 }
+
 export interface FrotaReturntNotificationWS {
   id: number
   vehicle_id: number
   vehicle: string
   message: string
 }
+
 export interface FrotaSolicitationNotificationWS {
   id: number
   vehicle_id: number
   vehicle: string
   message: string
 }
-// Notificação genérica
+
+// ✅ ADICIONAR NOVA INTERFACE PARA FUEL REMINDER
+export interface FuelReminderNotificationWS {
+  id: number
+  vehicle_id: number
+  message: string
+  notification_type: "fuel_reminder"
+}
+
+// Notificação genérica - ATUALIZAR
 export type WsNotificationPayload =
   | { type: "ticket_created"; message: TicketCreatedNotificationWS }
   | { type: "ticket_message"; message: TicketMessageNotificationWS }
   | { type: "ticket_finish"; message: TicketFinishNotificationWS }
   | { type: "frota_checkout"; message: TicketCreatedNotificationWS }
   | { type: "frota_return"; message: FrotaReturntNotificationWS }
-  | { type: "frota_solicitation"; message: FrotaSolicitationNotificationWS };
-
-
-
+  | { type: "frota_solicitation"; message: FrotaSolicitationNotificationWS }
+  | { type: "fuel_reminder"; message: FuelReminderNotificationWS }; // ✅ ADICIONAR AQUI

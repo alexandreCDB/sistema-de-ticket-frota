@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Vehicle, VehicleStatus } from '../../types';
 import './styles.css';
-import { X, Car, Hash, Users, Image as ImageIcon, ListChecks } from 'lucide-react';
+import { X, Car, Hash, Users, Image as ImageIcon, ListChecks, Fuel } from 'lucide-react';
 import { uploadVehicleImage, updateVehicleStatus } from '../../services/frota.services';
 
 const STATUS_TRANSLATIONS: Record<VehicleStatus, string> = {
@@ -39,6 +39,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
   const [passengers, setPassengers] = useState('');
   const [features, setFeatures] = useState('');
   const [status, setStatus] = useState<VehicleStatus>('available');
+  const [monitorFuel, setMonitorFuel] = useState(false); // ✅ NOVO ESTADO
   
   const [file, setFile] = useState<File | null>(null);
   const [localPreview, setLocalPreview] = useState<string | null>(null);
@@ -60,6 +61,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
       setFeatures(vehicleToEdit.features || '');
       setRemotePreview(vehicleToEdit.image_url || null);
       setStatus(vehicleToEdit.status);
+      setMonitorFuel(vehicleToEdit.monitor_fuel || false); // ✅ CARREGA VALOR EXISTENTE
       setFile(null);
       if (localPreview) {
         URL.revokeObjectURL(localPreview);
@@ -72,6 +74,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
       setPassengers('');
       setFeatures('');
       setStatus('available');
+      setMonitorFuel(false); // ✅ PADRÃO: DESMARCADO
       setFile(null);
       if (localPreview) {
         URL.revokeObjectURL(localPreview);
@@ -80,7 +83,7 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
       setRemotePreview(null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, vehicleToEdit]); // <<< --- A CORREÇÃO ESTÁ AQUI: `localPreview` foi removido da lista
+  }, [isOpen, vehicleToEdit]);
 
   useEffect(() => {
     return () => {
@@ -117,27 +120,38 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
   const handleSelectFileClick = () => { fileInputRef.current?.click(); };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let imageUrl = remotePreview;
-    try {
-      if (file) {
-        const upload = await uploadVehicleImage(file);
-        imageUrl = upload.file_url;
-      }
-      const vehicleData = {
-        name,
-        license_plate: licensePlate,
-        model: model || null,
-        passengers: passengers ? parseInt(passengers, 10) : null,
-        features: features || null,
-        image_url: imageUrl || null,
-      };
-      onSave(vehicleData, vehicleToEdit?.id);
-    } catch (err) {
-      console.error('Erro ao salvar veículo:', err);
-      alert('Erro ao salvar veículo. Veja o console.');
+  e.preventDefault();
+  let imageUrl = remotePreview;
+  
+  // ✅ DEBUG 1: Verificar estado do checkbox
+  console.log('🔍 DEBUG 1 - Estado do monitorFuel:', monitorFuel);
+  
+  try {
+    if (file) {
+      const upload = await uploadVehicleImage(file);
+      imageUrl = upload.file_url;
     }
-  };
+    
+    const vehicleData = {
+      name,
+      license_plate: licensePlate,
+      model: model || null,
+      passengers: passengers ? parseInt(passengers, 10) : null,
+      features: features || null,
+      image_url: imageUrl || null,
+      monitor_fuel: monitorFuel, // ← ESTE CAMPO
+    };
+    
+    // ✅ DEBUG 2: Verificar dados antes de enviar
+    console.log('🔍 DEBUG 2 - Dados enviados:', vehicleData);
+    
+    onSave(vehicleData, vehicleToEdit?.id);
+    
+  } catch (err) {
+    console.error('Erro ao salvar veículo:', err);
+    alert('Erro ao salvar veículo. Veja o console.');
+  }
+};
 
   const handleStatusChange = async (newStatus: VehicleStatus) => {
     if (!isEditing || newStatus === status) return;
@@ -194,6 +208,24 @@ export const VehicleFormModal: React.FC<VehicleFormModalProps> = ({
             <div className="input-group">
               <label>Modelo</label>
               <input value={model} onChange={e => setModel(e.target.value)} />
+            </div>
+
+            {/* ✅ NOVO CAMPO: MONITORAR ABASTECIMENTO */}
+            <div className="input-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={monitorFuel}
+                  onChange={(e) => setMonitorFuel(e.target.checked)}
+                  className="checkbox-input"
+                />
+                <span className="checkmark">
+                  {monitorFuel && '✓'}
+                </span>
+                <Fuel size={16} style={{ marginRight: '8px' }} />
+                Monitorar Abastecimento
+              </label>
+              
             </div>
             
             <div className="input-group">

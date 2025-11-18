@@ -24,18 +24,21 @@ export const VehicleManagement = () => {
   };
 
   const handleSave = async (vehicleData: any, vehicleId?: number) => {
-    setIsSaving(true);
-    try {
-      if (vehicleId) await updateVehicle(vehicleId, vehicleData);
-      else await createVehicle(vehicleData);
-      
-      // A atualização agora acontece no handleCloseModal
-      handleCloseModal(); 
-    } catch (err: any) {
-      console.error('Erro ao guardar veículo:', err);
-      alert(err.message || 'Erro ao guardar veículo.');
-    } finally { setIsSaving(false); }
-  };
+  setIsSaving(true);
+  try {
+    // ✅ DEBUG 3: Verificar dados recebidos
+    console.log('🔍 DEBUG 3 - Dados recebidos no handleSave:', vehicleData);
+    
+    if (vehicleId) await updateVehicle(vehicleId, vehicleData);
+    else await createVehicle(vehicleData);
+    
+    // A atualização agora acontece no handleCloseModal
+    handleCloseModal(); 
+  } catch (err: any) {
+    console.error('Erro ao guardar veículo:', err);
+    alert(err.message || 'Erro ao guardar veículo.');
+  } finally { setIsSaving(false); }
+};
 
   const handleDelete = async (vehicle: Vehicle) => {
     if (!window.confirm(`Tem a certeza que quer remover o veículo ${vehicle.name}?`)) return;

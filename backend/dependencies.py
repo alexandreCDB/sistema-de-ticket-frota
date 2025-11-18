@@ -6,7 +6,14 @@ from backend.crud.user import get_user
 from backend.models.user import User
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
-    token = request.cookies.get("access_token")
+    # Primeiro tenta do header Authorization
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split("Bearer ")[1]
+    else:
+        # Se não tiver no header, tenta dos cookies
+        token = request.cookies.get("access_token")
+    
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token ausente")
 
