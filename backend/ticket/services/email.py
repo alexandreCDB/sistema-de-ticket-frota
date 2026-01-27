@@ -79,7 +79,7 @@ def send_email3(ticket, recipients: list[str]):
     # anexa imagem se existir
     if ticket.attachment_url:
         try:
-            resp = requests.get(f"http://192.168.13.249:8000{ticket.attachment_url}", timeout=10)
+            resp = requests.get(f"http://192.168.13.149:8000{ticket.attachment_url}", timeout=10)
             resp.raise_for_status()
             image_part = MIMEImage(resp.content)
             image_part.add_header("Content-ID", "<ticket_image>")

@@ -1,31 +1,54 @@
 /* src/frota/styles/frota.css */
+/* Design Redesign Started */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --frota-color-primary-start: #F97316;
-  --frota-color-primary-end: #8B5CF6;
-  --frota-color-background: #F8FAFC;
-  --frota-color-surface: #FFFFFF;
-  --frota-color-text-primary: #1E293B;
-  --frota-color-text-secondary: #64748B;
-  --frota-color-border: #E2E8F0;
+  --frota-color-primary: #1a73e8;
+  /* Google Blue */
+  --frota-color-primary-hover: #1765cc;
+  --frota-color-background: #f8f9fa;
+  --frota-color-surface: #ffffff;
+  --frota-color-text-primary: #3c4043;
+  --frota-color-text-secondary: #5f6368;
+  --frota-color-border: #dadce0;
+  --frota-color-border-active: #1a73e8;
 
-  --frota-color-status-available-bg: #F0FDF4;
-  --frota-color-status-available-icon-bg: #22C55E;
-  --frota-color-status-available-text: #166534;
+  --frota-color-status-available-bg: #e6f4ea;
+  --frota-color-status-available-icon: #1e8e3e;
+  --frota-color-status-available-text: #137333;
 
-  --frota-color-status-in-use-bg: #FFFBEB;
-  --frota-color-status-in-use-icon-bg: #F59E0B;
-  --frota-color-status-in-use-text: #B45309;
+  --frota-color-status-in-use-bg: #fef7e0;
+  --frota-color-status-in-use-icon: #f9ab00;
+  --frota-color-status-in-use-text: #b06000;
 
-  --frota-color-status-reserved-bg: #F5F3FF;
-  --frota-color-status-reserved-icon-bg: #8B5CF6;
-  --frota-color-status-reserved-text: #6D28D9;
+  --frota-color-status-maintenance-bg: #fce8e6;
+  --frota-color-status-maintenance-icon: #d93025;
+  --frota-color-status-maintenance-text: #a50e0e;
 
-  --frota-color-status-maintenance-bg: #FEF2F2;
-  --frota-color-status-maintenance-icon-bg: #EF4444;
-  --frota-color-status-maintenance-text: #B91C1C;
+  --frota-shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  --frota-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@keyframes pulse-border {
+  0% {
+    border-color: var(--frota-color-border);
+    box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.2);
+  }
+
+  50% {
+    border-color: var(--frota-color-primary);
+    box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+  }
+
+  100% {
+    border-color: var(--frota-color-border);
+    box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.2);
+  }
+}
+
+.pulse-border {
+  animation: pulse-border 3s infinite ease-in-out;
 }
 
 .frota-module {
@@ -54,10 +77,16 @@
 }
 
 /* Responsividade Global */
+@media (max-width: 1200px) {
+  .frota-container {
+    max-width: 1000px;
+    padding: 0 1.5rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .frota-container {
-    padding: 0 1.5rem;
-    max-width: 100%;
+    padding: 0 1.25rem;
   }
 }
 
@@ -65,11 +94,19 @@
   .frota-container {
     padding: 0 1rem;
   }
+
+  .section-title {
+    font-size: 1.5rem !important;
+  }
 }
 
 @media (max-width: 480px) {
   .frota-container {
     padding: 0 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem !important;
   }
 }
 
@@ -80,6 +117,7 @@ img {
 
 body {
   overflow-x: hidden;
+  margin: 0;
 }
 
 * {
@@ -122,7 +160,8 @@ body {
   border: 1px solid var(--frota-color-border);
   font-size: 1rem;
   font-family: 'Inter', sans-serif;
-  width: 150px; /* Largura fixa para os campos de data */
+  width: 150px;
+  /* Largura fixa para os campos de data */
 }
 
 /* Estilo para o botão de limpar */
@@ -136,7 +175,8 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: auto; /* Alinha o botão com os campos */
+  margin-top: auto;
+  /* Alinha o botão com os campos */
 }
 
 .clear-filter-button:hover {
@@ -155,7 +195,7 @@ body {
 }
 
 .react-datepicker__current-month {
-    font-weight: 600 !important;
+  font-weight: 600 !important;
 }
 
 .react-datepicker__day--selected,
@@ -165,14 +205,49 @@ body {
   border-radius: 50% !important;
 }
 
-.adicionar-veiculo{
+.adicionar-veiculo {
   cursor: pointer;
 }
 
-.admin-grid {
-    /* background-color: red; */
-    display: flex
-;
-    flex-direction: column;
-    gap: 10px;
+
+/* Global Generic Buttons - Fix for Purple Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
 }
+
+.btn-primary {
+  background-color: var(--frota-color-primary) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--frota-color-primary-hover) !important;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent !important;
+  color: var(--frota-color-primary) !important;
+  border: 1px solid var(--frota-color-border) !important;
+}
+
+.btn-secondary:hover {
+  background-color: #f1f3f4 !important;
+}
+
+/* Google buttons (backward compatibility if used specifically) */
+.btn-google {
+  display: none;
+}
+
+/* Deprecated */

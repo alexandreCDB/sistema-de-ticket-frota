@@ -13,7 +13,8 @@
 }
 
 .page-title {
-  font-size: 1.875rem; /* Aumentei um pouco para dar mais destaque */
+  font-size: 1.875rem;
+  /* Aumentei um pouco para dar mais destaque */
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.5rem;
@@ -50,31 +51,48 @@
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--frota-color-border);
+  gap: 1rem;
 }
-.btn-primary{
-  border: none !important;
-  border-radius: 10px !important; 
-}
-
-.adicionar-veiculo{
-
-  padding: 10px;
-  border: 1px solid black;
-  border-radius: 5px;
-  background-color: transparent;
-  color: black;
-  cursor: pointer !important;
-}
-
 
 .management-header h3 {
   margin: 0;
   font-size: 1.25rem;
+  color: #202124;
 }
-.management-header .btn-primary {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-    font-weight: 600;
+
+/* Botão de Adicionar - Minimalista no Canto */
+.adicionar-veiculo {
+  padding: 0.4rem 0.8rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  background-color: transparent !important;
+  color: #1a73e8 !important;
+  border: 1px solid #1a73e8 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  flex-shrink: 0 !important;
+}
+
+.adicionar-veiculo:hover {
+  background-color: #e8f0fe !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Admin List Container - Grid 3 por linha (aprox) */
+.admin-list-container {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+  gap: 1rem !important;
+  width: 100% !important;
 }
 
 
@@ -119,84 +137,114 @@
   cursor: not-allowed;
 }
 
+/* --- RESPONSIVIDADE --- */
+
 @media (max-width: 768px) {
   .management-header {
-    flex-direction: column; /* Empilha o título e o botão */
-    align-items: flex-start; /* Alinha tudo à esquerda */
-    gap: 1rem;
+    flex-direction: row;
+    /* Keep row but maybe wrap if needed */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .fleet-status-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 }
 
-/* --- RESPONSIVIDADE PARA O STATUS DA FROTA --- */
 @media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .management-header h3 {
+    font-size: 1.1rem;
+  }
+
   .fleet-status-grid {
-    /* Em telas muito pequenas, força uma única coluna */
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  .admin-list-container {
+    grid-template-columns: 1fr !important;
+  }
 }
 
-/* Adicione esta classe ao seu arquivo de estilos */
+/* --- HISTÓRICO E FILTROS --- */
 
 .history-filters {
-  display: flex; /* Garante que os itens fiquem em linha */
+  display: flex;
   align-items: flex-end !important;
   gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  background-color: var(--frota-color-surface);
+  border: 1px solid var(--frota-color-border);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
 
- 
+.vehicle-filter-select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--frota-color-border);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  color: var(--frota-color-text-primary);
+  min-width: 200px;
+}
+
+.clear-filter-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--frota-color-border);
+  background-color: var(--frota-color-surface);
+  color: var(--frota-color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .export-button {
-  margin-left: auto; /* Esta é a mágica! Empurra o botão para a direita. */
-  
-  /* Estilos opcionais para deixar o botão mais bonito */
-  background-color: #2abe63 !important; /* Verde escuro */
+  margin-left: auto;
+  background-color: #2abe63 !important;
   color: white !important;
   border: none;
   padding: 0.6rem 1rem;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  white-space: nowrap; /* Impede que o texto quebre */
+  white-space: nowrap;
 }
 
 .export-button:hover {
   background-color: #15803d;
 }
 
-/* --- CSS PARA DEIXAR OS FILTROS RESPONSIVOS --- */
-
 @media (max-width: 768px) {
   .history-filters {
-    /* Muda a direção para vertical (empilhado) */
     flex-direction: column;
-    /* Alinha os itens para ocuparem a largura total */
-    align-items: stretch;
-    gap: 0.75rem; /* Diminui um pouco o espaçamento */
+    align-items: stretch !important;
+    gap: 1rem;
   }
 
-  /* Faz cada grupo de filtro ocupar a largura total */
   .filter-group {
     width: 100%;
   }
 
-  /* Reseta a margem do botão de exportar para que ele apareça corretamente */
   .export-button {
     margin-left: 0;
-    order: 5; /* Opcional: força o botão de exportar a ser o último item */
-  }
-  
-  /* Garante que os botões também ocupem a largura total para um visual limpo */
-  .clear-filter-button,
-  .export-button {
     width: 100%;
-    padding: 0.75rem; /* Aumenta um pouco o padding para facilitar o toque */
   }
 
-  /* Diminui um pouco o tamanho dos inputs de data e select em telas pequenas */
-  .date-picker-input,
-  .vehicle-filter-select {
-    padding: 0.6rem 0.75rem;
-    font-size: 0.9rem;
+  .clear-filter-button {
+    width: 100%;
   }
 }

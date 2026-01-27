@@ -1,56 +1,169 @@
+/* Tabs/styles.css - Redesign para Lista Mobile Profissional */
+
 .tabs-container {
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.tabs-header {
-  display: flex !important;
-  justify-content: flex-start !important;
-  border-bottom: 2px solid var(--frota-color-border) !important;
-  margin-bottom: 2rem !important;
-  overflow-x: auto !important;
+/* --- NAV (ABAS NO DESKTOP, LISTA NO MOBILE) --- */
+.tabs-nav {
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  gap: 2rem;
 }
 
 .tab-button {
-  padding: 0.75rem 0.25rem !important;
-  margin-right: 2rem !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  color:black;
-  background-color: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-  border-bottom: 3px solid transparent !important;
-  margin-bottom: -2px !important;
-  transition: all 0.2s ease-in-out !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
+  padding: 0.75rem 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
+.tab-label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-icon {
+  display: none;
+  /* Escondido no desktop tabs por padrão, opcional */
+}
+
+.mobile-only-arrow {
+  display: none;
+}
+
+.tab-button:hover {
+  color: #1e293b;
+}
 
 .tab-button.active {
-  color: #000000 !important;
-  border-bottom-color: #ef4444 !important;
-  background-color: transparent !important;
-  border-radius: 0px !important;
+  color: #2563eb;
+  border-bottom-color: #2563eb;
 }
 
+/* --- CONTENT --- */
 .tab-content {
-  /* O conteúdo de cada aba será renderizado aqui */
+  width: 100%;
 }
 
+.back-to-menu-btn {
+  display: none;
+}
+
+/* --- MEDIA QUERY: MOBILE DESIGN (LISTA DE CARDS) --- */
 @media (max-width: 768px) {
   .tabs-nav {
-    /* Permite scroll horizontal nas abas se não couberem na tela */
-    overflow-x: auto;
-    /* Adiciona um pouco de espaço no final para não cortar a sombra */
-    padding-bottom: 8px;
-    display: contents;
+    flex-direction: column;
+    border-bottom: none;
+    gap: 0;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
   }
 
-  /* Remove a margem para dar mais espaço */
+  .tabs-nav.hidden-mobile {
+    display: none;
+  }
+
   .tab-button {
-    margin-right: 1.5rem !important;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    margin: 0;
+    border-bottom: 1px solid #f1f5f9;
+    border-radius: 0;
+    justify-content: space-between;
+    /* Texto esquerda, Seta direita */
+    color: #334155;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .tab-button:last-child {
+    border-bottom: none;
+  }
+
+  .tab-button.active {
+    background-color: #f0f7ff;
+    /* Fundo azul ultra suave */
+    color: #1e40af;
+    /* Azul mais profundo para contraste */
+    border-left: none !important;
+    /* Removida a borda lateral */
+    border-bottom-color: #f1f5f9 !important;
+    /* Mantém a borda sutil da lista */
+    font-weight: 700;
+  }
+
+  .tab-icon {
+    display: flex;
+    color: #2563eb;
+  }
+
+  .mobile-only-arrow {
+    display: block;
+    color: #94a3b8;
+  }
+
+  .tab-button.active .mobile-only-arrow {
+    color: #2563eb;
+  }
+
+  /* --- VOLTAR NO MOBILE --- */
+  .tab-content.hidden-mobile {
+    display: none;
+  }
+
+  .mobile-back-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-to-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  .back-to-menu-btn:hover {
+    background: #f1f5f9;
+    color: #334155;
+  }
+
+  .mobile-tab-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    border-left: 4px solid #2563eb;
+    padding-left: 12px;
   }
 }

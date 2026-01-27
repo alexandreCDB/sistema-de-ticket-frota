@@ -180,6 +180,7 @@
   min-width: 140px !important;
 }
 
+/* 
 .btn-primary {
   background-color: #8b5cf6 !important;
   color: white !important;
@@ -187,12 +188,9 @@
 
 .btn-primary:hover:not(:disabled) {
   background-color: #7c3aed !important;
-}
+} */
 
-.btn-primary:disabled {
-  background-color: #9ca3af !important;
-  cursor: not-allowed !important;
-}
+
 
 .btn-secondary {
   background-color: #f3f4f6 !important;
@@ -217,19 +215,19 @@
     flex-direction: column !important;
     gap: 1rem !important;
   }
-  
+
   .supply-section {
     min-height: auto !important;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr !important;
   }
-  
+
   .modal-footer {
     flex-direction: column !important;
   }
-  
+
   .btn {
     min-width: auto !important;
     width: 100% !important;
@@ -244,17 +242,17 @@
     border-radius: 0 !important;
     margin: 0 !important;
   }
-  
+
   .supply-section {
     padding: 1rem !important;
   }
-  
+
   .modal-header,
   .modal-body,
   .modal-footer {
     padding: 1rem !important;
   }
-  
+
   .close-button {
     top: 0.25rem !important;
     right: 0.25rem !important;

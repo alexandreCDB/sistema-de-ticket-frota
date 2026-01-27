@@ -3,6 +3,15 @@ import { IUser } from "../../../components/AUTH/interfaces/user";
 //@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
 
+const getAuthHeaders = (extraHeaders: Record<string, string> = {}) => {
+  const token = localStorage.getItem('token');
+  const headers: Record<string, string> = { ...extraHeaders };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
+
 
 export interface Message {
   id: number;
@@ -67,7 +76,10 @@ export const getUsernameFromEmail = (email?: string) => {
 
 // ---------------- Fetch ----------------
 export const fetchTicket = async (ticketId: number): Promise<Ticket> => {
-  const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}`, { credentials: 'include' });
+  const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}`, {
+    headers: getAuthHeaders(),
+    credentials: 'include'
+  });
   if (!res.ok) {
     const data = await res.json();
     throw new Error(data.detail || 'Falha ao buscar ticket');
@@ -76,7 +88,10 @@ export const fetchTicket = async (ticketId: number): Promise<Ticket> => {
 };
 
 export const fetchMessages = async (ticketId: number): Promise<Message[]> => {
-  const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}/messages/`, { credentials: 'include' });
+  const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}/messages/`, {
+    headers: getAuthHeaders(),
+    credentials: 'include'
+  });
   if (!res.ok) {
     const data = await res.json();
     throw new Error(data.detail || 'Falha ao buscar mensagens');
@@ -88,7 +103,7 @@ export const sendMessage = async (ticketId: number, userId: number, content: str
   const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}/messages/`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ ticket_id: ticketId, sender_id: userId, content }),
   });
   if (!res.ok) {
@@ -99,7 +114,10 @@ export const sendMessage = async (ticketId: number, userId: number, content: str
 };
 
 export const fetchAssignableUsers = async (): Promise<IUser[]> => {
-  const res = await fetch(`${API_URL}/ticket/users/assignable/`, { credentials: 'include' });
+  const res = await fetch(`${API_URL}/ticket/users/assignable/`, {
+    headers: getAuthHeaders(),
+    credentials: 'include'
+  });
   if (!res.ok) {
     const data = await res.json();
     throw new Error(data.detail || 'Falha ao buscar usuários atribuíveis');
@@ -113,6 +131,7 @@ export const updateAssignee = async (ticketId: number, assigneeId: number | null
 
   const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}`, {
     method: 'PUT',
+    headers: getAuthHeaders(),
     credentials: 'include',
     body: formData,
   });
@@ -127,6 +146,7 @@ export const updateAssignee = async (ticketId: number, assigneeId: number | null
 export const attendTicket = async (ticketId: number): Promise<Ticket> => {
   const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}/accept`, {
     method: 'POST',
+    headers: getAuthHeaders(),
     credentials: 'include',
   });
   if (!res.ok) {
@@ -140,7 +160,7 @@ export const closeTicket = async (ticketId: number, observation: string): Promis
   const res = await fetch(`${API_URL}/ticket/tickets/${ticketId}/close`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ observation }),
   });
   if (!res.ok) {

@@ -29,10 +29,12 @@ def list_bookings(
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
 ):
-    if current_user.is_admin:
+    # ✅ CORRIGIDO: Super admins também veem todas as reservas
+    if current_user.is_admin or current_user.is_super_admin:
         bookings = get_all_bookings(frota_db)
     else:
         bookings = get_bookings_by_user(frota_db, user_id=current_user.id)
+
 
     if not bookings:
         return []
@@ -44,6 +46,22 @@ def list_bookings(
     for b in bookings:
         b.user = user_map.get(b.user_id)
 
+    return bookings
+
+@router.get("/me", response_model=List[BookingRead])
+def list_my_bookings(
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    bookings = get_bookings_by_user(frota_db, user_id=current_user.id)
+    if not bookings:
+        return []
+    
+    # Preencher dados do usuário (embora seja o próprio usuário logado)
+    for b in bookings:
+        b.user = current_user
+        
     return bookings
 
 @router.post("/checkout", response_model=BookingRead)
@@ -59,7 +77,7 @@ def checkout(
         raise HTTPException(status_code=403, detail=motivo)
     
     try:
-        booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage)
+        booking = create_checkout(frota_db, current_user.id, payload.vehicle_id, payload.purpose, payload.observation, payload.start_mileage, payload.start_time)
         booking.user = get_user(global_db, booking.user_id) 
         
         background_tasks.add_task(notify_frota_checkout_async, payload.vehicle_id)
@@ -95,9 +113,15 @@ def approve(
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
 ):
-    if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Apenas administradores podem aprovar")
-    
+    # Primeiro, buscamos a reserva para verificar quem a solicitou
+    booking = get_booking(frota_db, booking_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Reserva não encontrada")
+
+    # REGRA: Um admin não pode aprovar a própria reserva
+    if booking.user_id == current_user.id:
+        raise HTTPException(status_code=403, detail="Você não pode aprovar a sua própria solicitação. Peça a outro administrador para revisar.")
+
     # VARIÁVEL CORRIGIDA
     booking = approve_booking(frota_db, booking_id, current_user.id)
     if not booking:
@@ -118,14 +142,18 @@ def deny(
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
 ):
-    if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Apenas administradores podem negar")
-        
     # VARIÁVEL CORRIGIDA
     booking = deny_booking(frota_db, booking_id)
     if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
         
+    # LÓGICA DE PERMISSÃO: Admin pode negar qualquer um. Usuário pode negar (cancelar) o seu próprio.
+    if not current_user.is_admin:
+        if booking.user_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Apenas administradores podem negar reservas de outros usuários")
+        if booking.status not in ["pending", "confirmed"]:
+            raise HTTPException(status_code=400, detail="Você só pode cancelar reservas pendentes ou confirmadas")
+
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
@@ -146,9 +174,16 @@ def do_return(
     parking_location = payload.get("parking_location")
     
     # VARIÁVEL CORRIGIDA
-    booking = complete_return(frota_db, booking_id, end_mileage, parking_location)
+    # Primeiro, buscamos a reserva para verificar a propriedade
+    booking = get_booking(frota_db, booking_id)
     if not booking:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
+
+    # LÓGICA DE PERMISSÃO: Apenas o dono ou admin pode devolver
+    if not current_user.is_admin and booking.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Apenas o condutor ou administradores podem devolver este veículo")
+
+    booking = complete_return(frota_db, booking_id, end_mileage, parking_location)
         
     # LÓGICA ADICIONADA
     booking.user = get_user(global_db, booking.user_id)

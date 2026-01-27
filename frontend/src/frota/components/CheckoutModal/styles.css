@@ -2,8 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --frota-color-primary-start: #F97316;
-  --frota-color-primary-end: #8B5CF6;
+  --frota-color-primary-start: #1a73e8;
+  --frota-color-primary-end: #1a73e8;
   --frota-color-background: #F8FAFC;
   --frota-color-surface: #FFFFFF;
   --frota-color-text-primary: #1E293B;
@@ -15,13 +15,14 @@
   --frota-color-status-in-use-bg: #FFFBEB;
   --frota-color-status-in-use-icon-bg: #F59E0B;
   --frota-color-status-in-use-text: #B45309;
-  --frota-color-status-reserved-bg: #F5F3FF;
-  --frota-color-status-reserved-icon-bg: #8B5CF6;
-  --frota-color-status-reserved-text: #6D28D9;
+  --frota-color-status-reserved-bg: #EFF6FF;
+  --frota-color-status-reserved-icon-bg: #3B82F6;
+  --frota-color-status-reserved-text: #1E40AF;
   --frota-color-status-maintenance-bg: #FEF2F2;
   --frota-color-status-maintenance-icon-bg: #EF4444;
   --frota-color-status-maintenance-text: #B91C1C;
 }
+
 
 /* Fundo escurecido da modal */
 .modal-backdrop {
@@ -43,8 +44,8 @@
 .modal-content {
   background-color: var(--frota-color-surface);
   border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-              0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
   width: min(95%, 450px);
   max-height: 95vh;
   margin: auto;
@@ -54,8 +55,15 @@
 }
 
 @keyframes slide-up {
-  from { transform: translateY(25px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(25px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Cabeçalho da modal */
@@ -99,6 +107,7 @@
   right: 1.5rem;
   background-color: #F1F5F9;
 }
+
 .modal-close-button:hover {
   background-color: #E2E8F0;
 }
@@ -153,7 +162,7 @@
 .form-textarea:focus {
   outline: none;
   border-color: var(--frota-color-primary-end);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
 }
 
 .form-select {
@@ -178,6 +187,7 @@
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
 .alert-box strong {
   color: #854D0E;
 }
@@ -218,19 +228,22 @@
   color: var(--frota-color-text-secondary);
   border: 1px solid var(--frota-color-border);
 }
+
 .modal-footer .btn-secondary:hover:not(:disabled) {
   background-color: #F8FAFC;
   border-color: #CBD5E1;
 }
 
 .modal-footer .btn-primary {
-  background: linear-gradient(to right, var(--frota-color-primary-start), var(--frota-color-primary-end));
-  color: white;
-  border: 1px solid transparent;
+  background: #e81a2b !important;
+  color: white !important;
+  border: 1px solid transparent !important;
 }
+
 .modal-footer .btn-primary:hover:not(:disabled) {
-  opacity: 0.9;
-  box-shadow: 0 4px 15px -5px rgba(139, 92, 246, 0.4);
+  opacity: 1 !important;
+  background-color: #1765cc !important;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3) !important;
 }
 
 .modal-footer .btn:disabled {
@@ -259,7 +272,7 @@
 .termo-expand-button {
   background: none;
   border: none;
-  color: var(--frota-color-primary-end);
+  color: rgb(7, 24, 255) !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -272,7 +285,7 @@
 }
 
 .termo-expand-button:hover {
-  background-color: rgba(139, 92, 246, 0.1);
+  background-color: rgba(26, 115, 232, 0.1);
 }
 
 .termo-content {
@@ -321,8 +334,8 @@
   background-color: white;
 }
 
-.termo-checkbox:checked + .checkmark {
-  background-color: var(--frota-color-primary-end);
+.termo-checkbox:checked+.checkmark {
+  background-color: black;
   border-color: var(--frota-color-primary-end);
   color: white;
 }
@@ -337,14 +350,14 @@
   .termo-header {
     flex-wrap: wrap;
   }
-  
+
   .termo-expand-button {
     margin-left: 0;
     margin-top: 0.5rem;
     width: 100%;
     justify-content: center;
   }
-  
+
   .termo-content {
     max-height: 150px;
   }

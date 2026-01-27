@@ -16,6 +16,7 @@ from backend.websocket.service.settings import get_online_users_data, get_system
 from backend.websocket.service.ws_instance import manager
 from backend.frota.routers.fuel_supply import router as frota_fuel_supplies_router
 from backend.frota.services.fuel_reminder_service import fuel_reminder_service
+from backend.frota.services.vehicle_status_service import vehicle_status_service
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,27 +30,40 @@ async def lifespan(app: FastAPI):
 
     print("✅ Banco de dados da Frota configurado com sucesso.")
 
-
-    # ✅ INICIAR AGENDADOR DE ABASTECIMENTO (adicionar esta linha)
-    asyncio.create_task(fuel_reminder_service.start_scheduler())
+    # 🔁 Inicia scheduler de abastecimento
+    scheduler_task = asyncio.create_task(
+        fuel_reminder_service.start_scheduler()
+    )
     print("⛽ Agendador de notificações de abastecimento iniciado")
-    
-    yield
-    
-    # ✅ PARAR AGENDADOR (adicionar esta linha)
-    fuel_reminder_service.stop()
 
+    # 📡 Inicia broadcast do websocket
     broadcast_task = asyncio.create_task(broadcast_system_stats())
-    print("📡 Lifespan iniciado: broadcast ativo")
+    print("📡 Broadcast de system stats iniciado")
 
+    # 🚗 Inicia scheduler de status de veículos
+    status_task = asyncio.create_task(
+        vehicle_status_service.start_scheduler()
+    )
+    print("🚗 Agendador de status de veículos iniciado")
+
+    # 🔥 APLICAÇÃO RODANDO
     yield
+
+    # 🧹 SHUTDOWN
+    print("🧹 Application shutdown event triggered.")
+
+    fuel_reminder_service.stop()
+    scheduler_task.cancel()
 
     broadcast_task.cancel()
+    status_task.cancel()
     try:
         await broadcast_task
+        await status_task
     except asyncio.CancelledError:
-        print("📴 Lifespan finalizado: broadcast cancelado")
-    print("🧹 Application shutdown event triggered.")
+        print("📴 Broadcast e Status Tasks cancelados")
+
+    print("✅ Lifespan finalizado com sucesso")
 
 async def broadcast_system_stats():
     while True:
@@ -71,17 +85,24 @@ app = FastAPI(
 
 origins = [
     "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:5176",
+    "http://localhost:5177",
+    "http://localhost:5178",
+    "http://localhost:5179",
     "http://127.0.0.1:5173",
     "http://192.168.13.149:5173",
+    "http://192.168.13.149:5174",
+    "http://192.168.13.149:5175",
+    "http://192.168.13.149:5176",
+    "http://192.168.13.149:5177",
+    "http://192.168.13.149:5178",
     "http://192.168.13.149:8000",
     "http://192.168.13.158:5173",
-    "http://192.168.13.249:5173",
-    "http://192.168.56.1:5173",
-    "http://192.168.13.136:5173",
-    "http://192.168.13.136:8000",
-    "http://192.168.13.159:8000",
-    "http://192.168.13.159:5173",
-    "http://192.168.13.159:300",
+    "http://192.168.13.158:5174",
+    "http://192.168.13.158:5175",
+    "http://192.168.13.158:5176",
 ]
 
 app.add_middleware(
@@ -97,6 +118,13 @@ upload_directory = os.path.join(current_file_path, "uploads")
 if not os.path.exists(upload_directory):
     os.makedirs(upload_directory)
 app.mount("/uploads", StaticFiles(directory=upload_directory), name="uploads")
+
+# ✅ NOVO: Pasta separada para uploads da frota (evita conflito com outro sistema)
+uploads_frota_directory = os.path.join(current_file_path, "uploads_frota")
+if not os.path.exists(uploads_frota_directory):
+    os.makedirs(uploads_frota_directory)
+app.mount("/uploads_frota", StaticFiles(directory=uploads_frota_directory), name="uploads_frota")
+
 
 api_router = APIRouter(prefix="/api")
 
@@ -120,14 +148,35 @@ api_router.include_router(frota_api_router)
 app.include_router(api_router)
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket, token: str):
+async def websocket_endpoint(websocket: WebSocket, token: str = None):
+    # Log para depuração
+    print(f"📡 Tentativa de conexão WS. Token recebido: {token}")
+    
+    # Se o token não veio via parâmetro automático do FastAPI, tenta pegar manualmente
+    if not token:
+        token = websocket.query_params.get("token")
+        print(f"📡 Token extraído manualmente: {token}")
+
+    if not token:
+        print("❌ Conexão WS negada: Token ausente")
+        # Para websockets, precisamos aceitar antes de fechar se quisermos ser gentis,
+        # ou apenas fechar se for uma rejeição imediata.
+        # Mas o manager.connect já faz o accept.
+        # Se chegamos aqui sem token, nem chamamos o manager.
+        await websocket.accept()
+        await websocket.close(code=1008)
+        return
+
     await manager.connect(websocket, token)
     try:
         while True:
             data = await websocket.receive_text()
             print("📩 Mensagem recebida:", data)
-            await manager.broadcast(f"Echo: {data}")
+            # await manager.broadcast(f"Echo: {data}")
     except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception as e:
+        print(f"❌ Erro no loop do WebSocket: {e}")
         manager.disconnect(websocket)
 
 @app.get("/check-fuel-routes")

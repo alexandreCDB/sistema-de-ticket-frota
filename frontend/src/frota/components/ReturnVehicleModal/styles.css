@@ -16,9 +16,9 @@
 .modal-content {
   background-color: var(--frota-color-surface);
   border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-              0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  width: min(90%, 500px); 
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: min(90%, 500px);
   max-height: 95vh;
   margin: auto;
   animation: slide-down 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -45,6 +45,7 @@
     transform: translateY(-25px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -162,6 +163,7 @@
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
 .alert-box strong {
   color: #854D0E;
 }
@@ -202,19 +204,22 @@
   color: var(--frota-color-text-secondary);
   border: 1px solid var(--frota-color-border);
 }
+
 .modal-footer .btn-secondary:hover:not(:disabled) {
   background-color: #F8FAFC;
   border-color: #CBD5E1;
 }
 
 .modal-footer .btn-primary {
-  background: linear-gradient(to right, var(--frota-color-primary-start), var(--frota-color-primary-end));
-  color: white;
-  border: 1px solid transparent;
+  background: #1a73e8 !important;
+  color: white !important;
+  border: 1px solid transparent !important;
 }
+
 .modal-footer .btn-primary:hover:not(:disabled) {
-  opacity: 0.9;
-  box-shadow: 0 4px 15px -5px rgba(139, 92, 246, 0.4);
+  opacity: 1 !important;
+  background-color: #1765cc !important;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3) !important;
 }
 
 .modal-footer .btn:disabled {

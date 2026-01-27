@@ -5,12 +5,13 @@
   padding-bottom: 4rem;
   /* Adicionado para garantir que o container se estique se necessário */
   width: 100%;
-  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+  box-sizing: border-box;
+  /* Garante que o padding não aumente a largura total */
 }
 
 /* Garante que a seção ocupe a largura total do container pai */
 .page-layout section {
-    width: 100%;
+  width: 100%;
 }
 
 .section-title {
@@ -48,45 +49,168 @@
 
 /* Adicione este código ao seu arquivo ListaVeiculosPage.css */
 
+/* --- NOVO HEADER DE LISTA PROFISSIONAL --- */
+
 .list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  flex-wrap: wrap; /* Permite que a busca quebre para a linha de baixo em telas pequenas */
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
 }
 
-.search-wrapper {
-  position: relative;
-
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.search-icon {
-  position: absolute;
-  top: 50%;
-  left: 0.75rem;
-  transform: translateY(-50%);
-  color: #9ca3af; /* Cinza claro */
-  pointer-events: none; /* Permite clicar através do ícone */
-}
-.search-input {
-  /* Adicionado !important para garantir que o espaçamento seja aplicado */
-  padding: 0.6rem 0.75rem 0.6rem 2.5rem !important; 
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  min-width: 150px;
+.filter-pill {
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-color: transparent;
   font-size: 0.9rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: #8B5CF6; /* Cor primária roxa */
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+.filter-pill:hover {
+  background-color: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.filter-pill.active {
+  background-color: #ffffff;
+  color: #2563eb;
+  border-color: #dbeafe;
+  box-shadow:
+    0 4px 12px -2px rgba(37, 99, 235, 0.15),
+    0 2px 4px -2px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+}
+
+/* --- BUSCA EXPANSÍVEL MODERNA --- */
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 99px;
+  padding: 4px;
+  width: 40px;
+  /* Começa pequeno */
+  height: 40px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-container.expanded {
+  width: 300px;
+  /* Expande para o tamanho total */
+  padding-left: 12px;
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.search-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  color: #64748b;
+  transition: color 0.3s;
+}
+
+.search-container.expanded .search-icon-wrapper {
+  color: #2563eb;
+}
+
+.search-input-modern {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  width: 0;
+  padding: 0;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: width 0.4s ease, padding 0.4s ease;
+  opacity: 0;
+}
+
+.search-container.expanded .search-input-modern {
+  width: 100%;
+  padding: 0 12px;
+  opacity: 1;
+}
+
+.search-input-modern::placeholder {
+  color: #94a3b8;
 }
 
 /* Ajuste para o subtítulo não ter mais margem inferior */
 .list-header .section-subtitle {
-    margin-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* ============= RESPONSIVO ============= */
+
+@media (max-width: 1024px) {
+  .vehicle-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
+  .list-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+
+  .status-filters {
+    justify-content: center !important;
+  }
+
+  .filter-pill {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .vehicle-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .status-filters {
+    gap: 0.5rem !important;
+  }
+
+  .filter-pill {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 0.4rem 0.5rem !important;
+    min-width: 80px !important;
+  }
 }

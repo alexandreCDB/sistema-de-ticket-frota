@@ -4,7 +4,7 @@ from datetime import datetime, timezone, timedelta
 from ..models.booking import Booking
 from ..models.vehicle import Vehicle
 
-def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, observation:str=None, start_mileage:int=None):
+def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, observation:str=None, start_mileage:int=None, start_time: datetime = None):
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).with_for_update().first()
     if not vehicle:
         raise ValueError("Veículo não encontrado")
@@ -20,11 +20,12 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
         status="pending",
         purpose=purpose,
         observation=observation,
-        start_time=now_utc,
+        start_time=start_time or now_utc,
         start_mileage=start_mileage
     )
     
-    vehicle.status = "reserved"
+    # Status permanece available até ser aceito
+    # vehicle.status = "reserved"
     
     db.add(b)
     db.commit()
@@ -79,11 +80,14 @@ def approve_booking(db: Session, booking_id:int, approver_id:int):
     
     if b.vehicle:
         now_utc = datetime.now(timezone.utc)
-        two_hours_from_now = now_utc + timedelta(hours=2)
-        if b.start_time <= two_hours_from_now:
-             b.vehicle.status = "in-use" if b.type == "checkout" else "reserved"
+        
+        # Regras: 30 minutos para retirada imediata (checkout), 1 hora para agendamento
+        limit_time = now_utc + (timedelta(minutes=30) if b.type == "checkout" else timedelta(hours=1))
+        
+        if b.start_time <= limit_time:
+            b.vehicle.status = "in-use"
         else:
-             b.vehicle.status = "available"
+            b.vehicle.status = "available"
 
     db.commit()
     db.refresh(b)

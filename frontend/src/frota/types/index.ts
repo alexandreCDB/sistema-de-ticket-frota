@@ -13,6 +13,7 @@ export interface Vehicle {
   passengers: number | null;
   features: string | null;
   monitor_fuel: boolean; // ✅ CAMPO ADICIONADO
+  categories?: 'carro' | 'caminhao'; // ✅ NOVO CAMPO
   created_at: string;
 }
 
@@ -21,7 +22,7 @@ export interface Booking {
   vehicle_id: number;
   user_id: number;
   type: 'checkout' | 'schedule';
-  status: 'pending' | 'confirmed' | 'denied' | 'completed';
+  status: 'pending' | 'confirmed' | 'denied' | 'completed' | 'in-use' | 'cancelled';
   purpose: string | null;
   observation: string | null;
   start_time: string;
@@ -31,6 +32,7 @@ export interface Booking {
   parking_location: string | null;
   created_at: string;
   handled_by: number | null;
+  user?: User;
 }
 
 // Tipo de veículo que inclui suas reservas
@@ -45,5 +47,5 @@ export interface User {
 
 export interface BookingWithVehicle extends Booking {
   vehicle: Vehicle;
-  user: User;
+  user?: User;
 }

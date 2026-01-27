@@ -1,5 +1,5 @@
-import React from 'react'; 
-import { FrotaHeader } from '../Header'; 
+import React from 'react';
+import { FrotaHeader } from '../Header';
 import { Tabs } from '../Tabs';
 import { PendingRequests } from './PendingRequests';
 import { FleetStatus } from './FleetStatus';
@@ -8,46 +8,50 @@ import { History } from './History';
 import { VehicleManagement } from './VehicleManagement';
 // ✅ NOVO: Importar o componente de Histórico de Abastecimento
 import { FuelSupplyHistory } from '../FuelSupplyHistory';
-import './styles.css'; 
+import { Mail, CheckCircle, Calendar, Fuel, Settings } from 'lucide-react'; // ✅ Importar ícones
+import './styles.css';
 
-export default function FrotaAdminPage() { 
+export default function FrotaAdminPage() {
 
   const adminTabs = [
     {
       label: 'Solicitações Pendentes',
-      content: <PendingRequests />
+      content: <PendingRequests />,
+      icon: <Mail size={20} /> // ✅ Adicionar ícone
     },
     {
       label: 'Status da Frota',
-      content: <FleetStatus />
+      content: <FleetStatus />,
+      icon: <CheckCircle size={20} /> // ✅ Adicionar ícone
     },
     {
       label: 'Histórico de Reservas',
-      content: <History />
+      content: <History />,
+      icon: <Calendar size={20} /> // ✅ Adicionar ícone
     },
     {
-      label: 'Histórico de Abastecimento', // ✅ NOVA ABA
-      content: <FuelSupplyHistory />
+      label: 'Histórico de Abastecimento',
+      content: <FuelSupplyHistory />,
+      icon: <Fuel size={20} /> // ✅ Adicionar ícone
     },
     {
       label: 'Gestão de Veículos',
-      // --- MUDANÇA 2: Substituir o "Em breve..." pelo componente funcional ---
-      content: <VehicleManagement />
+      content: <VehicleManagement />,
+      icon: <Settings size={20} /> // ✅ Adicionar ícone
     }
   ];
 
-  return ( 
-    <div className="frota-module"> 
-      <FrotaHeader /> 
-      <main className="frota-container page-layout"> 
-        <section> 
-          <h2 className="section-title">Painel do Administrador</h2> 
-          <p className="section-subtitle">Gerenciar e visualizar o status da frota de veículos.</p>
+  return (
+    <div className="frota-module">
+      <FrotaHeader />
+      <main className="frota-container page-layout">
+        <section>
+          <h2 className="section-title">Painel do Administrador</h2>
           <div className="admin-content-wrapper">
             <Tabs tabs={adminTabs} />
           </div>
-        </section> 
-      </main> 
-    </div> 
-  ); 
+        </section>
+      </main>
+    </div>
+  );
 }

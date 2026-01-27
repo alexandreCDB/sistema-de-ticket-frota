@@ -6,8 +6,8 @@ from backend.dependencies import get_current_user
 
 router = APIRouter()
 
-# A pasta de uploads agora fica dentro do 'backend' para simplicidade
-UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "uploads")
+# ✅ ALTERADO: Pasta separada para uploads da frota (evita conflito com outro sistema)
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "uploads_frota")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/image", status_code=201)
@@ -25,8 +25,7 @@ async def upload_vehicle_image(file: UploadFile = File(...), user = Depends(get_
     finally:
         file.file.close()
 
-    # Retorna o URL RELATIVO. O frontend irá completá-lo.
-    # Isto é mais robusto do que construir o URL completo no backend.
-    file_url = f"/uploads/{unique_filename}"
+    # ✅ ALTERADO: URL relativo agora aponta para uploads_frota
+    file_url = f"/uploads_frota/{unique_filename}"
     
     return {"file_url": file_url}

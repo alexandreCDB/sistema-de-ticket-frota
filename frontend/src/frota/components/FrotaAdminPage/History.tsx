@@ -4,9 +4,9 @@ import { useMyBookings, useVehicles } from '../../services/frota.services';
 import { Vehicle } from '../../types';
 import DatePicker from 'react-datepicker';
 //@ts-ignore
-import 'react-datepicker/dist/react-datepicker.css'; 
+import 'react-datepicker/dist/react-datepicker.css';
 //@ts-ignore
-import './styles.css'; 
+import './styles.css';
 import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -45,25 +45,39 @@ export const History = () => {
     if (!bookings) return [];
 
     const historyItems = bookings.filter((booking) => {
-      const isHistoryItem = booking.status === 'completed' || booking.status === 'denied';
+      // ✅ INCLUIR MAIS STATUS: Algumas reservas podem ser marcadas como returned, cancelled ou unavailable
+      const isHistoryItem = ['completed', 'denied', 'returned', 'cancelled', 'unavailable'].includes(booking.status);
       if (!isHistoryItem) return false;
 
       const bookingDate = new Date(booking.start_time);
-      const start = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
-      const end = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
 
-      if (start && end && (bookingDate < start || bookingDate > end)) return false;
-      if (start && bookingDate < start) return false;
-      if (end && bookingDate > end) return false;
-      
+      // Se tiver filtro de data, validar
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        if (bookingDate < start) return false;
+      }
+
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        if (bookingDate > end) return false;
+      }
+
       if (selectedVehicleId && booking.vehicle.id !== parseInt(selectedVehicleId)) {
         return false;
       }
-      
+
       return true;
     });
 
-    return historyItems.sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime());
+    return historyItems.sort((a, b) => {
+      // Priorizar a data de término (quando o serviço foi concluído) para o topo, 
+      // caindo para a data de início se não houver término.
+      const timeA = new Date(a.end_time || a.start_time).getTime();
+      const timeB = new Date(b.end_time || b.start_time).getTime();
+      return timeB - timeA;
+    });
   }, [bookings, startDate, endDate, selectedVehicleId]);
 
   // --- LÓGICA DE EXPORTAÇÃO RESTAURADA ---
@@ -122,7 +136,7 @@ export const History = () => {
         </div>
         <div className="filter-group">
           <label>Filtrar por Veículo</label>
-          <select 
+          <select
             className="vehicle-filter-select"
             value={selectedVehicleId}
             onChange={(e) => setSelectedVehicleId(e.target.value)}
@@ -145,8 +159,8 @@ export const History = () => {
         >
           Limpar Filtros
         </button>
-        <button 
-          className="export-button" 
+        <button
+          className="export-button"
           onClick={handleExportExcel}
           title="Exportar para Excel"
         >

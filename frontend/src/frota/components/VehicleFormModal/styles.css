@@ -19,15 +19,23 @@
   border-radius: 16px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 500px; /* um pouco maior */
+  max-width: 500px;
+  /* um pouco maior */
   animation: scale-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
 }
 
 @keyframes scale-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* HEADER */
@@ -63,6 +71,7 @@
   border-radius: 50%;
   transition: all 0.2s;
 }
+
 .close-button:hover {
   background-color: #dc2626;
   transform: rotate(90deg);
@@ -74,6 +83,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
 .input-group {
@@ -106,8 +117,8 @@
 
 .input-group input:focus {
   outline: none;
-  border-color: var(--frota-color-primary-end);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
 }
 
 /* BOTÃO DE UPLOAD PERSONALIZADO */
@@ -117,20 +128,20 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(90deg, #F97316 0%, #8B5CF6 100%);
+  background: #1a73e8;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   text-align: center;
   transition: all 0.3s ease;
   margin-top: 0.25rem;
-  box-shadow: 0 4px 12px -4px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 4px 12px -4px rgba(26, 115, 232, 0.5);
 }
 
 .input-group .btn-upload:hover {
-  opacity: 0.95;
+  background: #1765cc;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px -4px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 6px 16px -4px rgba(26, 115, 232, 0.6);
 }
 
 /* PREVIEW DA IMAGEM */
@@ -167,27 +178,29 @@
   color: var(--frota-color-text-secondary);
   border: 1px solid var(--frota-color-border);
 }
+
 .btn-cancel:hover {
   background-color: #f1f5f9;
 }
 
-.btn-img{
+.btn-img {
   padding: 10px;
   background-color: rgb(148, 146, 146);
   border: none;
   border-radius: 10px;
-  
+
 }
 
 .btn-save {
-  background: linear-gradient(90deg, #F97316 0%, #8B5CF6 100%);
+  background: #1a73e8;
   color: white !important;
-  box-shadow: 0 4px 12px -4px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 4px 12px -4px rgba(26, 115, 232, 0.5);
 }
+
 .btn-save:hover {
-  opacity: 0.95;
+  background: #1765cc;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px -4px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 6px 16px -4px rgba(26, 115, 232, 0.6);
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -213,6 +226,7 @@ input::-webkit-inner-spin-button {
     width: 100%;
   }
 }
+
 /* meta do preview (texto pequeno) */
 .preview-meta {
   font-size: 0.85rem;
@@ -235,7 +249,7 @@ input::-webkit-inner-spin-button {
 .image-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.72);
+  background: rgba(0, 0, 0, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,15 +267,18 @@ input::-webkit-inner-spin-button {
   max-width: 90vw;
   max-height: 90vh;
   border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   display: block;
 }
+
 .image-close-btn svg {
   width: 20px !important;
   height: 20px !important;
   color: #fff !important;
-  stroke: #fff !important; /* força a cor da linha */
+  stroke: #fff !important;
+  /* força a cor da linha */
 }
+
 /* botão X da imagem (círculo branco) */
 .image-close-btn {
   position: absolute !important;
@@ -270,7 +287,8 @@ input::-webkit-inner-spin-button {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background-color: transparent !important; /* vermelho */
+  background-color: transparent !important;
+  /* vermelho */
   color: #fff !important;
   border: none !important;
   cursor: pointer !important;
@@ -281,7 +299,7 @@ input::-webkit-inner-spin-button {
   justify-content: center !important;
 
   /* Estética */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
   transition: background-color 0.25s, transform 0.2s !important;
 }
 
@@ -290,9 +308,9 @@ input::-webkit-inner-spin-button {
   transform: scale(1.1) rotate(90deg) !important;
 }
 
-  
 
-  /* Adicione ao seu VehicleFormModal/styles.css */
+
+/* Adicione ao seu VehicleFormModal/styles.css */
 
 .checkbox-label {
   display: flex;
@@ -323,7 +341,7 @@ input::-webkit-inner-spin-button {
   color: white;
 }
 
-.checkbox-input:checked + .checkmark {
+.checkbox-input:checked+.checkmark {
   background-color: #10b981;
   border-color: #10b981;
 }
@@ -332,7 +350,7 @@ input::-webkit-inner-spin-button {
   border-color: #9ca3af;
 }
 
-.checkbox-input:checked + .checkmark:hover {
+.checkbox-input:checked+.checkmark:hover {
   background-color: #059669;
   border-color: #059669;
 }

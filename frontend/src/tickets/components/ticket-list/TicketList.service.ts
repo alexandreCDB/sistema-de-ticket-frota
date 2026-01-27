@@ -1,5 +1,13 @@
-//@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL;
+
+const getAuthHeaders = (extraHeaders: Record<string, string> = {}) => {
+    const token = localStorage.getItem('token');
+    const headers: Record<string, string> = { ...extraHeaders };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
+};
 
 export interface TicketParams {
     ticketType: 'my-tickets' | 'assigned-tickets' | 'all-tickets';
@@ -42,7 +50,7 @@ export const fetchTickets = async (params: TicketParams): Promise<TicketResponse
     const url = `${API_URL}${endpoint}${query.toString() ? `?${query.toString()}` : ''}`;
 
     const response = await fetch(url, {
-        // headers: { Authorization: `Bearer ${token}` },
+        headers: getAuthHeaders(),
         credentials: 'include', // usa cookie
     });
 

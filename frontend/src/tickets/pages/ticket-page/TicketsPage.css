@@ -1,108 +1,119 @@
 /* frontend/src/components/TicketsPage.css */
 
 .tickets-page-container {
-    /* Remove o padding direto aqui para centralizar o conteúdo interno */
-    /* padding: 20px; */ /* REMOVA OU COMENTE ESTA LINHA */
+  /* Remove o padding direto aqui para centralizar o conteúdo interno */
+  /* padding: 20px; */
+  /* REMOVA OU COMENTE ESTA LINHA */
 
-    /* Adicione largura máxima e centralização para o container principal */
-    max-width: 1000px; /* Use o mesmo max-width do .ticket-list-container, ou um pouco maior */
-    margin: 20px auto; /* Centraliza todo o conteúdo da página de tickets */
+  /* Adicione largura máxima e centralização para o container principal */
+  max-width: 1000px;
+  /* Use o mesmo max-width do .ticket-list-container, ou um pouco maior */
+  margin: 20px auto;
+  /* Centraliza todo o conteúdo da página de tickets */
 
-    /* Adicione um padding interno se desejar que o conteúdo não cole nas bordas do tickets-page-container */
-    padding: 0 20px; /* Exemplo: padding horizontal, sem padding vertical extra aqui */
+  /* Adicione um padding interno se desejar que o conteúdo não cole nas bordas do tickets-page-container */
+  padding: 0 20px;
+  /* Exemplo: padding horizontal, sem padding vertical extra aqui */
 }
 
 .tabs-container0 {
-    display: flex !important;
-    /* REMOVA OU COMENTE ESTA LINHA ABAIXO, pois ela é a causadora do desalinhamento */
-    /* margin-left: 16% !important; */
+  display: flex !important;
+  /* REMOVA OU COMENTE ESTA LINHA ABAIXO, pois ela é a causadora do desalinhamento */
+  /* margin-left: 16% !important; */
 
-    margin-bottom: 20px !important;
-    border-bottom: 1px solid #ccc !important;
-    /* overflow-x: auto !important; */
-    -webkit-overflow-scrolling: touch !important;
+  margin-bottom: 20px !important;
+  border-bottom: 1px solid #ccc !important;
+  /* overflow-x: auto !important; */
+  -webkit-overflow-scrolling: touch !important;
 
-    /* Opcional: Adicione padding se os botões estiverem muito colados nas bordas do container */
-    /* padding: 0 20px; */ /* Pode ser útil se o tickets-page-container não tiver padding */
+  /* Opcional: Adicione padding se os botões estiverem muito colados nas bordas do container */
+  /* padding: 0 20px; */
+  /* Pode ser útil se o tickets-page-container não tiver padding */
 }
 
 /* O restante do seu CSS para .tab-button e .tab-button.active pode permanecer como está */
 .tab-button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #555;
-    border-radius: 5px 5px 0 0;
-    margin-right: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    white-space: nowrap;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  border-radius: 5px 5px 0 0;
+  margin-right: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
 }
 
 .tab-button:hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 .tab-button.active {
-    background-color: #4e4e4e !important;
-    color: white !important;
-    border-bottom: 3px solid #0056b3;
-    font-weight: bold;
-    outline: none !important;
+
+  color: rgb(0, 0, 0) !important;
+  border-bottom: 3px solid #0056b3;
+  font-weight: bold;
+  outline: none !important;
 }
 
 .tab-content {
-    padding: 20px 0;
+  padding: 20px 0;
 }
 
 @media (max-width: 768px) {
 
-.tabs-container0 {
-  display: flex;
-  flex-wrap: wrap; /* permite quebrar em telas menores */
-  gap: 10px;
-  justify-content: center; /* centraliza os botões */
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+  .tabs-container0 {
+    display: flex;
+    flex-wrap: wrap;
+    /* permite quebrar em telas menores */
+    gap: 10px;
+    justify-content: center;
+    /* centraliza os botões */
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
 
-/* Botão de aba */
-.tab-button {
-  flex: 1 1 auto; /* ocupa espaço proporcional */
-  min-width: 140px; /* largura mínima */
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  background: #f4f4f4;
-  color: #333;
-  transition: all 0.25s ease;
-  text-align: center;
-  white-space: nowrap; /* evita quebra de texto feia */
-}
+  /* Botão de aba */
+  .tab-button {
+    flex: 1 1 auto;
+    /* ocupa espaço proporcional */
+    min-width: 140px;
+    /* largura mínima */
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: #f4f4f4;
+    color: #333;
+    transition: all 0.25s ease;
+    text-align: center;
+    white-space: nowrap;
+    /* evita quebra de texto feia */
+  }
 
-/* Hover */
-.tab-button:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-}
+  /* Hover */
+  .tab-button:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+  }
 
-/* Aba ativa */
-.tab-button.active {
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-}
+  /* Aba ativa */
+  .tab-button.active {
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  }
 
-.ticket-table th:not(:first-child):not(:last-child),
+  .ticket-table th:not(:first-child):not(:last-child),
   .ticket-table td:not(:first-child):not(:last-child) {
-    display: none; /* esconde todas as colunas exceto a 1ª (título) e a última (detalhes) */
+    display: none;
+    /* esconde todas as colunas exceto a 1ª (título) e a última (detalhes) */
   }
 
   .ticket-table {
@@ -113,8 +124,8 @@
   .ticket-table td {
     padding: 10px;
   }
-  
-  .tickets-page-container{
+
+  .tickets-page-container {
     padding: 0;
   }
 }

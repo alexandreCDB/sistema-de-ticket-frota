@@ -5,6 +5,15 @@ import { IUser } from "../../../components/AUTH/interfaces/user";
 
 const API_URL = import.meta.env.VITE_API_URL; // ex: http://localhost:8000/api
 
+const getAuthHeaders = (extraHeaders: Record<string, string> = {}) => {
+  const token = localStorage.getItem('token');
+  const headers: Record<string, string> = { ...extraHeaders };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
+
 export const useDashboardStats = () => {
   const [stats, setStats] = useState<SystemStats>({
     cpu: { percent: 0 },
@@ -42,6 +51,7 @@ export const useDashboardStats = () => {
 export const fetchUsers = async (): Promise<IUser[]> => {
   // 🔹 Corrigido: sem /api duplicado
   const response = await fetch(`${API_URL}/frota/admin/users/cnh/list`, {
+    headers: getAuthHeaders(),
     credentials: "include",
   });
 
@@ -56,6 +66,7 @@ export const fetchUsers = async (): Promise<IUser[]> => {
 export const fetchVehicles = async () => {
   // 🔹 Corrigido: /frota (sem "s")
   const response = await fetch(`${API_URL}/frota/vehicles`, {
+    headers: getAuthHeaders(),
     credentials: "include",
   });
 
@@ -72,7 +83,7 @@ export const toggleUserActive = async (
 ): Promise<IUser> => {
   const response = await fetch(`${API_URL}/ticket/users/${userId}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     credentials: "include",
     body: JSON.stringify({ is_active: !isActive }),
   });
@@ -93,7 +104,7 @@ export const saveCnhVencimento = async (
 
   const response = await fetch(url, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders({ "Content-Type": "application/json" }),
     credentials: "include",
     body: JSON.stringify(payload),
   });

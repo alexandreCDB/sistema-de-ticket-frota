@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css';
 import { Vehicle } from '../../types';
-import { Car, Pencil, Trash2 } from 'lucide-react';
+import { Car, Settings, Trash2 } from 'lucide-react';
 
 interface VehicleListItemProps {
   vehicle: Vehicle;
@@ -10,25 +10,30 @@ interface VehicleListItemProps {
 }
 
 export const VehicleListItem: React.FC<VehicleListItemProps> = ({ vehicle, onEdit, onDelete }) => {
+  // @ts-ignore
+  const API_URL_BASE = (import.meta as any).env?.VITE_API_URL?.replace('/api', '') || '';
+  const imageUrl = vehicle.image_url ? `${API_URL_BASE}${vehicle.image_url}` : null;
+
   return (
     <div className="vehicle-list-item">
-      <div className="item-icon-wrapper">
-        <Car size={20} />
+      <div className="item-thumbnail">
+        {imageUrl ? (
+          <img src={imageUrl} alt={vehicle.name} />
+        ) : (
+          <Car size={20} />
+        )}
       </div>
-      <div className="item-info-main">
-        <h4>{vehicle.name}</h4>
-        <p>{vehicle.license_plate}</p>
+      <div className="item-info">
+        <h4 className="item-name">{vehicle.name}</h4>
+        <p className="item-plate">{vehicle.license_plate}</p>
       </div>
-      <div className="item-info-secondary">
-        <p><strong>Modelo:</strong> {vehicle.model || 'N/A'}</p>
-        <p><strong>Passageiros:</strong> {vehicle.passengers || 'N/A'}</p>
-      </div>
-      <div className="item-info-status">
-        <span className={`status-pill status-${vehicle.status}`}>{vehicle.status}</span>
-      </div>
-      <div className="item-list-actions">
-        <button className="btn-icon" onClick={() => onEdit(vehicle)} title="Editar"><Pencil size={16} /></button>
-        <button className="btn-icon btn-icon-danger" onClick={() => onDelete(vehicle)} title="Remover"><Trash2 size={16} /></button>
+      <div className="item-actions">
+        <button className="icon-btn btn-edit" onClick={() => onEdit(vehicle)} title="Editar">
+          <Settings size={18} />
+        </button>
+        <button className="icon-btn btn-delete" onClick={() => onDelete(vehicle)} title="Remover">
+          <Trash2 size={18} />
+        </button>
       </div>
     </div>
   );

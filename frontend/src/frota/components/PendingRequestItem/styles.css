@@ -2,14 +2,18 @@
 
 .request-item {
   display: flex !important;
-  flex-wrap: wrap !important; /* Permite que os botões quebrem para a próxima linha em telas menores */
+  flex-wrap: wrap !important;
+  /* Permite que os botões quebrem para a próxima linha em telas menores */
   justify-content: space-between !important;
   align-items: center !important;
-  gap: 1rem 1.5rem !important; /* Espaçamento entre as seções (info e botões) */
+  gap: 1rem 1.5rem !important;
+  /* Espaçamento entre as seções (info e botões) */
   padding: 1.5rem !important;
   border-radius: 12px !important;
-  background-color: var(--frota-color-surface, #ffffff) !important; /* Fallback branco */
-  border: 1px solid var(--frota-color-border, #e0e0e0) !important; /* Fallback cinza */
+  background-color: var(--frota-color-surface, #ffffff) !important;
+  /* Fallback branco */
+  border: 1px solid var(--frota-color-border, #e0e0e0) !important;
+  /* Fallback cinza */
   border-left-width: 6px !important;
   transition: all 0.3s ease-in-out !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03) !important;
@@ -22,33 +26,44 @@
 
 /* Cores de fundo e borda baseadas no tipo */
 /* Ajustadas para combinar com as cores dos cards na imagem de referência */
-.request-item.checkout { 
-  border-left-color: #22c55e !important; /* Verde */
-  background-color: #f0fdf4 !important; /* Verde claro */
+.request-item.checkout {
+  border-left-color: #22c55e !important;
+  /* Verde */
+  background-color: #f0fdf4 !important;
+  /* Verde claro */
 }
-.request-item.schedule { 
-  border-left-color: #ef4444 !important; /* Vermelho */
-  background-color: #fef2f2 !important; /* Vermelho claro */
+
+.request-item.schedule {
+  border-left-color: #ef4444 !important;
+  /* Vermelho */
+  background-color: #fef2f2 !important;
+  /* Vermelho claro */
 }
 
 .card-content {
   display: flex !important;
   align-items: center !important;
-  flex-wrap: wrap !important; /* Permite que os blocos internos quebrem */
-  gap: 1.5rem 2.5rem !important; /* Espaçamento entre vehicle-info e request-details-grid */
-  flex-grow: 1 !important; /* Faz esta parte ocupar o espaço disponível */
+  flex-wrap: wrap !important;
+  /* Permite que os blocos internos quebrem */
+  gap: 1.5rem 2.5rem !important;
+  /* Espaçamento entre vehicle-info e request-details-grid */
+  flex-grow: 1 !important;
+  /* Faz esta parte ocupar o espaço disponível */
 }
 
 .vehicle-info {
   display: flex !important;
   align-items: center !important;
   gap: 1rem !important;
-  flex-shrink: 0 !important; /* Impede o encolhimento */
+  flex-shrink: 0 !important;
+  /* Impede o encolhimento */
 }
 
 .icon-wrapper {
-  background-color: #e0e7ff !important; /* Azul claro */
-  color: #4f46e5 !important; /* Azul escuro */
+  background-color: #e0e7ff !important;
+  /* Azul claro */
+  color: #4f46e5 !important;
+  /* Azul escuro */
   width: 52px !important;
   height: 52px !important;
   border-radius: 10px !important;
@@ -74,11 +89,14 @@
 
 .request-details-grid {
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(180px, 1fr)) !important; /* 2 colunas, min 180px */
-  gap: 0.75rem 2.5rem !important; /* Espaçamento entre os itens da grade */
+  grid-template-columns: repeat(2, minmax(180px, 1fr)) !important;
+  /* 2 colunas, min 180px */
+  gap: 0.75rem 2.5rem !important;
+  /* Espaçamento entre os itens da grade */
   font-size: 0.9rem !important;
   color: var(--frota-color-text-secondary, #666666) !important;
-  flex-grow: 1 !important; /* Permite que a grade ocupe o espaço */
+  flex-grow: 1 !important;
+  /* Permite que a grade ocupe o espaço */
 }
 
 .request-details-grid p {
@@ -86,24 +104,27 @@
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
-  white-space: nowrap !important; /* Impede que o texto quebre a linha */
+  white-space: nowrap !important;
+  /* Impede que o texto quebre a linha */
 }
 
 /* Estilo para o texto forte dentro da grid, se houver */
 .request-details-grid p strong {
-    color: var(--frota-color-text-primary, #333333) !important;
-    font-weight: 500 !important;
+  color: var(--frota-color-text-primary, #333333) !important;
+  font-weight: 500 !important;
 }
 
 
 .item-actions {
   display: flex !important;
   gap: 1rem !important;
-  flex-shrink: 0 !important; /* Impede que os botões encolham */
-  margin-left: auto !important; /* Empurra os botões para a direita */
+  flex-shrink: 0 !important;
+  /* Impede que os botões encolham */
+  margin-left: auto !important;
+  /* Empurra os botões para a direita */
 }
 
-.admin-list{
+.admin-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -121,39 +142,50 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 0.5rem !important;
+  width: 100% !important;
 }
 
 .btn-approve {
-  background-color: #22c55e !important; /* Verde */
+  background-color: #22c55e !important;
+  /* Verde */
   color: white !important;
 }
+
 .btn-approve:hover {
-  background-color: #16a34a !important; /* Verde escuro */
+  background-color: #16a34a !important;
+  /* Verde escuro */
 }
 
 .btn-deny {
-  background-color: #ef4444 !important; /* Vermelho */
+  background-color: #ef4444 !important;
+  /* Vermelho */
   color: white !important;
 }
+
 .btn-deny:hover {
-  background-color: #dc2626 !important; /* Vermelho escuro */
+  background-color: #dc2626 !important;
+  /* Vermelho escuro */
 }
 
 
 /* --- RESPONSIVIDADE PARA O LAYOUT MOBILE --- */
 @media (max-width: 992px) {
   .request-details-grid {
-    grid-template-columns: 1fr !important; /* Uma única coluna em telas médias */
+    grid-template-columns: 1fr !important;
+    /* Uma única coluna em telas médias */
   }
+
   .card-content {
-      gap: 1rem !important; /* Reduz o espaçamento */
+    gap: 1rem !important;
+    /* Reduz o espaçamento */
   }
 }
 
 @media (max-width: 768px) {
   .request-item {
     flex-direction: column !important;
-    align-items: stretch !important; /* Alinha os itens para ocupar a largura toda */
+    align-items: stretch !important;
+    /* Alinha os itens para ocupar a largura toda */
     padding: 1rem !important;
   }
 
@@ -166,7 +198,8 @@
 
   .request-details-grid {
     width: 100% !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Volta para 2 colunas no mobile para economizar espaço vertical */
+    grid-template-columns: repeat(2, 1fr) !important;
+    /* Volta para 2 colunas no mobile para economizar espaço vertical */
     gap: 0.5rem 1rem !important;
   }
 
@@ -174,16 +207,51 @@
     width: 100% !important;
     margin-top: 1rem !important;
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important; /* Botões ocupam a largura toda */
-    margin-left: 0 !important; /* Centraliza ou alinha à esquerda conforme necessário */
+    grid-template-columns: 1fr 1fr !important;
+    /* Botões ocupam a largura toda */
+    margin-left: 0 !important;
+    /* Centraliza ou alinha à esquerda conforme necessário */
   }
+
   .item-actions button {
-      width: 100% !important; /* Garante que os botões preencham o grid */
+    width: 100% !important;
+    /* Garante que os botões preencham o grid */
   }
 }
 
 @media (max-width: 480px) {
-    .request-details-grid {
-      grid-template-columns: 1fr !important; /* Força 1 coluna em telas muito pequenas */
+  .request-details-grid {
+    grid-template-columns: 1fr !important;
+    /* Força 1 coluna em telas muito pequenas */
   }
+}
+
+/* --- ESTILOS PARA AUTO-APROVAÇÃO (DUPLO CONTROLE) --- */
+
+.own-request-badge {
+  background-color: #fef3c7 !important;
+  /* Amarelo claro */
+  color: #92400e !important;
+  /* Marrom/Amarelo escuro */
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  border-radius: 9999px !important;
+  margin-left: 8px !important;
+  border: 1px solid #fde68a !important;
+}
+
+.self-request-message {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  background-color: #fff7ed !important;
+  /* Laranja muito claro */
+  color: #c2410c !important;
+  /* Laranja escuro */
+  padding: 0.65rem 1.25rem !important;
+  border-radius: 8px !important;
+  border: 1px dashed #fdba74 !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
 }

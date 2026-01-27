@@ -19,22 +19,29 @@ class ConnectionManager:
         self.active_connections: dict[int, list[WebSocket]] = {}
 
     async def connect(self, websocket: WebSocket, token: str):
+        await websocket.accept()
         try:
             payload = decode_access_token(token)
-            print("Payload JWT:", payload)  # para depuração
-            user_id: int = int(payload.get("user_id") or payload.get("sub"))
-            if user_id is None:
+            print("WebSocket Payload JWT:", payload)  # para depuração
+            
+            # Tenta pegar 'user_id' ou 'sub'
+            uid = payload.get("user_id") or payload.get("sub")
+            if uid is None:
+                print("❌ WebSocket Reject: ID não encontrado no token")
                 await websocket.close(code=1008)
-                raise Exception("Usuário inválido")
-        except ValueError:
+                return
+            
+            user_id = int(uid)
+            
+        except Exception as e:
+            print(f"❌ WebSocket Auth Error: {e}")
             await websocket.close(code=1008)
             return
 
-        await websocket.accept()
         if user_id not in self.active_connections:
             self.active_connections[user_id] = []
         self.active_connections[user_id].append(websocket)
-        print(f"🔗 Cliente conectado: {user_id}")
+        print(f"🔗 Cliente conectado via WS: {user_id}")
 
     async def connect_OLD(self, websocket: WebSocket, token: str):
         try:

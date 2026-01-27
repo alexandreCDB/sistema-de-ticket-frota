@@ -7,6 +7,7 @@
   background-color: var(--frota-color-surface);
   border: 1px solid var(--frota-color-border);
   border-radius: 10px;
+  margin: 10px;
 }
 
 .history-icon-wrapper {
@@ -26,6 +27,7 @@
   margin: 0 0 0.25rem 0;
   color: var(--frota-color-text-primary);
 }
+
 .history-details h4 span {
   font-weight: 400;
   color: var(--frota-color-text-secondary);
@@ -36,6 +38,7 @@
   font-size: 0.9rem;
   color: var(--frota-color-text-secondary);
 }
+
 .history-details strong {
   font-weight: 500;
   color: var(--frota-color-text-primary);
@@ -46,6 +49,7 @@
   color: var(--frota-color-text-secondary);
   text-align: right;
 }
+
 .history-time p {
   margin: 0.2rem 0;
   display: flex;
@@ -63,9 +67,11 @@
   padding-left: 1.5rem;
   border-left: 1px solid var(--frota-color-border);
 }
+
 .history-item.completed .history-status {
   color: var(--frota-color-status-available-icon-bg);
 }
+
 .history-item.denied .history-status {
   color: var(--frota-color-status-maintenance-icon-bg);
 }
@@ -74,18 +80,32 @@
   .history-item {
     /* Muda a grelha para um layout de duas colunas mais simples */
     grid-template-columns: auto 1fr;
-    grid-template-areas: 
+    grid-template-areas:
       "icon main"
       "icon time"
       "status status";
     gap: 0.5rem 1rem;
   }
-  
-  .history-icon-wrapper { grid-area: icon; align-self: start; }
-  .history-details { grid-area: main; }
-  .history-time { grid-area: time; text-align: left; justify-content: flex-start; }
-  .history-time p { justify-content: flex-start; }
-  
+
+  .history-icon-wrapper {
+    grid-area: icon;
+    align-self: start;
+  }
+
+  .history-details {
+    grid-area: main;
+  }
+
+  .history-time {
+    grid-area: time;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .history-time p {
+    justify-content: flex-start;
+  }
+
   .history-status {
     grid-area: status;
     border-left: none;

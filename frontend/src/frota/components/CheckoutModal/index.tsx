@@ -18,7 +18,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
   const [startMileage, setStartMileage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // ✅ NOVOS ESTADOS PARA O TERMO
   const [aceitouTermo, setAceitouTermo] = useState(false);
   const [termoExpandido, setTermoExpandido] = useState(false);
@@ -32,7 +32,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
     for (let hour = 6; hour <= 22; hour++) {
       for (let minute = 0; minute < 60; minute += 5) {
         const isPast = hour < currentHour || (hour === currentHour && minute < currentMinute);
-        
+
         if (!isPast) {
           const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
           slots.push(time);
@@ -49,7 +49,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
       } else {
         setDepartureTime('');
       }
-      
+
       setPurpose('');
       setObservation('');
       setStartMileage('');
@@ -90,7 +90,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // ✅ VALIDAÇÃO DA KM (AGORA OBRIGATÓRIA)
     if (!startMileage.trim()) {
       setError('O campo KM Inicial é obrigatório.');
@@ -114,17 +114,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
     setError(null);
 
     try {
+      // Converte HH:mm para ISO string (data de hoje)
+      const now = new Date();
+      const [hours, minutes] = departureTime.split(':').map(Number);
+      const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+
       await checkoutVehicle({
         vehicle_id: vehicle!.id,
         purpose: purpose || null,
         observation: observation || null,
-        start_mileage: mileageNumber // ✅ AGORA SEMPRE ENVIADO
+        start_mileage: mileageNumber,
+        start_time: startTime.toISOString()
       });
-      
+
       onConfirm();
     } catch (err) {
       const errorMessage = err instanceof Error
-        ? err.message 
+        ? err.message
         : "Ocorreu um erro desconhecido. Tente novamente.";
       setError(errorMessage);
     } finally {
@@ -140,7 +146,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
         <div className="modal-header">
           <h2 className="modal-title">Retirar Veículo: {vehicle.name}</h2>
         </div>
-        
+
         <form className="modal-body" onSubmit={handleSubmit} id="checkout-form">
           <div className="form-group">
             <label className="form-label"><Clock size={16} /> Horário de Saída</label>
@@ -159,37 +165,37 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
 
           <div className="form-group">
             <label className="form-label"><User size={16} /> Finalidade da Viagem</label>
-            <input 
-              type="text" 
-              className="form-input" 
-              placeholder="Ex: Reunião com cliente..." 
-              value={purpose} 
-              onChange={(e) => setPurpose(e.target.value)} 
-              required 
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Ex: Reunião com cliente..."
+              value={purpose}
+              onChange={(e) => setPurpose(e.target.value)}
+              required
             />
           </div>
 
           <div className="form-group">
             <label className="form-label"><Gauge size={16} /> KM Inicial <span className="required-field">*</span></label>
-            <input 
-              type="number" 
-              className="form-input" 
-              placeholder="Digite a quilometragem atual" 
-              value={startMileage} 
-              onChange={(e) => setStartMileage(e.target.value)} 
+            <input
+              type="number"
+              className="form-input"
+              placeholder="Digite a quilometragem atual"
+              value={startMileage}
+              onChange={(e) => setStartMileage(e.target.value)}
               required
               min="1"
             />
             <div className="field-hint">Campo obrigatório</div>
           </div>
-          
+
           <div className="form-group">
             <label className="form-label"><MessageSquare size={16} /> Observações (Opcional)</label>
-            <textarea 
-              className="form-textarea" 
-              placeholder="Informações adicionais..." 
-              value={observation} 
-              onChange={(e) => setObservation(e.target.value)} 
+            <textarea
+              className="form-textarea"
+              placeholder="Informações adicionais..."
+              value={observation}
+              onChange={(e) => setObservation(e.target.value)}
               rows={3}
             />
           </div>
@@ -199,7 +205,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
             <div className="termo-header">
               <FileText size={18} />
               <span>Termo de Responsabilidade</span>
-              <button 
+              <button
                 type="button"
                 className="termo-expand-button"
                 onClick={() => setTermoExpandido(!termoExpandido)}
@@ -208,13 +214,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
                 {termoExpandido ? 'Ver menos' : 'Ver mais'}
               </button>
             </div>
-            
+
             {termoExpandido && (
               <div className="termo-content">
                 <pre>{termoResponsabilidade}</pre>
               </div>
             )}
-            
+
             <label className="termo-checkbox-label">
               <input
                 type="checkbox"
@@ -242,15 +248,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
             <strong>Atenção:</strong> A sua solicitação será enviada para aprovação.
           </div>
         </form>
-        
+
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose} disabled={isLoading}>
             Cancelar
           </button>
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            form="checkout-form" 
+          <button
+            type="submit"
+            className="btn btn-primary"
+            form="checkout-form"
             disabled={isLoading || !departureTime || !purpose || !startMileage || !aceitouTermo}
           >
             {isLoading ? 'Enviando...' : 'Solicitar Retirada'}

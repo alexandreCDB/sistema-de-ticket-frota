@@ -29,8 +29,13 @@ export const useDashboardStats = () => {
       setError(null);
 
       try {
+        const token = localStorage.getItem("token");
+        const headers: Record<string, string> = {};
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+
         const response = await fetch(`${API_URL}/ticket/tickets/stats/`, {
           method: "GET",
+          headers,
           credentials: "include", // garante envio de cookies
         });
 

@@ -20,6 +20,7 @@ class BookingBase(BaseModel):
 
 class BookingCheckout(BookingBase):
     start_mileage: Optional[int] = None
+    start_time: Optional[datetime] = None
 
 class BookingSchedule(BookingBase):
     start_time: datetime

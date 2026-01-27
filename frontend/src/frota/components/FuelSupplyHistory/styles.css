@@ -26,8 +26,8 @@
 }
 
 .badge {
-  background-color: #8b5cf6;
-  color: white;
+  background-color: #c0ff96;
+  color: rgb(61, 94, 30);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -146,7 +146,8 @@
   min-width: 120px;
 }
 
-.user-info, .date-info {
+.user-info,
+.date-info {
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -318,38 +319,38 @@
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .search-wrapper {
     min-width: auto;
   }
-  
+
   .supply-header {
     flex-direction: column;
     gap: 0.75rem;
   }
-  
+
   .supply-meta {
     align-items: flex-start;
     min-width: auto;
     width: 100%;
   }
-  
+
   .info-grid {
     grid-template-columns: 1fr;
     gap: 0.4rem;
   }
-  
+
   .supply-details-expanded {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .pagination {
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
   }
-  
+
   .pagination-btn {
     width: 100%;
     justify-content: center;
@@ -361,22 +362,22 @@
   .supply-card {
     padding: 0.75rem 1rem;
   }
-  
+
   .vehicle-info {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
   }
-  
+
   .info-item {
     font-size: 0.75rem;
     padding: 0.4rem;
   }
-  
+
   .details-section h4 {
     font-size: 0.85rem;
   }
-  
+
   .detail-item {
     font-size: 0.75rem;
   }

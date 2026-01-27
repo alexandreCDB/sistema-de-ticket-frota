@@ -27,10 +27,14 @@ class Vehicle(Base):
     passengers = Column(Integer, nullable=True)
     features = Column(Text, nullable=True)
     
-    # ✅ NOVO CAMPO: Monitorar Abastecimento
+    # ✅ NOVO CAMPO: Categoria (carro ou caminhao)
+    categories = Column(String(50), nullable=True)
+    
+    # ✅ NOVO CAMPO: Monitoramento de abastecimento
     monitor_fuel = Column(Boolean, nullable=False, default=False)
     
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
 
     bookings = relationship("Booking", back_populates="vehicle")
     

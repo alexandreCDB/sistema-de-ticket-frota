@@ -13,6 +13,15 @@ import {
 } from "../../interface/ticket";
 //@ts-ignore
 const API_URL = import.meta.env.VITE_API_URL as string;
+
+const getAuthHeaders = (extraHeaders: Record<string, string> = {}) => {
+  const token = localStorage.getItem('token');
+  const headers: Record<string, string> = { ...extraHeaders };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
 import { Ticket, Car, CheckCircle, Fuel } from "lucide-react";
 
 export interface NotificationItemTicket {
@@ -40,6 +49,7 @@ interface UseNotificationsProps {
 export async function markAsReadRemote(notificationId: number): Promise<void> {
   const response = await fetch(`${API_URL}/ticket/notifications/read/${notificationId}`, {
     method: "PATCH",
+    headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Erro ao marcar notificação como lida");
 }
@@ -50,13 +60,16 @@ export async function markAllAsReadRemote(notifications: NotificationItemTicket[
     notifications.map((msg) =>
       fetch(`${API_URL}/ticket/notifications/read/${msg.id}`, {
         method: "PATCH",
+        headers: getAuthHeaders(),
       })
     )
   );
 }
 
 export async function fetchNotifications(userId: number): Promise<NotificationItemTicket[] | NotificationItemFrota[]> {
-  const response = await fetch(`${API_URL}/ticket/notifications/unread/${userId}`);
+  const response = await fetch(`${API_URL}/ticket/notifications/unread/${userId}`, {
+    headers: getAuthHeaders(),
+  });
   if (!response.ok) throw new Error("Erro ao buscar notificações");
   return response.json();
 }
@@ -77,7 +90,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
         const normalizedUnread = unread
           .map((n: any) => normalizeNotification(n))
           .filter(Boolean) as (NotificationItemTicket | NotificationItemFrota)[];
-         
+
         setNotifications(normalizedUnread);
         setCount(normalizedUnread.length);
 
@@ -98,7 +111,7 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
 
         let normalized: NotificationItemTicket | NotificationItemFrota | null = null;
         let song = notificationSoundTicket;
-        
+
         switch (data.type) {
           case "ticket_created":
             normalized = {
@@ -168,15 +181,15 @@ export default function useNotifications({ userId }: UseNotificationsProps) {
 
           // ✅ NOVO CASO: Notificação de Abastecimento
           case "fuel_reminder":
-          normalized = {
-            id: (data.message as any).id,
-            vehicle_id: (data.message as any).vehicle_id,
-            message: (data.message as any).message,
-            routerLink: `/frotas/fuel-supplies`,
-            icon: <Fuel size={18} className="inline-block text-orange-500" />
-          };
-          song = notificationSoundCar;
-          break;
+            normalized = {
+              id: (data.message as any).id,
+              vehicle_id: (data.message as any).vehicle_id,
+              message: (data.message as any).message,
+              routerLink: `/frotas/fuel-supplies`,
+              icon: <Fuel size={18} className="inline-block text-orange-500" />
+            };
+            song = notificationSoundCar;
+            break;
 
           default:
             return; // ignora outros

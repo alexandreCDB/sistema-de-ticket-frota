@@ -6,7 +6,7 @@ export default function TicketAttachmentModal({ ticket }) {
 
   if (!ticket.attachment_url) return null;
 
-  const imageUrl = `http://192.168.13.249:8000${ticket.attachment_url}`;
+  const imageUrl = `http://192.168.13.149:8000${ticket.attachment_url}`;
 
   return (
     <div className="form-group" style={{ marginTop: "10px", marginBottom: "10px" }}>
