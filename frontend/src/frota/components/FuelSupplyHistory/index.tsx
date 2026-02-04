@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './styles.css';
-import { getAllFuelSupplies } from '../../services/fuelSupply.services';
-import { Fuel, Calendar, Clock, Gauge, DollarSign, Car, User, Search, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getAllFuelSupplies, createFuelSupply } from '../../services/fuelSupply.services';
+import { useVehicles } from '../../services/frota.services'; // Importar hook de veículos
+import { Fuel, Calendar, Clock, Gauge, DollarSign, Car, User, Search, ChevronDown, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { VehicleSelectionModal } from '../VehicleSelectionModal';
+import { FuelSupplyModal } from '../FuelSupplyModal';
+import { Vehicle } from '../../types';
 
 interface FuelSupply {
   id: number;
@@ -34,6 +38,13 @@ export const FuelSupplyHistory: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  // Estados para Lançamento Manual
+  const { vehicles } = useVehicles();
+  const [isSelectionModalOpen, setIsSelectionModalOpen] = useState(false);
+  const [isFuelModalOpen, setIsFuelModalOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     loadFuelSupplies();
@@ -92,13 +103,57 @@ export const FuelSupplyHistory: React.FC = () => {
     return returnKm - departureKm;
   };
 
-  const calculateTotalAmount = (departureAmount: number, returnAmount: number) => {
-    return departureAmount + returnAmount;
+  // Funções de Lançamento Manual
+  const handleOpenSelectionModal = () => {
+    setIsSelectionModalOpen(true);
   };
+
+  const handleSelectVehicle = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsSelectionModalOpen(false);
+    setIsFuelModalOpen(true);
+  };
+
+  const handleConfirmFuelSupply = async (fuelSupplyData: any) => {
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Usuário não autenticado');
+
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const user_id = payload.sub;
+
+      const completeFuelSupplyData = {
+        ...fuelSupplyData,
+        user_id: parseInt(user_id)
+      };
+
+      await createFuelSupply(completeFuelSupplyData);
+      alert('Abastecimento lançado com sucesso!');
+      setIsFuelModalOpen(false);
+      setSelectedVehicle(null);
+      loadFuelSupplies(); // Recarregar lista
+    } catch (err) {
+      console.error('Erro ao lançar abastecimento:', err);
+      alert('Erro ao lançar abastecimento. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const filteredVehiclesForSelection = useMemo(() => {
+    if (!vehicles) return [];
+    // Filtrar apenas veículos com monitoramento de combustível ativado
+    return vehicles.filter(v => v.monitor_fuel);
+  }, [vehicles]);
+
+
+  // Import React.useMemo was missing in original file, added logic inside component body
+  const _dummy = 0; // Placeholder
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    setExpandedCard(null); // Fechar card expandido ao mudar de página
+    setExpandedCard(null);
   };
 
   if (isLoading) {
@@ -117,7 +172,16 @@ export const FuelSupplyHistory: React.FC = () => {
           <h2>Histórico de Abastecimentos</h2>
           <span className="badge">{filteredSupplies.length}</span>
         </div>
-        
+
+        <div className="header-actions">
+          <button className="btn-primary" onClick={handleOpenSelectionModal} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Plus size={18} />
+            Lançar Abastecimento
+          </button>
+        </div>
+      </div>
+
+      <div className="search-bar-container" style={{ margin: '1rem 0' }}>
         <div className="search-wrapper">
           <Search size={18} className="search-icon" />
           <input
@@ -127,7 +191,7 @@ export const FuelSupplyHistory: React.FC = () => {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setCurrentPage(1); // Resetar para primeira página ao buscar
+              setCurrentPage(1);
             }}
           />
         </div>
@@ -143,8 +207,8 @@ export const FuelSupplyHistory: React.FC = () => {
         <>
           <div className="supplies-list">
             {currentSupplies.map((supply) => (
-              <div 
-                key={supply.id} 
+              <div
+                key={supply.id}
                 className={`supply-card ${expandedCard === supply.id ? 'expanded' : ''}`}
                 onClick={() => toggleExpand(supply.id)}
               >
@@ -156,7 +220,7 @@ export const FuelSupplyHistory: React.FC = () => {
                       <span className="license-plate">{supply.vehicle?.license_plate}</span>
                     </div>
                   </div>
-                  
+
                   <div className="supply-meta">
                     <div className="user-info">
                       <User size={14} />
@@ -168,7 +232,7 @@ export const FuelSupplyHistory: React.FC = () => {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     className={`expand-button ${expandedCard === supply.id ? 'rotated' : ''}`}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -190,7 +254,7 @@ export const FuelSupplyHistory: React.FC = () => {
                       <Gauge size={14} />
                       <span>KM Final: {supply.return_km.toLocaleString()} km</span>
                     </div>
-                    
+
                     <div className="info-item km-total">
                       <span>KM Percorrido: </span>
                       <strong>{calculateTotalKm(supply.departure_km, supply.return_km).toLocaleString()} km</strong>
@@ -251,7 +315,7 @@ export const FuelSupplyHistory: React.FC = () => {
           {/* Paginação */}
           {totalPages > 1 && (
             <div className="pagination">
-              <button 
+              <button
                 className="pagination-btn"
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -259,12 +323,12 @@ export const FuelSupplyHistory: React.FC = () => {
                 <ChevronLeft size={16} />
                 Anterior
               </button>
-              
+
               <div className="pagination-info">
                 Página {currentPage} de {totalPages}
               </div>
 
-              <button 
+              <button
                 className="pagination-btn"
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
@@ -276,6 +340,22 @@ export const FuelSupplyHistory: React.FC = () => {
           )}
         </>
       )}
+
+      {/* MODALS */}
+      <VehicleSelectionModal
+        isOpen={isSelectionModalOpen}
+        onClose={() => setIsSelectionModalOpen(false)}
+        vehicles={filteredVehiclesForSelection}
+        onSelect={handleSelectVehicle}
+      />
+
+      <FuelSupplyModal
+        isOpen={isFuelModalOpen}
+        onClose={() => setIsFuelModalOpen(false)}
+        vehicle={selectedVehicle}
+        onConfirm={handleConfirmFuelSupply}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 };

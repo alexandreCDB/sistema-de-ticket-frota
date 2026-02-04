@@ -11,12 +11,12 @@ interface ReturnVehicleModalProps {
   isSubmitting: boolean;
 }
 
-export const ReturnVehicleModal = ({ 
-  isOpen, 
-  onClose, 
-  onConfirmReturn, 
-  booking, 
-  isSubmitting 
+export const ReturnVehicleModal = ({
+  isOpen,
+  onClose,
+  onConfirmReturn,
+  booking,
+  isSubmitting
 }: ReturnVehicleModalProps) => {
   const [endMileage, setEndMileage] = useState('');
   const [parkingLocation, setParkingLocation] = useState('');
@@ -36,6 +36,11 @@ export const ReturnVehicleModal = ({
       return;
     }
 
+    if (parseInt(endMileage) > 2000000000) {
+      setError('O valor da quilometragem é muito alto. Verifique se digitou corretamente.');
+      return;
+    }
+
     onConfirmReturn(booking.id, parseInt(endMileage), parkingLocation);
   };
 
@@ -47,33 +52,34 @@ export const ReturnVehicleModal = ({
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Devolver Veículo</h2>
-            
+
           </div>
-          
+
         </div>
-        
+
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label"><Gauge size={16} /> KM Final</label>
-            <input 
-              type="number" 
-              className="form-input" 
+            <input
+              type="number"
+              className="form-input"
               placeholder="Quilometragem no momento da devolução"
-              value={endMileage} 
-              onChange={(e) => setEndMileage(e.target.value)} 
-              required 
+              value={endMileage}
+              onChange={(e) => setEndMileage(e.target.value)}
+              required
+              max={2000000000}
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label"><MapPin size={16} /> Local de Estacionamento</label>
-            <input 
-              type="text" 
-              className="form-input" 
+            <input
+              type="text"
+              className="form-input"
               placeholder="Ex: G2-15"
-              value={parkingLocation} 
-              onChange={(e) => setParkingLocation(e.target.value)} 
-              required 
+              value={parkingLocation}
+              onChange={(e) => setParkingLocation(e.target.value)}
+              required
             />
           </div>
 

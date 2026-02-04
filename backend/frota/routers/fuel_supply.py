@@ -33,7 +33,11 @@ def create_fuel_supply(
             detail="KM de retorno deve ser maior que KM de saída"
         )
     
-    return crud_fuel_supply.create_fuel_supply(db, fuel_supply_data)
+    
+    result = crud_fuel_supply.create_fuel_supply(db, fuel_supply_data)
+    print(f"✅ [DEBUG] Fuel Supply Created: ID={result.id}")
+    print(f"✅ [DEBUG] user_data on object: {getattr(result, 'user_data', 'MISSING')}")
+    return result
 
 # Listar todos os abastecimentos (admin)
 @router.get("", response_model=list[fuel_supply_schema.FuelSupplyRead])

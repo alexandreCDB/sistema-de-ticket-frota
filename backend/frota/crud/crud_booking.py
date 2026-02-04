@@ -21,7 +21,7 @@ def create_checkout(db: Session, user_id:int, vehicle_id:int, purpose:str=None, 
         purpose=purpose,
         observation=observation,
         start_time=start_time or now_utc,
-        start_mileage=start_mileage
+        start_mileage=None # Mileage removed from initial request
     )
     
     # Status permanece available até ser aceito
@@ -81,14 +81,52 @@ def approve_booking(db: Session, booking_id:int, approver_id:int):
     if b.vehicle:
         now_utc = datetime.now(timezone.utc)
         
-        # Regras: 30 minutos para retirada imediata (checkout), 1 hora para agendamento
-        limit_time = now_utc + (timedelta(minutes=30) if b.type == "checkout" else timedelta(hours=1))
+        # Lógica de Disponibilidade:
+        # 1. Checkout (Retirada Imediata): Veículo fica 'reserved' (indisponível) IMEDIATAMENTE.
+        # 2. Agendamento: Veículo fica 'reserved' se faltar menos de 1 hora.
         
-        if b.start_time <= limit_time:
-            b.vehicle.status = "in-use"
+        if b.type == "checkout":
+            b.vehicle.status = "reserved"
         else:
-            b.vehicle.status = "available"
+             # Agendamento
+            limit_time = now_utc + timedelta(hours=1)
+            if b.start_time <= limit_time:
+                b.vehicle.status = "reserved"
+            else:
+                # Se falto muito tempo, mantém available (mas o sistema de conflito já impede outros agendamentos)
+                b.vehicle.status = "available"
 
+    db.commit()
+    db.refresh(b)
+    
+    # Broadcast para atualizar Lista de Veículos em tempo real
+    # Importação local para evitar ciclo
+    from backend.frota.events.notification import broadcast_vehicle_update, notify_frota_approve_async
+    # Isso precisa ser async/await, mas estamos numa rota sync ou chamada sync.
+    # O ideal é usar background_tasks na rota, mas aqui estamos no CRUD.
+    # Como o CRUD é chamado pela rota, vamos retornar e deixar a rota lidar com notifications?
+    # Não, crud_booking já é usado em tasks.
+    # Vamos assumir que manager.broadcast é async, então precisamos de um loop ou rodar sync.
+    # Na verdade, approve_booking é síncrono.
+    # O notify_frota_approve_async é chamado NA ROTA, não aqui.
+    # Volte ao arquivo original: approve_booking retorna 'b' e a ROTA chama notify.
+    
+    return b
+
+def depart_booking(db: Session, booking_id: int, start_mileage: int):
+    b = get_booking(db, booking_id)
+    if not b:
+        return None
+    
+    if b.status != "confirmed":
+        raise ValueError("Apenas reservas confirmadas podem ser iniciadas.")
+        
+    b.status = "in-use"
+    b.start_mileage = start_mileage
+    
+    if b.vehicle:
+        b.vehicle.status = "in-use"
+        
     db.commit()
     db.refresh(b)
     return b

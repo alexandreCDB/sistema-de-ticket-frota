@@ -1,0 +1,70 @@
+.vehicle-selection-modal {
+    max-width: 500px;
+    width: 90%;
+}
+
+.vehicle-selection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.vehicle-selection-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vehicle-selection-item:hover {
+    border-color: var(--primary-color);
+    background-color: var(--hover-bg);
+    transform: translateY(-1px);
+}
+
+.vehicle-icon-wrapper {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehicle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.vehicle-plate {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.btn-select {
+    padding: 6px 12px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.vehicle-selection-item:hover .btn-select {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}

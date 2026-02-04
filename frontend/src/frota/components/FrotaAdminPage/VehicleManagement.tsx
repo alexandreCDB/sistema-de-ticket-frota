@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useVehicles, createVehicle, updateVehicle, deleteVehicle } from '../../services/frota.services';
 import { Vehicle } from '../../types';
 import { VehicleListItem } from '../VehicleListItem';
 import { VehicleFormModal } from '../VehicleFormModal';
 import { Pagination } from '../Pagination';
 import { Plus } from 'lucide-react';
+import { getWebSocket } from '../../../services/websocket';
 import './styles.css';
 
 const ITEMS_PER_PAGE = 9;
@@ -15,6 +16,26 @@ export const VehicleManagement = () => {
   const [vehicleToEdit, setVehicleToEdit] = useState<Vehicle | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  // ✅ EFEITO: Escutar atualizações em tempo real via WebSocket
+  useEffect(() => {
+    const ws = getWebSocket();
+    if (!ws) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "vehicle_update") {
+          refetchVehicles();
+        }
+      } catch (err) {
+        console.error("Erro ao processar mensagem WS na gestão de veículos:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleMessage);
+    return () => ws.removeEventListener("message", handleMessage);
+  }, [refetchVehicles]);
 
   // Paginação
   const paginatedVehicles = React.useMemo(() => {

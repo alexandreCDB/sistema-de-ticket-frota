@@ -42,7 +42,7 @@ const getAuthHeaders = () => {
   if (!token) {
     throw new Error('Usuário não autenticado');
   }
-  
+
   return {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
@@ -50,18 +50,28 @@ const getAuthHeaders = () => {
 };
 
 export const createFuelSupply = async (fuelSupplyData: FuelSupplyData): Promise<FuelSupply> => {
-  const response = await fetch(`${API_BASE}/frota/fuel-supplies`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(fuelSupplyData),
-  });
+  const url = `${API_BASE}/frota/fuel-supplies`;
+  console.log('🚀 Tentando lançar abastecimento:', url, fuelSupplyData);
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.detail || 'Erro ao criar abastecimento');
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include', // ✅ Alinhado com frota.services.ts
+      body: JSON.stringify(fuelSupplyData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+      console.error('❌ Erro na resposta da API:', response.status, errorData);
+      throw new Error(errorData.detail || 'Erro ao criar abastecimento');
+    }
+
+    return response.json();
+  } catch (err) {
+    console.error('❌ Erro de rede ou CORS ao lançar abastecimento:', err);
+    throw err;
   }
-
-  return response.json();
 };
 
 export const getMyFuelSupplies = async (): Promise<FuelSupply[]> => {
@@ -91,7 +101,7 @@ export const getAllFuelSupplies = async (): Promise<FuelSupply[]> => {
     if (response.status === 403) {
       throw new Error('Apenas administradores podem visualizar todos os abastecimentos');
     }
-    
+
     const errorData = await response.json();
     throw new Error(errorData.detail || 'Erro ao buscar todos os abastecimentos');
   }
@@ -123,7 +133,7 @@ export const getFuelSupply = async (fuelSupplyId: number): Promise<FuelSupply> =
     if (response.status === 404) {
       throw new Error('Abastecimento não encontrado');
     }
-    
+
     if (response.status === 403) {
       throw new Error('Acesso negado a este abastecimento');
     }
@@ -145,7 +155,7 @@ export const deleteFuelSupply = async (fuelSupplyId: number): Promise<void> => {
     if (response.status === 403) {
       throw new Error('Apenas administradores podem excluir abastecimentos');
     }
-    
+
     if (response.status === 404) {
       throw new Error('Abastecimento não encontrado');
     }

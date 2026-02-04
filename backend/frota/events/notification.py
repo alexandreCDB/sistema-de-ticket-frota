@@ -15,6 +15,11 @@ from backend.websocket.service.ws_instance import manager
 from backend.frota.database import get_db , SessionLocal as FleetSessionLocal 
 
 
+async def broadcast_vehicle_update():
+    """ Envia um sinal para TODOS os clientes conectados recarregarem a lista de veículos """
+    await manager.broadcast("vehicle_update", {"message": "Update vehicle list"})
+
+
 async def notify_frota_checkout_async(vehicle_id: int):
     # sessão para banco da frota
     db_frota = FleetSessionLocal()
@@ -48,6 +53,50 @@ async def notify_frota_checkout_async(vehicle_id: int):
                 await manager.send_to_user(
                     notification.user_id,
                     "frota_checkout",
+                    {
+                        "id": notification.id,
+                        "vehicle_id": vehicle_id,
+                        "message": notification.message,
+                    }
+                )
+        finally:
+            db_pm.close()
+    finally:
+        db_frota.close()
+
+async def notify_frota_schedule_async(vehicle_id: int):
+    # sessão para banco da frota
+    db_frota = FleetSessionLocal()
+    try:
+        vehicle = get_vehicle(db_frota, vehicle_id)
+        
+        if not vehicle:
+            return
+
+        # Agora você ainda precisa de db de notifications
+        db_pm = SessionLocal()  
+        try:
+            user_super = db_pm.query(User).filter(
+                User.is_super_admin == True,
+                User.is_active == True
+            ).all()
+
+            notifications = []
+            for admin in user_super:
+                notification = notification_crud.create_notification_frota(
+                    db=db_pm,
+                    user_id=admin.id,
+                    vehicle_id=vehicle_id,
+                    message=f"Solicitação de agendamento de veículo :  {vehicle.name} - {vehicle.license_plate}",
+                    notif_type=NotificationType.frota_checkout # Reutilizando o tipo checkout por enquanto, ou criar um novo se necessário
+                )
+                notifications.append(notification)
+
+            db_pm.commit()
+            for notification in notifications:
+                await manager.send_to_user(
+                    notification.user_id,
+                    "frota_checkout", # Reutilizando o tipo checkout no WS também
                     {
                         "id": notification.id,
                         "vehicle_id": vehicle_id,

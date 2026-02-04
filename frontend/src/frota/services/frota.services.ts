@@ -61,6 +61,23 @@ export async function checkoutVehicle(data: CheckoutData) {
   return response.json();
 }
 
+export async function departVehicle(bookingId: number, data: { start_mileage: number }) {
+  const response = await fetch(`${API_URL}/frota/bookings/${bookingId}/depart`, {
+    method: 'POST',
+    headers: getAuthHeaders({
+      'Content-Type': 'application/json',
+    }),
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Falha ao iniciar a saída do veículo.');
+  }
+  return response.json();
+}
+
 export async function getVehicle(vehicleId: number): Promise<Vehicle> {
   try {
     // 🚨 CORREÇÃO: frotas -> frota

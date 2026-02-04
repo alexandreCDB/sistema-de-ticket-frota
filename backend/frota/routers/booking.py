@@ -1,13 +1,13 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 from typing import List
-from backend.frota.events.notification import notify_frota_approve_async, notify_frota_checkout_async, notify_frota_deny_async, notify_frota_return_async
+from backend.frota.events.notification import notify_frota_approve_async, notify_frota_checkout_async, notify_frota_deny_async, notify_frota_return_async, notify_frota_schedule_async, broadcast_vehicle_update
 # --- Imports do Módulo Frota ---
 from ..crud.crud_booking import (
-    create_checkout, create_schedule, approve_booking, deny_booking,
+    create_checkout, create_schedule,    approve_booking, depart_booking, deny_booking,
     complete_return, get_booking, get_all_bookings, get_bookings_by_user
 )
-from ..schemas.booking import BookingCheckout, BookingSchedule, BookingRead
+from ..schemas.booking import BookingCheckout, BookingSchedule, BookingRead, BookingDepart
 # Import padronizado para a base da frota
 from ..database import get_db as get_frota_db
 
@@ -89,6 +89,7 @@ def checkout(
 @router.post("/schedule", response_model=BookingRead)
 def schedule(
     payload: BookingSchedule,
+    background_tasks: BackgroundTasks,
     frota_db: Session = Depends(get_frota_db),
     global_db: Session = Depends(get_global_db),
     current_user: UserModel = Depends(get_current_user)
@@ -100,6 +101,8 @@ def schedule(
     try:
         booking = create_schedule(frota_db, current_user.id, payload.vehicle_id, payload.start_time, payload.end_time, payload.purpose, payload.observation)
         booking.user = get_user(global_db, booking.user_id)
+        
+        background_tasks.add_task(notify_frota_schedule_async, payload.vehicle_id)
         return booking
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -132,6 +135,7 @@ def approve(
     # RETORNO CORRIGIDO
      
     background_tasks.add_task(notify_frota_approve_async, booking)
+    background_tasks.add_task(broadcast_vehicle_update)
     return booking
 
 @router.patch("/{booking_id}/deny", response_model=BookingRead)
@@ -158,7 +162,32 @@ def deny(
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
     background_tasks.add_task(notify_frota_deny_async, booking)
+    background_tasks.add_task(broadcast_vehicle_update)
     return booking
+
+@router.post("/{booking_id}/depart", response_model=BookingRead)
+def depart(
+    booking_id: int,
+    payload: BookingDepart,
+    background_tasks: BackgroundTasks,
+    frota_db: Session = Depends(get_frota_db),
+    global_db: Session = Depends(get_global_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    booking = get_booking(frota_db, booking_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Reserva não encontrada")
+
+    if booking.user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Apenas o condutor pode iniciar esta saída")
+
+    try:
+        updated_booking = depart_booking(frota_db, booking_id, payload.start_mileage)
+        updated_booking.user = get_user(global_db, updated_booking.user_id)
+        background_tasks.add_task(broadcast_vehicle_update)
+        return updated_booking
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/{booking_id}/return", response_model=BookingRead)
 def do_return(
@@ -172,6 +201,10 @@ def do_return(
 ):
     end_mileage = payload.get("end_mileage")
     parking_location = payload.get("parking_location")
+
+    # ✅ VALIDAÇÃO: Prevenção de Integer Overflow (máx 2 bilhões)
+    if end_mileage and end_mileage > 2000000000:
+        raise HTTPException(status_code=400, detail="A quilometragem informada é muito alta. Verifique o valor.")
     
     # VARIÁVEL CORRIGIDA
     # Primeiro, buscamos a reserva para verificar a propriedade
@@ -189,4 +222,6 @@ def do_return(
     booking.user = get_user(global_db, booking.user_id)
     # RETORNO CORRIGIDO
     background_tasks.add_task(notify_frota_return_async, booking)
+    background_tasks.add_task(broadcast_vehicle_update)
     return booking
+ 

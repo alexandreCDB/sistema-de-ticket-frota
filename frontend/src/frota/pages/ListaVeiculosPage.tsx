@@ -14,6 +14,7 @@ import Loading from '../../components/Loads/Loading';
 import { Search } from 'lucide-react';
 // 1. IMPORTAÇÃO DO COMPONENTE DE PAGINAÇÃO
 import { Pagination } from '../components/Pagination';
+import { getWebSocket } from '../../services/websocket';
 
 export default function ListaVeiculosPage() {
   const { user, loadingUser } = useAuth();
@@ -40,8 +41,30 @@ export default function ListaVeiculosPage() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [searchTerm]);
+
+  // ✅ EFEITO: Escutar atualizações em tempo real via WebSocket
+  useEffect(() => {
+    const ws = getWebSocket();
+    if (!ws) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "vehicle_update") {
+          console.log("🔄 Recebido sinal de atualização de veículos via WS");
+          refetchVehicles();
+        }
+      } catch (err) {
+        console.error("Erro ao processar mensagem WS na lista de veículos:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleMessage);
+    return () => ws.removeEventListener("message", handleMessage);
+  }, [refetchVehicles]);
 
   const handleOpenCheckoutModal = (vehicle: VehicleWithBookings) => {
     setSelectedVehicle(vehicle);

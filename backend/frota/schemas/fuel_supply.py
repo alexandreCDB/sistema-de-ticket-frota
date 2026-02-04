@@ -28,7 +28,7 @@ class FuelSupplyRead(FuelSupplyBase):
     created_at: datetime
     updated_at: Optional[datetime]
     vehicle: Optional[VehicleRead]
-    user_data: Optional[dict]  # ✅ ADICIONAR DADOS DO USUÁRIO
+    user_data: Optional[dict] = None  # ✅ ADICIONAR DADOS DO USUÁRIO
     
     class Config:
         orm_mode = True

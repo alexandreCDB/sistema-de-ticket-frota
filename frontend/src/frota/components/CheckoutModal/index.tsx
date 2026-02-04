@@ -15,7 +15,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
   const [departureTime, setDepartureTime] = useState('');
   const [purpose, setPurpose] = useState('');
   const [observation, setObservation] = useState('');
-  const [startMileage, setStartMileage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +51,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
 
       setPurpose('');
       setObservation('');
-      setStartMileage('');
       setError(null);
       setAceitouTermo(false);
       setTermoExpandido(false);
@@ -91,19 +89,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ VALIDAÇÃO DA KM (AGORA OBRIGATÓRIA)
-    if (!startMileage.trim()) {
-      setError('O campo KM Inicial é obrigatório.');
-      return;
-    }
-
-    // ✅ VALIDAÇÃO SE É UM NÚMERO VÁLIDO
-    const mileageNumber = parseInt(startMileage, 10);
-    if (isNaN(mileageNumber) || mileageNumber <= 0) {
-      setError('Por favor, insira um valor válido para a KM.');
-      return;
-    }
-
     // ✅ VALIDAÇÃO DO TERMO
     if (!aceitouTermo) {
       setError('Você deve aceitar o termo de responsabilidade para continuar.');
@@ -123,7 +108,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
         vehicle_id: vehicle!.id,
         purpose: purpose || null,
         observation: observation || null,
-        start_mileage: mileageNumber,
+        start_mileage: null, // No mileage at request time
         start_time: startTime.toISOString()
       });
 
@@ -175,19 +160,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label"><Gauge size={16} /> KM Inicial <span className="required-field">*</span></label>
-            <input
-              type="number"
-              className="form-input"
-              placeholder="Digite a quilometragem atual"
-              value={startMileage}
-              onChange={(e) => setStartMileage(e.target.value)}
-              required
-              min="1"
-            />
-            <div className="field-hint">Campo obrigatório</div>
-          </div>
 
           <div className="form-group">
             <label className="form-label"><MessageSquare size={16} /> Observações (Opcional)</label>
@@ -257,7 +229,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, v
             type="submit"
             className="btn btn-primary"
             form="checkout-form"
-            disabled={isLoading || !departureTime || !purpose || !startMileage || !aceitouTermo}
+            disabled={isLoading || !departureTime || !purpose || !aceitouTermo}
           >
             {isLoading ? 'Enviando...' : 'Solicitar Retirada'}
           </button>

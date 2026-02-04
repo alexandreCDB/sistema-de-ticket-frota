@@ -1,6 +1,6 @@
 # backend/frota/schemas/booking.py
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 
@@ -25,6 +25,9 @@ class BookingCheckout(BookingBase):
 class BookingSchedule(BookingBase):
     start_time: datetime
     end_time: datetime
+
+class BookingDepart(BaseModel):
+    start_mileage: int = Field(..., le=2000000000, description="Quilometragem inicial (máx 2 bilhões)")
 
 class BookingRead(BaseModel):
     id: int

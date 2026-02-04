@@ -18,6 +18,7 @@ import AdminRoute from "./components/AUTH/AdminRoute";
 import Home from "./Pages/home/home";
 import Loading from "./components/Loads/Loading";
 import { useAuth } from "./components/AUTH/AuthContext";
+import TicketDeprecatedPage from "./tickets/TicketDeprecatedPage";
 
 function AppContent() {
   // const { loadingUser, user } = useAuth();
@@ -53,9 +54,10 @@ function AppContent() {
         <Route
           path="/tickets/*"
           element={
-            <ProtectedRoute>
-              <DashboardLayoutRoute />
-            </ProtectedRoute>
+           <TicketDeprecatedPage/>
+            // <ProtectedRoute>
+            //   <DashboardLayoutRoute />
+            // </ProtectedRoute>
           }
         >
           <Route index element={<Dashboard />} />

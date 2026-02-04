@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import useNotifications from "./NotificationBell.service";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Bell, CheckCheck, Car, Ticket, ExternalLink } from "lucide-react";
 import "./NotificationBell.css";
 import { connectWebSocket } from "../../services/websocket";
@@ -39,6 +39,17 @@ const NotificationBell: React.FC = () => {
     useNotifications({
       userId: user?.id!,
     });
+  const location = useLocation();
+
+  // ✅ ATUALIZAR TÍTULO DA ABA COM O CONTADOR
+  useEffect(() => {
+    const baseTitle = "Doce Brinquedo";
+    if (count > 0) {
+      document.title = `(${count}) ${baseTitle}`;
+    } else {
+      document.title = baseTitle;
+    }
+  }, [count, location.pathname]);
 
   // Detectar nova notificação para mostrar o Toast
   useEffect(() => {

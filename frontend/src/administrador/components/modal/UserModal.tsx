@@ -34,13 +34,13 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
   useEffect(() => {
     if (user) {
       console.log('🔍 DEBUG - Objeto user COMPLETO:', JSON.stringify(user, null, 2));
-      
+
       setEmail(user.email);
       setError(null);
 
       // ✅ CORREÇÃO CRÍTICA: Determina o role baseado na propriedade 'role' do usuário
       let userRole = 'comum';
-      
+
       if (user.role) {
         const roleLower = user.role.toLowerCase();
         if (roleLower.includes('super')) {
@@ -49,14 +49,14 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
           userRole = 'is_admin';
         }
       }
-      
+
       // ✅ CORREÇÃO ALTERNATIVA: Também verifica as propriedades booleanas se existirem
       if (user.is_super_admin === true || user.is_super_admin === 'true') {
         userRole = 'is_super_admin';
       } else if (user.is_admin === true || user.is_admin === 'true') {
         userRole = 'is_admin';
       }
-      
+
       console.log('🔄 Carregando perfil do usuário:', {
         email: user.email,
         role: user.role,
@@ -64,19 +64,19 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
         is_admin: user.is_admin,
         roleDefinido: userRole
       });
-      
+
       setRole(userRole);
 
       // ✅ Converte string 'AAAA-MM-DD' em data local CORRETAMENTE
       const cnhString = user.cnh_vencimento?.trim();
       console.log('🔄 Carregando CNH do usuário:', { cnhString, user });
-      
+
       if (cnhString && /^\d{4}-\d{2}-\d{2}$/.test(cnhString)) {
         const [y, m, d] = cnhString.split('-').map(Number);
         // CORREÇÃO: Adiciona 1 dia para compensar o backend que subtrai
         const correctedDate = new Date(y, m - 1, d + 1, 12, 0, 0, 0);
-        console.log('📅 Data convertida (com correção):', { 
-          original: cnhString, 
+        console.log('📅 Data convertida (com correção):', {
+          original: cnhString,
           correctedDate: correctedDate.toLocaleDateString('pt-BR'),
           dayOriginal: d,
           dayCorrected: d + 1
@@ -110,22 +110,22 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
   // ✅ CORREÇÃO CRÍTICA: Compensa a subtração do backend
   const formatDateForAPI = (date: Date | null): string | null => {
     if (!date) return null;
-    
+
     // CORREÇÃO: Adiciona 1 dia para compensar o backend que subtrai
     const correctedDate = new Date(date);
     correctedDate.setDate(correctedDate.getDate() + 1);
-    
+
     const year = correctedDate.getFullYear();
     const month = String(correctedDate.getMonth() + 1).padStart(2, '0');
     const day = String(correctedDate.getDate()).padStart(2, '0');
-    
+
     const formatted = `${year}-${month}-${day}`;
-    console.log('📤 Data formatada para API (COM CORREÇÃO):', { 
+    console.log('📤 Data formatada para API (COM CORREÇÃO):', {
       original: date.toLocaleDateString('pt-BR'),
       corrected: correctedDate.toLocaleDateString('pt-BR'),
       enviando: formatted
     });
-    
+
     return formatted;
   };
 
@@ -144,29 +144,37 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
     };
 
     const cnhVencimentoString = formatDateForAPI(cnhDate);
-    console.log('💾 ENVIANDO PARA BACKEND (COM CORREÇÃO):', { 
+    console.log('💾 ENVIANDO PARA BACKEND (COM CORREÇÃO):', {
       cnhDate: cnhDate?.toLocaleDateString('pt-BR'),
       cnhVencimentoString,
-      payload 
+      payload
     });
+
+    const token = localStorage.getItem('token');
+    const headers: any = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
     try {
       if (user) {
         // Atualiza usuário existente
         const res = await fetch(`${API_URL}/ticket/users/${user.id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           credentials: 'include',
           body: JSON.stringify(payload),
         });
-        
+
         if (!res.ok) throw new Error('Falha ao atualizar usuário.');
 
         console.log('🎯 Enviando CNH para saveCnhVencimento (COM CORREÇÃO):', {
           userId: user.id,
           cnhVencimento: cnhVencimentoString
         });
-        
+
         await saveCnhVencimento(user.id, cnhVencimentoString);
       } else {
         if (password !== confirmPassword) {
@@ -175,7 +183,7 @@ const UserModal = ({ user, onClose, onSuccess }: Props) => {
 
         await fetch(`${API_URL}/ticket/users`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           credentials: 'include',
           body: JSON.stringify({ ...payload, password }),
         });

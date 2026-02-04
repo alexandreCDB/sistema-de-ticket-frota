@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import { getWebSocket } from '../../../services/websocket';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
-import { usePersonalBookings, completeReturn, cancelBooking } from '../../services/frota.services';
+import { usePersonalBookings, completeReturn, cancelBooking, departVehicle } from '../../services/frota.services';
 import { FrotaHeader } from '../../components/Header';
 import { VehicleCard } from '../../components/VehicleCard';
 import { ReturnVehicleModal } from '../../components/ReturnVehicleModal';
-import { FuelSupplyModal } from '../../components/FuelSupplyModal'; // ✅ NOVA IMPORT
+import { FuelSupplyModal } from '../../components/FuelSupplyModal';
 import { createFuelSupply } from '../../services/fuelSupply.services';
 import { BookingWithVehicle } from '../../types';
+import { DepartVehicleModal } from '../../components/DepartVehicleModal';
 
 export default function MeusVeiculosPage() {
   const { bookings, isLoading, error, refetchBookings } = usePersonalBookings();
@@ -19,6 +21,31 @@ export default function MeusVeiculosPage() {
   const [isFuelSupplyModalOpen, setIsFuelSupplyModalOpen] = useState(false);
   const [selectedVehicleForFuel, setSelectedVehicleForFuel] = useState<any>(null);
   const [isFuelSubmitting, setIsFuelSubmitting] = useState(false);
+
+  // ✅ NOVOS ESTADOS PARA MODAL DE SAÍDA
+  const [isDepartModalOpen, setIsDepartModalOpen] = useState(false);
+  const [isDepartSubmitting, setIsDepartSubmitting] = useState(false);
+
+  // ✅ EFEITO: Escutar atualizações em tempo real via WebSocket
+  useEffect(() => {
+    const ws = getWebSocket();
+    if (!ws) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "vehicle_update") {
+          console.log("🔄 Recebido sinal de atualização de veículos via WS (Meus Veículos)");
+          refetchBookings();
+        }
+      } catch (err) {
+        console.error("Erro ao processar mensagem WS em Meus Veículos:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleMessage);
+    return () => ws.removeEventListener("message", handleMessage);
+  }, [refetchBookings]);
 
   const handleOpenReturnModal = (booking: BookingWithVehicle) => {
     setSelectedBooking(booking);
@@ -40,6 +67,16 @@ export default function MeusVeiculosPage() {
   const handleCloseFuelSupplyModal = () => {
     setIsFuelSupplyModalOpen(false);
     setSelectedVehicleForFuel(null);
+  };
+
+  const handleOpenDepartModal = (booking: BookingWithVehicle) => {
+    setSelectedBooking(booking);
+    setIsDepartModalOpen(true);
+  };
+
+  const handleCloseDepartModal = () => {
+    setIsDepartModalOpen(false);
+    setSelectedBooking(null);
   };
 
   const handleConfirmReturn = async (bookingId: number, endMileage: number, parkingLocation: string) => {
@@ -68,6 +105,21 @@ export default function MeusVeiculosPage() {
     } catch (err) {
       console.error('Erro ao cancelar reserva:', err);
       alert('Erro ao cancelar reserva. Tente novamente.');
+    }
+  };
+
+  const handleConfirmSair = async (bookingId: number, startMileage: number) => {
+    setIsDepartSubmitting(true);
+    try {
+      await departVehicle(bookingId, { start_mileage: startMileage });
+      alert('Saída registrada com sucesso! Boa viagem.');
+      handleCloseDepartModal();
+      refetchBookings();
+    } catch (err) {
+      console.error('Erro ao registrar saída:', err);
+      throw err; // Repassa para o modal mostrar o erro
+    } finally {
+      setIsDepartSubmitting(false);
     }
   };
 
@@ -122,6 +174,7 @@ export default function MeusVeiculosPage() {
             vehicle={booking.vehicle}
             booking={booking}
             onDevolver={() => handleOpenReturnModal(booking)}
+            onSair={() => handleOpenDepartModal(booking)}
             onCancelar={() => handleCancelBooking(booking.id)}
             onAbastecimento={() => handleOpenFuelSupplyModal(booking.vehicle)} // ✅ NOVA PROP
             isMyVehiclesPage={true}
@@ -157,6 +210,15 @@ export default function MeusVeiculosPage() {
           onConfirm={handleConfirmFuelSupply}
           vehicle={selectedVehicleForFuel}
           isSubmitting={isFuelSubmitting}
+        />
+
+        {/* ✅ NOVO MODAL: Saída */}
+        <DepartVehicleModal
+          isOpen={isDepartModalOpen}
+          onClose={handleCloseDepartModal}
+          onConfirm={handleConfirmSair}
+          booking={selectedBooking}
+          isSubmitting={isDepartSubmitting}
         />
       </main>
     </div>

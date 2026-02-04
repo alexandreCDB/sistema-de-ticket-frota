@@ -8,7 +8,7 @@ import {
 } from "react";
 import { IUser } from "./interfaces/user";
 import { useNavigate } from "react-router-dom";
-import { connectWebSocket } from "../../services/websocket";
+import { connectWebSocket, disconnectWebSocket } from "../../services/websocket";
 
 interface User {
   id: number;
@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   const clearAuth = useCallback(() => {
+    disconnectWebSocket();
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
@@ -117,7 +118,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(accessToken);
       localStorage.setItem("token", accessToken);
       localStorage.setItem("user_current", user_email);
-
+      sessionStorage.setItem("authEmail", email);
+      sessionStorage.setItem("authPassword", password)
       connectWebSocket(accessToken);
       setMessage("Login bem-sucedido!");
 
@@ -169,7 +171,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Erro no logout", err);
     } finally {
       clearAuth();
-      navigate("/login", { replace: true });
+      // navigate("/login", { replace: true });
+      window.location.href = "/login";
     }
   };
 

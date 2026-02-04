@@ -14,6 +14,16 @@
   margin-bottom: 2rem;
   overflow-x: auto;
   gap: 2rem;
+  /* Ocultar barra de rolagem mas manter funcionalidade */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.tabs-nav::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari/Opera */
 }
 
 .tab-button {

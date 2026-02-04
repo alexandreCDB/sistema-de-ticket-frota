@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from ..crud import crud_vehicle
@@ -6,6 +6,7 @@ from ..schemas import vehicle as vehicle_schema
 from ..database import get_db
 from backend.dependencies import get_current_user
 from ..models.vehicle import VehicleStatus
+from backend.frota.events.notification import broadcast_vehicle_update
 
 router = APIRouter(
     prefix="", # 🚨 CORREÇÃO CRÍTICA: AGORA ESTÁ VAZIO ("")
@@ -41,12 +42,20 @@ def post_vehicle(data: vehicle_schema.VehicleCreate, db: Session = Depends(get_d
     return v
 
 @router.put("/{vehicle_id}", response_model=vehicle_schema.VehicleRead)
-def update_one_vehicle(vehicle_id: int, data: vehicle_schema.VehicleCreate, db: Session = Depends(get_db), user = Depends(get_current_user)):
+def update_one_vehicle(
+    vehicle_id: int, 
+    data: vehicle_schema.VehicleCreate, 
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db), 
+    user = Depends(get_current_user)
+):
     if not user.is_admin:
         raise HTTPException(status_code=403, detail="Apenas administradores podem editar veículos")
     v = crud_vehicle.update_vehicle(db, vehicle_id, data.dict())
     if not v:
         raise HTTPException(status_code=404, detail="Veículo não encontrado")
+    
+    background_tasks.add_task(broadcast_vehicle_update)
     return v
 
 # --- ADICIONADO: Nova rota para alterar o status ---
@@ -54,6 +63,7 @@ def update_one_vehicle(vehicle_id: int, data: vehicle_schema.VehicleCreate, db: 
 def update_status(
     vehicle_id: int,
     payload: VehicleStatusUpdate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user = Depends(get_current_user)
 ):
@@ -63,6 +73,8 @@ def update_status(
     vehicle = crud_vehicle.update_vehicle_status(db, vehicle_id=vehicle_id, status=payload.status)
     if not vehicle:
         raise HTTPException(status_code=404, detail="Veículo não encontrado para atualizar status")
+    
+    background_tasks.add_task(broadcast_vehicle_update)
     return vehicle
 
 @router.delete("/{vehicle_id}", status_code=200)

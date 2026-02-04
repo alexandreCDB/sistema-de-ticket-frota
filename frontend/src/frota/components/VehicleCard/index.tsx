@@ -14,6 +14,7 @@ interface VehicleCardProps {
   onRetirar?: (vehicle: Vehicle) => void;
   onAgendar?: (vehicle: Vehicle) => void;
   onDevolver?: () => void;
+  onSair?: (booking: Booking) => void;
   onCancelar?: () => void;
   onAbastecimento?: (vehicle: Vehicle) => void;
   isMyVehiclesPage?: boolean;
@@ -26,6 +27,7 @@ export function VehicleCard({
   onRetirar,
   onAgendar,
   onDevolver,
+  onSair,
   onCancelar,
   onAbastecimento,
   isMyVehiclesPage = false
@@ -40,6 +42,7 @@ export function VehicleCard({
     unavailable: { text: 'Indisponível', className: 'status-maintenance' },
     pending: { text: 'Pendente', className: 'status-reserved' },
     confirmed: { text: 'Confirmado', className: 'status-confirmed' },
+    departed: { text: 'Em Uso', className: 'status-in-use' },
     denied: { text: 'Negado', className: 'status-maintenance' },
     completed: { text: 'Finalizado', className: 'status-available' },
     cancelled: { text: 'Cancelado', className: 'status-maintenance' },
@@ -79,34 +82,16 @@ export function VehicleCard({
       }
 
       if (booking.status === 'confirmed') {
-        if (booking.type === 'checkout') {
-          return (
-            <>
-              <button className="btn-primary" style={{ backgroundColor: '#10b981' }} onClick={onDevolver}>
-                <Undo2 size={16} style={{ marginRight: 8 }} /> Devolver
-              </button>
-              {/* ✅ BOTÃO ABASTECIMENTO - aparece apenas se monitor_fuel = true */}
-              {vehicle.monitor_fuel && onAbastecimento && (
-                <button className="btn-primary" style={{ backgroundColor: '#3b82f6' }} onClick={() => onAbastecimento(vehicle)}>
-                  <Fuel size={16} />
-                </button>
-              )}
-            </>
-          );
-        }
-
-        if (booking.type === 'schedule') {
-          return (
-            <>
-              <button className="btn-primary" style={{ backgroundColor: '#ef4444' }} onClick={onCancelar}>
-                <XCircle size={16} style={{ marginRight: 8 }} /> Cancelar
-              </button>
-              <button className="btn-primary" style={{ backgroundColor: '#10b981' }} onClick={onDevolver}>
-                <Undo2 size={16} style={{ marginRight: 8 }} /> Devolver
-              </button>
-            </>
-          );
-        }
+        return (
+          <>
+            <button className="btn-primary" style={{ backgroundColor: '#ef4444' }} onClick={onCancelar}>
+              <XCircle size={16} style={{ marginRight: 8 }} /> Cancelar
+            </button>
+            <button className="btn-primary" style={{ backgroundColor: '#10b981' }} onClick={() => onSair?.(booking)}>
+              <Car size={16} style={{ marginRight: 8 }} /> SAIR
+            </button>
+          </>
+        );
       }
 
       // Se for pendente, o usuário também pode cancelar

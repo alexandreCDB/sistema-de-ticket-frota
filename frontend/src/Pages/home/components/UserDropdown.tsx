@@ -20,19 +20,12 @@ interface UserDropdownProps {
 const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen, onClose, userName, userEmail }) => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const { user, loadingUser, userError } = useAuth();
+  const { user, loadingUser, userError, logout } = useAuth();
   if (!isOpen) return null;
 
 
   const handleLogout = async () => {
-    try {
-      await fetch(`${API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include", // envia o cookie HttpOnly
-      });
-    } finally {
-      window.location.href = "/login"; // redireciona
-    }
+    await logout();
     onClose();
   };
 
